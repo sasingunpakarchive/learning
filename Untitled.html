@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOEFL Online Test - Unified System</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #2980b9; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #333; line-height: 1.6; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 40px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); }
+        .hidden { display: none; }
+        h1, h2 { color: var(--primary); border-bottom: 3px solid var(--accent); padding-bottom: 10px; }
+        .input-group { margin-bottom: 15px; }
+        input[type="text"] { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; }
+        button { background: var(--accent); color: white; border: none; padding: 15px 35px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; transition: 0.3s; }
+        button:hover { background: #1c5982; }
+        .question-block { margin-bottom: 25px; padding: 15px; background: #fff; border: 1px solid #eee; border-radius: 10px; }
+        .options-label { display: block; margin: 10px 0; padding: 10px; border: 1px solid #eee; border-radius: 5px; cursor: pointer; }
+        .options-label:hover { background: #f0f7ff; }
+        .passage { background: #fffbe6; padding: 25px; border-left: 5px solid #f1c40f; border-radius: 5px; margin-top: 40px; margin-bottom: 20px; font-size: 15px; max-height: 400px; overflow-y: scroll; border: 1px solid #ddd; line-height: 1.8; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); }
+        .instruction { font-style: italic; color: #555; margin-bottom: 20px; padding: 15px; background: #f9f9f9; border-radius: 5px; border-left: 4px solid var(--accent); }
+        .status-bar { position: sticky; top: 0; background: white; padding: 10px 0; border-bottom: 2px solid #eee; z-index: 100; font-weight: bold; display: flex; justify-content: space-between; margin-bottom: 20px; }
+        /* Styling tambahan untuk box audio */
+        .audio-box { background: #ebf5fb; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #aed6f1; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- LOGIN PAGE -->
+    <div id="login-page">
+        <h1>TOEFL Online Test</h1>
+        <p>Silahkan masukkan data diri. Sistem akan mencatat setiap aktivitas perpindahan jendela/tab.</p>
+        <div class="input-group"><input type="text" id="name" placeholder="Nama Lengkap"></div>
+        <div class="input-group"><input type="text" id="npm" placeholder="NPM"></div>
+        <div class="input-group"><input type="text" id="class" placeholder="Kelas"></div>
+        <button onclick="startExam()">Mulai Ujian</button>
+    </div>
+
+    <!-- EXAM PAGE -->
+    <div id="exam-page" class="hidden">
+        <div class="status-bar">
+            <span id="display-info"></span>
+            <span id="violation-count" style="color: #e74c3c;">Pelanggaran: 0/3</span>
+        </div>
+        <h2 id="section-title">Section Title</h2>
+        <div id="exam-content"></div>
+        <button id="next-btn" onclick="submitSection()" style="margin-top: 20px;">Submit & Lanjut</button>
+    </div>
+</div>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxvG2t9ppIgaHeFrFl0kh201uOJPQGbYyKO60A-d_VVTRDwtkfYqEXymOqLT23DX-z5/exec';
+    
+    let currentSectionIdx = 0;
+    let violations = 0;
+    let jenisPelanggaranTerakhir = "Tidak Ada";
+    let userData = {};
+    let userScores = { listening: 0, structure: 0, reading: 0 };
+    let isFinished = false;
+
+    window.onblur = function() {
+        if (isFinished) return;
+        violations++;
+        jenisPelanggaranTerakhir = "tab_switch"; 
+        document.getElementById('violation-count').innerText = "Pelanggaran: " + violations + "/3";
+        alert("Peringatan: Jangan pindah tab atau membuka aplikasi lain!");
+    };
+
+    window.onresize = function() {
+        if (isFinished) return;
+        if (window.innerWidth < 800) { 
+            violations++;
+            jenisPelanggaranTerakhir = "minimize";
+            document.getElementById('violation-count').innerText = "Pelanggaran: " + violations + "/3";
+        }
+    };
+
+    const examData = [
+        {
+            title: "SECTION 1 — LISTENING COMPREHENSION",
+            // URL AUDIO DIMASUKKAN DI SINI
+            audioUrl: "https://drive.google.com/uc?export=download&id=10nUutD0hn1TYPPWLYg0G9jlmt7sT68ht",
+            instr: `<b>Time — approximately 35 minutes<br>(including the reading of the directions for each part)</b><br><br>In this section of the test, you will have an opportunity to demonstrate your ability to understand conversations and talks in English. Answer all the questions on the basis of what is stated or implied by the speakers you hear.`,
+            keys: ["B","A","D","B","C","C","D","A","B","D","C","A","A","D","A","C","B","B","B","D","C","A","A","D","D","B","B","D","C","D","A","C","D","C","B","B","A","D","C","D","C","A","C","B","A","D","A","C","D","C"],
+            questions: [
+                { o: ["(A) Carla does not live very far away.", "(B) What Carla said was unjust.", "(C) He does not fear what anyone says.", "(D) Carla is fairly rude to others."] },
+                { o: ["(A) She thinks it is an improvement.", "(B) The fir trees in it are better.", "(C) It resembles the last one.", "(D) It is the best the man has ever done."] },
+                { o: ["(A) He graduated last in his class.", "(B) He is the last person in his family to graduate.", "(C) He does not believe he can improve gradually.", "(D) He has finally finished his studies."] },
+                { o: ["(A) He is surprised there were five dresses.", "(B) It was an unexpectedly inexpensive dress.", "(C) He would like to know what color dress it was.", "(D) The dress was not cheap."] },
+                { o: ["(A) Leave the car somewhere else.", "(B) Ignore the parking tickets.", "(C) Add more money to the meter.", "(D) Pay the parking attendant."] },
+                { o: ["(A) He does not like to hold too many books at one time.", "(B) There is no bookstore in his neighborhood.", "(C) It is not possible to obtain the book yet.", "(D) He needs to talk to someone at the bookstore."] },
+                { o: ["(A) It was incomplete.", "(B) It finished on time.", "(C) It was about honor.", "(D) It was too long."] },
+                { o: ["(A) She needs to use the man’s notes.", "(B) Yesterday’s physics class was quite boring.", "(C) She took some very good notes in physics class.", "(D) She would like to lend the man her notes."] },
+                { o: ["(A) It is her birthday today.", "(B) She is looking for a birthday gift.", "(C) She wants to go shopping with her dad.", "(D) She wants a new wallet for herself."] },
+                { o: ["(A) He prefers cold water.", "(B) His toes are too big.", "(C) The pool felt quite refreshing.", "(D) He did not go for a swim."] },
+                { o: ["(A) She just left her sister’s house.", "(B) Her sister is not at home.", "(C) She is not exactly sure where her sweater is.", "(D) She does not know where her sister lives."] },
+                { o: ["(A) She does not have time to complete additional reports.", "(B) She cannot finish the reports that she is already working on.", "(C) She is scared of having responsibility for the reports.", "(D) It is not time for the accounting reports to be compiled."] },
+                { o: ["(A) He has had enough exercise.", "(B) He is going to give himself a reward for the hard work.", "(C) He is going to stay on for quite some time.", "(D) He would like to give the woman an exercise machine as a gift."] },
+                { o: ["(A) He cannot see the huge waves.", "(B) The waves are not coming in.", "(C) He would like the woman to repeat what she said.", "(D) He agrees with the woman."] },
+                { o: ["(A) The exam was postponed.", "(B) The man should have studied harder.", "(C) Night is the best time to study for exams.", "(D) She is completely prepared for the exam."] },
+                { o: ["(A) Students who want to change schedules should form a line.", "(B) It is only possible to make four changes in the schedule.", "(C) It is necessary to submit the form quickly.", "(D) Problems occur when people do not wait their turn."] },
+                { o: ["(A) In a mine", "(B) In a jewelry store", "(C) In a clothing store", "(D) In a bank"] },
+                { o: ["(A) A visit to the woman’s family", "(B) The telephone bill", "(C) The cost of a new telephone", "(D) How far away the woman’s family lives"] },
+                { o: ["(A) She has not met her new boss yet.", "(B) She has a good opinion of her boss.", "(C) Her boss has asked her about her impressions of the company.", "(D) Her boss has been putting a lot of pressure on her."] },
+                { o: ["(A) The recital starts in three hours.", "(B) He intends to recite three different poems.", "(C) He received a citation on the third of the month.", "(D) He thinks the performance begins at three."] },
+                { o: ["(A) Choose a new dentist.", "(B) Cure the pain himself.", "(C) Make an appointment with his dentist.", "(D) Ask his dentist about the right way to brush."] },
+                { o: ["(A) It is almost five o’clock.", "(B) The man does not really need the stamps.", "(C) It is a long way to the post office.", "(D) It would be better to go after five o’clock."] },
+                { o: ["(A) The article was placed on reserve.", "(B) The woman must ask the professor for a copy.", "(C) The woman should look through a number of journals in the library.", "(D) He has reservations about the information in the article."] },
+                { o: ["(A) He needs to take a nap.", "(B) He hopes the woman will help him calm down.", "(C) The woman just woke him up.", "(D) He is extremely relaxed."] },
+                { o: ["(A) She does not think the news report is false.", "(B) She has never before reported on the news.", "(C) She never watches the news on television.", "(D) She shares the man’s opinion about the report."] },
+                { o: ["(A) Management will offer pay raises on Friday.", "(B) The policy has not yet been decided.", "(C) The manager is full of hot air.", "(D) The plane has not yet landed."] },
+                { o: ["(A) He does not believe that it is really snowing.", "(B) The snow had been predicted.", "(C) The exact amount of snow is unclear.", "(D) He expected the woman to go out in the snow."] },
+                { o: ["(A) She is going to take the test over again.", "(B) She thinks she did a good job on the exam.", "(C) She has not yet taken the literature exam.", "(D) She is unhappy with how she did."] },
+                { o: ["(A) The door was unlocked.", "(B) It was better to wait outside.", "(C) He could not open the door.", "(D) He needed to take a walk."] },
+                { o: ["(A) He nailed the door shut.", "(B) He is heading home.", "(C) He hit himself in the head.", "(D) He is absolutely correct."] },
+                { o: ["(A) The haircut is unusually short.", "(B) This is Bob’s first haircut.", "(C) Bob does not know who gave him the haircut.", "(D) After the haircut, Bob’s hair still touches the floor."] },
+                { o: ["(A) It is just what he wanted.", "(B) He enjoys having the latest style.", "(C) He dislikes it immensely.", "(D) He thinks it will be cool in the summer."] },
+                { o: ["(A) A broken mirror", "(B) The hairstylist", "(C) The scissors used to cut his hair", "(D) Piles of his hair"] },
+                { o: ["(A) “You should become a hairstylist.”", "(B) “Please put it back on.”", "(C) “It’ll grow back.”", "(D) “It won’t grow fast enough.”"] },
+                { o: ["(A) Every evening", "(B) Every week", "(C) Every Sunday", "(D) Every month"] },
+                { o: ["(A) That she was eighty-five years old", "(B) That a storm was coming", "(C) That she was under a great deal of pressure", "(D) That she wanted to become a weather forecaster"] },
+                { o: ["(A) In her bones", "(B) In her ears", "(C) In her legs", "(D) In her head"] },
+                { o: ["(A) Call his great-grandmother less often.", "(B) Watch the weather forecasts with his great-grandmother.", "(C) Help his great-grandmother relieve some of her pressures.", "(D) Believe his great-grandmother’s predictions about the weather."] },
+                { o: ["(A) In a car", "(B) On a hike", "(C) On a tram", "(D) In a lecture hall"] },
+                { o: ["(A) It means they have big tears.", "(B) It means they like to swim.", "(C) It means they look like crocodiles.", "(D) It means they are pretending to be sad."] },
+                { o: ["(A) They are sad.", "(B) They are warming themselves.", "(C) They are getting rid of salt.", "(D) They regret their actions."] },
+                { o: ["(A) Taking photographs", "(B) Getting closer to the crocodiles", "(C) Exploring the water’s edge", "(D) Getting off the tram"] },
+                { o: ["(A) Water Sports", "(B) Physics", "(C) American History", "(D) Psychology"] },
+                { o: ["(A) To cut", "(B) To move fast", "(C) To steer a boat", "(D) To build a ship"] },
+                { o: ["(A) To bring tea from China", "(B) To transport gold to California", "(C) To trade with the British", "(D) To sail the American river system"] },
+                { o: ["(A) A reading assignment", "(B) A quiz on Friday", "(C) A research paper for the end of the semester", "(D) Some written homework"] },
+                { o: ["(A) Writers", "(B) Actors", "(C) Athletes", "(D) Musicians"] },
+                { o: ["(A) He or she would see butterflies.", "(B) He or she would break a leg.", "(C) He or she would have shaky knees.", "(D) He or she would stop breathing."] },
+                { o: ["(A) By staring at the audience", "(B) By breathing shallowly", "(C) By thinking about possible negative outcomes", "(D) By focusing on what needs to be done"] },
+                { o: ["(A) At two o’clock", "(B) At four o’clock", "(C) At six o’clock", "(D) At eight o’clock"] }
+            ]
+        },
+        {
+            title: "SECTION 2 — STRUCTURE AND WRITTEN EXPRESSION",
+            instr: `<b>Time — 25 minutes</b><br>This section is designed to measure your ability to recognize language that is appropriate for standard written English.`,
+            keys: ["C","D","B","A","B","C","A","A","D","B","C","A","D","C","B","A","C","A","C","C","D","D","A","B","D","C","D","C","A","D","B","C","A","B","C","C","A","A","C","C"],
+            questions: [
+                { q: "1. ________, the outermost layer of skin, is about as thick as a sheet of paper over most of the skin.", o: ["(A) It is the epidermis", "(B) In the epidermis", "(C) The epidermis", "(D) The epidermis is"] },
+                { q: "2. Sam Spade in The Maltese Falcon and Rick Blaine in Casablanca ________ two of Humphrey Bogart’s more famous roles.", o: ["(A) they are two", "(B) two of them are", "(C) two of them", "(D) are two"] },
+                { q: "3. The compound microscope has not one ________ two lenses.", o: ["(A) and also", "(B) but", "(C) and there are", "(D) but there are"] },
+                { q: "4. During the Precambrian period, the Earth’s crust formed, and life ________ in the seas.", o: ["(A) first appeared", "(B) first to appear", "(C) is first appearing", "(D) appearing"] },
+                { q: "5. The hard palate forms a partition ________ and nasal passages.", o: ["(A) the mouth", "(B) between the mouth", "(C) is between the mouth", "(D) it is between the mouth"] },
+                { q: "6. Conditions required for seed germination include abundant water, an adequate supply of oxygen, and ________.", o: ["(A) the temperatures must be appropriate", "(B) having appropriate temperatures", "(C) appropriate temperatures", "(D) appropriately temperate"] },
+                { q: "7. When fluid accumulates against the eardrum, a second more insidious type of ________.", o: ["(A) otitis media may develop", "(B) developing otitis media", "(C) the development of otitis media", "(D) to develop otitis media"] },
+                { q: "8. Some general theories of motivation ________ of central motives, from which other motives develop.", o: ["(A) identify a limited number", "(B) identification of a limited amount", "(C) identify a limited amount", "(D) identifying a limited number"] },
+                { q: "9. Before the Statue of Liberty arrived in the United States, newspapers invited the public to help determine where ________ placed after its arrival.", o: ["(A) should the statue be", "(B) the statue being", "(C) it should be the statue", "(D) the statue should be"] },
+                { q: "10. Hydroelectric power can be produced by ________ and using tidal flow to run turbines.", o: ["(A) water basins are dammed", "(B) damming water basins", "(C) to dam water basins", "(D) dams in water basins"] },
+                { q: "11. Abraham Lincoln and Jefferson Davis, ________ of the Union and the Confederacy during the Civil War, were both born in Kentucky.", o: ["(A) they were opposing presidents", "(B) were opposing presidents", "(C) opposing presidents", "(D) presidents opposed"] },
+                { q: "12. A stock ________ at an inflated price is called a watered stock.", o: ["(A) issued", "(B) is issued", "(C) it is issued", "(D) which issued"] },
+                { q: "13. The leaves of the white mulberry provide food for silkworms, ________ silk fabrics are woven.", o: ["(A) whose cocoons", "(B) from cocoons", "(C) whose cocoons are from", "(D) from whose cocoons"] },
+                { q: "14. Not only ________ generate energy, but it also produces fuel for other fission reactors.", o: ["(A) a nuclear breeder reactor", "(B) it is a nuclear breeder reactor", "(C) does a nuclear breeder reactor", "(D) is a nuclear breeder reactor"] },
+                { q: "15. D. W. Griffith pioneered many of the stylistic features and filmmaking techniques ________ as the Hollywood standard.", o: ["(A) that established", "(B) that became established", "(C) what established", "(D) what became established"] },
+                { q: "16. Mosquitoes will accepts (A) the malaria (B) parasite at only one (C) stage of the parasite’s complex (D) life cycle.", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "17. The counterpart (A) of (B) a negative electrons (C) is the positive (D) proton.", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "18. The ankle joint occur (A) where the lower (B) ends of the tibia and fibula slot neatly (C) around (D) the talus.", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "19. In the United States and Canada, motor vehicle (A) laws affect (B) the operate (C) of motorcycles as well as (D) automobiles.", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "20. The neocortex is (A), in evolutionary terms (B), most (C) recent layer (D) of the brain.", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "21. There are (A) more than eighty-four million specimens (B) in the National Museum of Natural History’s collection (C) of biological, geological, archaeological, and anthropology (D) treasures.", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "22. After (A) George Washington married widow (B) Martha Custis, the couple came (C) to resides (D) at Mount Vernon.", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "23. At this stage in their (A) development, rubberized (B) asphalt can hardly (C) be classified as (D) cutting edge.", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "24. Rhesus monkeys exhibit (A) patterns of shy (B) similar to (C) those (D) in humans.", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "25. In space, with no (A) gravity for muscles to work against (B), the body (C) becomes weakly (D).", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "26. Fort Jefferson, in the Dry Tortugas off (A) the southern tip (B) of Florida, can be reach (C) only by (D) boat or plane.", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "27. A (A) zoom lens produces (B) an inverted (C) real image, either on the film in a camera and (D) on the light-sensitive tube of a television camera.", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "28. Supersonic (A) flight is flight that (B) is faster (C) the speed of sound (D).", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "29. The Betataken House Ruins at Navajo National Monument is (A) among the largest (B) and most elaborate (C) cliff dwellings in the country (D).", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "30. It is a common (A) observation that liquids will soak (B) through some materials but not (C) through other (D).", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "31. The number of wild horses (A) on Assateague are (B) increasing lately, resulting (C) in overgrazed (D) marsh and dune grasses.", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "32. The newsreels of Hearst Metrotone News, which formed part of every (A) moviegoer’s experience in the era before television (B), offer an (C) unique record of the events (D) of the 1930s.", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "33. Unlikely (A) gas sport (B) balloons, hot air balloons do not have (C) nets (D).", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "34. Born (A) in Massachusetts in 1852, Albert Fairbanks has begun (B) making (C) banjos in Boston in the late (D) 1870s.", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "35. Dwight David Eisenhower, military officer (A) and thirty-fourth president of the United States, lived (B) in the White House and of least (C) thirty-seven other (D) residences.", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "36. Methane in wetlands comes (A) from (B) soil bacteria that consumes (C) organic plant matter (D).", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "37. Alois Alzheimer made the first observers (A) of the telltale signs (B) of the disease that today bears (C) his name (D).", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "38. Edward MacDowell remembers (A) as the composer (B) of such perennial (C) favorites (D) as “To a Wild Rose” and “To a Water Lily.”", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "39. Animism is the belief (A) that objects and natural phenomena (B) such as rivers, rocks, and wind are live (C) and have feelings (D).", o: ["(A)","(B)","(C)","(D)"] },
+                { q: "40. Newtonian physics accounts (A) for (B) the observing (C) orbits (D) of the planets and the moons.", o: ["(A)","(B)","(C)","(D)"] }
+            ]
+        },
+        {
+            title: "SECTION 3 — READING COMPREHENSION",
+            instr: "Read the passages and choose the best answer for each question based on the text provided.",
+            keys: ["C","D","A","A","B","C","D","B","A","D","B","B","D","A","C","C","A","B","D","B","C","D","A","A","B","D","A","D","A","D","B","A","C","D","A","D","C","B","D","D","B","B","C","A","D","B","D","C","A","C"],
+            questions: [
+                { passage: `<b>Questions 1–10</b><br><br>The hippopotamus is the third largest land animal, smaller only than the elephant and the rhinoceros. Its name comes from two Greek words which mean “river horse.” The long name of this animal is often shortened to the easier-to-handle term “hippo.”<br><br>The hippo has a natural affinity for the water. It does not float on top of the water; instead, it can easily walk along the bottom of a body of water. The hippo commonly remains underwater for three to five minutes and has been known to stay under for up to half an hour before coming up for air.<br><br>In spite of its name, the hippo has relatively little in common with the horse and instead has a number of interesting similarities in common with the whale. When a hippo comes up after a stay at the bottom of a lake or river, it releases air through a blowhole, just like a whale. In addition, the hippo resembles the whale in that they both have thick layers of blubber for protection and they are almost completely hairless.`, 
+                  q: "1. The topic of this passage is", o: ["(A) the largest land animals", "(B) the derivations of animal names", "(C) the characteristics of the hippo", "(D) the relation between the hippo and the whale"] },
+                { q: "2. It can be inferred from the passage that the rhinoceros is", o: ["(A) smaller than the hippo", "(B) equal in size to the elephant", "(C) a hybrid of the hippo and the elephant", "(D) one of the two largest types of land animals"] },
+                { q: "3. The possessive “Its” in sentence 2 refers to", o: ["(A) hippopotamus", "(B) elephant", "(C) rhinoceros", "(D) horse"] },
+                { q: "4. It can be inferred from the passage that the hippopotamus is commonly called a hippo because the word “hippo” is", o: ["(A) simpler to pronounce", "(B) scientifically more accurate", "(C) the original name", "(D) easier for the animal to recognize"] },
+                { q: "5. The word “float” in paragraph 2 is closest in meaning to", o: ["(A) sink", "(B) drift", "(C) eat", "(D) flap"] },
+                { q: "6. According to the passage, what is the maximum time that hippos have been known to stay underwater?", o: ["(A) Three minutes", "(B) Five minutes", "(C) Thirty minutes", "(D) Ninety minutes"] },
+                { q: "7. The expression “has relatively little in common” in paragraph 3 could best be replaced by", o: ["(A) has few interactions", "(B) is not normally found", "(C) has minimal experience", "(D) shares few similarities"] },
+                { q: "8. The passage states that one way in which a hippo is similar to a whale is that", o: ["(A) they both live on the bottoms of rivers", "(B) they both have blowholes", "(C) they are both named after horses", "(D) they both breathe underwater"] },
+                { q: "9. The word “blubber” in the last paragraph is closest in meaning to", o: ["(A) fat", "(B) metal", "(C) water", "(D) skin"] },
+                { q: "10. The passage states that the hippo does not", o: ["(A) like water", "(B) resemble the whale", "(C) have a protective coating", "(D) have much hair"] },
+                { passage: `<b>Questions 11–19</b><br><br>John James Audubon, nineteenth-century artist and naturalist, is known as one of the foremost authorities on North American birds. Born in Les Cayes, Haiti, in 1785, Audubon was raised in France and studied art under French artist Jacques-Louis David. After settling on his father’s Pennsylvania estate at the age of eighteen, he first began to study and paint birds.<br><br>In his young adulthood, Audubon undertook numerous enterprises, generally without a tremendous amount of success; at various times during his life he was involved in a mercantile business, a lumber and grist mill, a taxidermy business, and a school. His general mode of operating a business was to leave it either unattended or in the hands of a partner and take off on excursions through the wilds to paint the natural life that he saw. His business career came to an end in 1819 when he was jailed for debt and forced to file for bankruptcy.<br><br>It was at that time that Audubon began seriously to pursue the dream of publishing a collection of his paintings of birds. For the next six years he painted birds in their natural habitats while his wife worked as a teacher to support the family. His Birds of America, which included engravings of 435 of his colorful and lifelike watercolors, was published in parts during the period from 1826 to 1838 in England. After the success of the English editions, American editions of his work were published in 1839, and his fame and fortune were ensured.`,
+                  q: "11. This passage is mainly about", o: ["(A) North American birds", "(B) Audubon’s route to success as a painter of birds", "(C) the works that Audubon published", "(D) Audubon’s preference for travel in natural habitats"] },
+                { q: "12. The word “foremost” in paragraph 1 is closest in meaning to", o: ["(A) prior", "(B) leading", "(C) first", "(D) largest"] },
+                { q: "13. In the second paragraph, the author mainly discusses", o: ["(A) how Audubon developed his painting style", "(B) Audubon’s involvement in a mercantile business", "(C) where Audubon went on his excursions", "(D) Audubon’s unsuccessful business practices"] },
+                { q: "14. The word “mode” in paragraph 2 could best be replaced by", o: ["(A) method", "(B) vogue", "(C) average", "(D) trend"] },
+                { q: "15. Audubon decided not to continue to pursue business when", o: ["(A) he was injured in an accident at a grist mill", "(B) he decided to study art in France", "(C) he was put in prison because he owed money", "(D) he made enough money from his paintings"] },
+                { q: "16. The word “pursue” in paragraph 3 is closest in meaning to", o: ["(A) imagine", "(B) share", "(C) follow", "(D) deny"] },
+                { q: "17. According to the passage, Audubon’s paintings", o: ["(A) were realistic portrayals", "(B) used only black, white, and gray", "(C) were done in oils", "(D) depicted birds in cages"] },
+                { q: "18. The word “support” in paragraph 2 could best be replaced by", o: ["(A) tolerate", "(B) provide for", "(C) side with", "(D) fight for"] },
+                { q: "19. It can be inferred from the passage that after 1839 Audubon", o: ["(A) unsuccessfully tried to develop new businesses", "(B) continued to be supported by his wife", "(C) traveled to Europe", "(D) became wealthy"] },
+                { passage: `<b>Questions 20–29</b><br><br>Schizophrenia is often confused with multiple personality disorder, yet is quite distinct from it. Schizophrenia is one of the more common mental disorders, considerably more common than multiple personality disorder. The term “schizophrenia” is composed of roots which mean “a splitting of the mind,” but it does not refer to a division into separate and distinct personalities, as occurs in multiple personality disorder. Instead, schizophrenic behavior is generally characterized by illogical thought patterns and withdrawal from reality. Schizophrenics often live in a fantasy world where they hear voices that others cannot hear, often voices of famous people. Schizophrenics tend to withdraw from families and friends and communicate mainly with the “voices” that they hear in their minds.<br><br>It is common for the symptoms of schizophrenia to develop during the late teen years or early twenties, but the causes of schizophrenia are not well understood. It is believed that heredity may play a part in the onset of schizophrenia. In addition, abnormal brain chemistry also seems to have a role; certain brain chemicals, called neurotransmitters, have been found to be at abnormal levels in some schizophrenics.`,
+                  q: "20. The paragraph preceding the passage most probably discusses", o: ["(A) the causes of schizophrenia", "(B) multiple personality disorder", "(C) the most common mental disorder", "(D) possible cures for schizophrenia"] },
+                { q: "21. Which of the following is true about schizophrenia and multiple personality disorder?", o: ["(A) They are relatively similar.", "(B) One is a psychological disorder, while the other is not.", "(C) Many people mistake one for the other.", "(D) Multiple personality disorder occurs more often than schizophrenia."] },
+                { q: "22. “Disorder” in sentence 2 is closest in meaning to which of the following?", o: ["(A) Disruption", "(B) Untidiness", "(C) Misalignment", "(D) Disease"] },
+                { q: "23. It can be inferred from the passage that a “schism” is", o: ["(A) a division into factions", "(B) a mental disease", "(C) a personality trait", "(D) a part of the brain"] },
+                { q: "24. What is NOT true about schizophrenia, according to the passage?", o: ["(A) It is characterized by separate and distinct personalities.", "(B) It often causes withdrawal from reality.", "(C) Its symptoms include illogical thought patterns.", "(D) Its victims tend to hear voices in their minds."] },
+                { q: "25. According to the passage, how do schizophrenics generally relate to their families?", o: ["(A) They are quite friendly with their families.", "(B) They become remote from their families.", "(C) They have an enhanced ability to understand their families.", "(D) They communicate openly with their families."] },
+                { q: "26. It can be inferred from the passage that it would be least common for schizophrenia to develop at the age of", o: ["(A) fifteen", "(B) twenty", "(C) twenty-five", "(D) thirty"] },
+                { q: "27. The word “onset” in paragraph 2 is closest in meaning to", o: ["(A) start", "(B) medication", "(C) effect", "(D) age"] },
+                { q: "28. The word “abnormal” in the last paragraph is closest in meaning to", o: ["(A) unstable", "(B) unregulated", "(C) uncharted", "(D) unusual"] },
+                { q: "29. Where in the passage does the author explain the derivation of the term “schizophrenia”?", o: ["(A) Sentence 3–4", "(B) Sentence 4–5", "(C) Sentence 6", "(D) Paragraph 2"] },
+                { passage: `<b>Questions 30–39</b><br><br>People are often surprised to learn just how long some varieties of trees can live. If asked to estimate the age of the oldest living trees on Earth, they often come up with guesses in the neighborhood of two or perhaps three hundred years. The real answer is considerably larger than that, more than five thousand years.<br><br>The tree that wins the prize for its considerable maturity is the bristlecone pine of California. This venerable pine predates wonders of the ancient world such as the pyramids of Egypt, the Hanging Gardens of Babylon, and the Colossus of Rhodes. It is not nearly as tall as the giant redwood that is also found in California, and, in fact, it is actually not very tall compared with many other trees, often little more than five meters in height. This relatively short height may be one of the factors that aid the bristlecone pine in living to a ripe old age—high winds and inclement weather cannot easily reach the shorter trees and cause damage. An additional factor that contributes to the long life of the bristlecone pine is that this type of tree has a high percentage of resin, which prevents rot from developing in the tree trunk and branches.`,
+                  q: "30. The best title for this passage would be", o: ["(A) The Size of the Bristlecone Pine", "(B) Three-Hundred-Year-Old Forests", "(C) The Wonders of the Ancient World", "(D) An Amazingly Enduring Tree"] },
+                { q: "31. The word “estimate” in sentence 2 is closest in meaning to", o: ["(A) measure", "(B) approximate", "(C) evaluate", "(D) view"] },
+                { q: "32. The expression “in the neighborhood of” in sentence 2 could best be replaced by", o: ["(A) of approximately", "(B) on the same block as", "(C) with the friendliness of", "(D) located close to"] },
+                { q: "33. It can be inferred from the passage that most people", o: ["(A) are quite accurate in their estimates of the ages of trees", "(B) have two to three hundred trees in their neighborhoods", "(C) do not really have any idea how old the oldest trees on Earth are", "(D) can name some three-hundred-year-old trees"] },
+                { q: "34. According to the passage, approximately how old are the oldest trees on Earth?", o: ["(A) Two hundred years old", "(B) Three hundred years old", "(C) Five hundred years old", "(D) Five thousand years old"] },
+                { q: "35. The word “venerable” in paragraph 2 is closest in meaning to", o: ["(A) ancient", "(B) incredible", "(C) towering", "(D) unrecognizable"] },
+                { q: "36. The author mentions the Egyptian pyramids as an example of something that is", o: ["(A) far away", "(B) believed to be strong", "(C) extremely tall", "(D) known to be old"] },
+                { q: "37. Which of the following is true about the bristlecone pine?", o: ["(A) It is as tall as the great pyramids.", "(B) It is never more than five meters in height.", "(C) It is short in comparison to many other trees.", "(D) It can be two to three hundred feet tall."] },
+                { q: "38. The word “inclement” in the last paragraph could best be replaced by", o: ["(A) sunny", "(B) bad", "(C) unusual", "(D) strong"] },
+                { q: "39. The passage states that resin", o: ["(A) assists the tree trunks to develop", "(B) is found only in the bristlecone pine", "(C) flows from the branches to the trunk", "(D) helps stop rot from starting"] },
+                { passage: `<b>Questions 40–50</b><br><br>The organization that today is known as the Bank of America did start out in America, but under quite a different name. Italian American A. P. Giannini established this bank on October 17, 1904, in a renovated saloon in San Francisco’s Italian community of North Beach under the name Bank of Italy, with immigrants and first-time bank customers comprising the majority of his first customers. During its development, Giannini’s bank survived major crises in the form of a natural disaster and a major economic upheaval that not all other banks were able to overcome.<br><br>One major test for Giannini’s bank occurred on April 18, 1906, when a massive earthquake struck San Francisco, followed by a raging fire that destroyed much of the city. Giannini obtained two wagons and teams of horses, filled the wagons with the bank’s reserves, mostly in the form of gold, covered the reserves with crates of oranges, and escaped from the chaos of the city with his clients’ funds protected. In the aftermath of the disaster, Giannini’s bank was the first to resume operations. Unable to install the bank in a proper office setting, Giannini opened up shop on the Washington Street Wharf on a makeshift desk created from boards and barrels.<br><br>In the period following the 1906 fire, the Bank of Italy continued to prosper and expand. By 1918 there were twenty-four branches of the Bank of Italy, and by 1928 Giannini had acquired numerous other banks, including a Bank of America located in New York City. In 1930 he consolidated all the branches of the Bank of Italy, the Bank of America in New York City, and another Bank of America that he had formed in California into the Bank of America National Trust and Savings Association.<br><br>A second major crisis for the bank occurred during the Great Depression of the 1930s. Although Giannini had already retired prior to the darkest days of the Depression, he became incensed when his successor began selling off banks during the bad economic times. Giannini resumed leadership of the bank at the age of sixty-two. Under Giannini’s leadership, the bank weathered the storm of the Depression and subsequently moved into a phase of overseas development.`,
+                  q: "40. According to the passage, Giannini", o: ["(A) opened the Bank of America in 1904", "(B) worked in a bank in Italy", "(C) set up the Bank of America prior to setting up the Bank of Italy", "(D) later changed the name of the Bank of Italy"] },
+                { q: "41. Where did Giannini open his first bank?", o: ["(A) In New York City", "(B) In what used to be a bar", "(C) On Washington Street Wharf", "(D) On a makeshift desk"] },
+                { q: "42. According to the passage, which of the following is NOT true about the San Francisco earthquake?", o: ["(A) It happened in 1906.", "(B) It occurred in the aftermath of a fire.", "(C) It caused problems for Giannini’s bank.", "(D) It was a tremendous earthquake."] },
+                { q: "43. The word “raging” in paragraph 2 could best be replaced by", o: ["(A) angered", "(B) localized", "(C) intense", "(D) feeble"] },
+                { q: "44. It can be inferred from the passage that Giannini used crates of oranges after the earthquake", o: ["(A) to hide the gold", "(B) to fill up the wagons", "(C) to provide nourishment for his customers", "(D) to protect the gold from the fire"] },
+                { q: "45. The word “chaos” in paragraph 2 is closest in meaning to", o: ["(A) legal system", "(B) extreme heat", "(C) overdevelopment", "(D) total confusion"] },
+                { q: "46. The word “consolidated” in paragraph 3 is closest in meaning to", o: ["(A) hardened", "(B) merged", "(C) moved", "(D) sold"] },
+                { q: "47. The passage states that after his retirement, Giannini", o: ["(A) began selling off banks", "(B) caused economic misfortune to occur", "(C) supported the bank’s new management", "(D) returned to work"] },
+                { q: "48. The expression “weathered the storm of” in paragraph 4 could best be replaced by", o: ["(A) found a cure for", "(B) rained on the parade of", "(C) survived the ordeal of", "(D) blew its stack at"] },
+                { q: "49. Where in the passage does the author describe Giannini’s first banking clients?", o: ["(A) Paragraph 1", "(B) First part of paragraph 2", "(C) Last sentence of paragraph 2", "(D) Paragraph 3"] },
+                { q: "50. The paragraph following the passage most likely discusses", o: ["(A) bank failures during the Great Depression", "(B) a third major crisis of the Bank of America", "(C) the international development of the Bank of America", "(D) how Giannini spent his retirement"] }
+            ]
+        }
+    ];
+
+    function startExam() {
+        const name = document.getElementById('name').value;
+        const npm = document.getElementById('npm').value;
+        const cls = document.getElementById('class').value;
+        if (!name || !npm || !cls) return alert("Mohon lengkapi data login!");
+        userData = { name, npm, className: cls };
+        document.getElementById('display-info').innerText = `${name} (${npm}) - ${cls}`;
+        document.getElementById('login-page').classList.add('hidden');
+        document.getElementById('exam-page').classList.remove('hidden');
+        renderSection();
+        setupSecurity();
+    }
+
+    function renderSection() {
+    const sec = examData[currentSectionIdx];
+    document.getElementById('section-title').innerText = sec.title;
+    
+    let html = `<div class='instruction'>${sec.instr}</div>`;
+
+    if (sec.audioUrl) {
+        html += `
+            <div class="audio-box" style="background: #fdfdfd; border: 2px solid #3498db; padding: 25px; border-radius: 15px; text-align: center; margin-bottom: 25px;">
+                <div style="font-size: 35px; margin-bottom: 10px;">🎧</div>
+                <strong style="font-size: 18px; color: #2c3e50;">Listening Section</strong><br>
+                
+                <audio id="listeningAudio">
+                    <source src="${sec.audioUrl}" type="audio/mpeg">
+                </audio>
+
+                <div style="margin-top: 15px;">
+                    <button type="button" id="btnPlay" onclick="startSecurePlay()" 
+                        style="background-color: #3498db; color: white; padding: 12px 30px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 16px;">
+                        ▶️ Putar Audio
+                    </button>
+                </div>
+                
+                <p id="audio-msg" style="font-size: 12px; color: #e74c3c; margin-top: 10px; font-weight: bold;">
+                    *Audio hanya dapat diputar 1x. Jangan merefresh halaman.
+                </p>
+            </div>
+        `;
+    }
+
+    // Bagian render pertanyaan
+    sec.questions.forEach((qObj, i) => {
+        if (qObj.passage) html += `<div class='passage'>${qObj.passage}</div>`;
+        const questionText = qObj.q ? `<strong>${qObj.q}</strong>` : `<strong>Question ${i+1}</strong>`;
+        html += `<div class='question-block' style='margin-bottom: 20px;'><p>${questionText}</p>`;
+        qObj.o.forEach((opt, oi) => {
+            const val = String.fromCharCode(65 + oi);
+            html += `<label style='display: block; margin-bottom: 5px; cursor: pointer;'>
+                        <input type='radio' name='q${i}' value='${val}'> ${opt}
+                     </label>`;
+        });
+        html += `</div>`;
+    });
+    
+    document.getElementById('exam-content').innerHTML = html;
+    window.scrollTo(0,0);
+}
+
+function startSecurePlay() {
+    const audio = document.getElementById('listeningAudio');
+    const btn = document.getElementById('btnPlay');
+    const msg = document.getElementById('audio-msg');
+
+    if (audio) {
+        // 1. Paksa browser memuat ulang source untuk menghindari error "Not Found"
+        audio.load(); 
+
+        // 2. Kunci fitur 'seeking' (mencegah audio dipercepat/diseret)
+        audio.onseeking = function() {
+            audio.currentTime = lastPlayedTime;
+        };
+        let lastPlayedTime = 0;
+        audio.ontimeupdate = function() {
+            if (!audio.seeking) {
+                lastPlayedTime = audio.currentTime;
+            }
+        };
+
+        audio.play().then(() => {
+            btn.disabled = true;
+            btn.innerHTML = "⌛ Audio Sedang Diputar...";
+            btn.style.backgroundColor = "#bdc3c7";
+            btn.style.cursor = "not-allowed";
+            msg.innerText = "⚠️ Audio sedang berjalan. Durasi terkunci (Tidak bisa dipercepat/diulang).";
+            
+            audio.oncontextmenu = (e) => e.preventDefault();
+        }).catch(err => {
+            // Jika error karena link Google Drive limit, ini akan muncul
+            alert("Gagal memutar suara. Hal ini biasanya karena limit akses file atau koneksi internet.");
+            console.error(err);
+        });
+
+        audio.onended = function() {
+            btn.innerHTML = "✅ Selesai";
+            msg.style.color = "#27ae60";
+            msg.innerText = "Audio telah selesai. Silakan lanjut menjawab.";
+            // Hapus referensi agar tidak bisa diputar ulang lewat console
+            audio.src = ""; 
+        };
+    }
+}
+
+    function setupSecurity() {
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden && !isFinished) {
+                violations++;
+                document.getElementById('violation-count').innerText = `Pelanggaran: ${violations}/3`;
+                
+                if (violations >= 3) { 
+                    alert("Batas pelanggaran tercapai! Sesi otomatis diakhiri dan nilai saat ini akan disubmit."); 
+                    submitFinalData();
+                } else {
+                    alert("PERINGATAN: Dilarang pindah tab selama ujian berlangsung!");
+                }
+            }
+        });
+    }
+
+    function calculateCurrentScore() {
+        const sec = examData[currentSectionIdx];
+        let score = 0;
+        sec.keys.forEach((k, i) => {
+            const ans = document.querySelector(`input[name="q${i}"]:checked`);
+            if (ans && ans.value === k) score++;
+        });
+        
+        if (currentSectionIdx === 0) userScores.listening = score;
+        else if (currentSectionIdx === 1) userScores.structure = score;
+        else if (currentSectionIdx === 2) userScores.reading = score;
+    }
+
+    function submitSection() {
+        calculateCurrentScore();
+        currentSectionIdx++;
+        
+        if (currentSectionIdx < examData.length) { 
+            alert("Jawaban disimpan. Lanjut ke bagian berikutnya."); 
+            renderSection(); 
+        } else { 
+            submitFinalData();
+        }
+    }
+
+    async function submitFinalData() {
+        isFinished = true; // Mencegah triger violation saat halaman reload nanti
+        
+        // Buat payload / kumpulan data untuk dioper ke Google Sheet
+        const payload = {
+            name: userData.name,
+            npm: userData.npm,
+            kelas: userData.className,
+            listening: userScores.listening,
+            structure: userScores.structure,
+            reading: userScores.reading,
+            violations: violations + "x (" + jenisPelanggaranTerakhir + ")"
+        };
+        
+        try {
+            await fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(payload)
+            });
+        } catch (e) {
+            console.error("Gagal mengirim data:", e);
+        }
+        
+        alert("Ujian Selesai. Data telah berhasil disimpan ke database!"); 
+        location.reload(); 
+    }
+</script>
+
+</body>
+</html>
