@@ -59,13 +59,21 @@
     let userScores = { listening: 0, structure: 0, reading: 0 };
     let isFinished = false;
 
-    window.onblur = function() {
-        if (isFinished) return;
-        violations++;
-        jenisPelanggaranTerakhir = "tab_switch"; 
-        document.getElementById('violation-count').innerText = "Pelanggaran: " + violations + "/3";
-        alert("Peringatan: Jangan pindah tab atau membuka aplikasi lain!");
-    };
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden && !isFinished && !isProcessingViolation) {
+            isProcessingViolation = true; // Kunci agar tidak muncul bertubi-tubi
+            violations++;
+            jenisPelanggaranTerakhir = "tab_switch";
+
+            if (violations >= 3) {
+                alert("❌ Batas pelanggaran tercapai! Jawaban Anda akan dikirim otomatis.");
+                submitFinalData();
+            } else {
+                alert("⚠️ PERINGATAN " + violations + "/3: Jangan pindah tab atau membuka aplikasi lain!");
+                isProcessingViolation = false; // Buka kunci setelah tombol OK di klik
+            }
+        }
+    });
 
     window.onresize = function() {
         if (isFinished) return;
