@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Academic Writing Companion – Expanded Edition</title>
+  <style>
+    :root {
+      --bg: #f6f8fc;
+      --panel: #ffffff;
+      --panel2: #f8fbff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --line: #dce4f1;
+      --primary: #3559e8;
+      --primary-soft: #eaf0ff;
+      --good: #0f766e;
+      --good-soft: #ecfdf5;
+      --warn: #b45309;
+      --warn-soft: #fffbeb;
+      --bad: #b91c1c;
+      --bad-soft: #fff1f2;
+      --shadow: 0 12px 30px rgba(24,32,51,.08);
+      --radius: 22px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:linear-gradient(180deg,#f8fbff 0%,var(--bg) 100%);
+      color:var(--text);
+    }
+    a{color:inherit;text-decoration:none}
+    button,input,textarea,select{font:inherit}
+    .app{display:grid;grid-template-columns:286px 1fr;min-height:100vh}
+    .sidebar{
+      position:sticky;top:0;height:100vh;overflow:auto;
+      background:rgba(255,255,255,.84);backdrop-filter:blur(12px);
+      border-right:1px solid var(--line);padding:22px 18px;
+    }
+    .brand{
+      display:flex;gap:12px;align-items:center;padding:14px;
+      background:var(--panel);border:1px solid var(--line);
+      border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px;
+    }
+    .logo{
+      width:46px;height:46px;border-radius:15px;display:grid;place-items:center;
+      background:linear-gradient(135deg,var(--primary),#7c3aed);
+      color:#fff;font-weight:800;flex:0 0 auto;
+    }
+    .brand h1{margin:0 0 3px;font-size:16px}
+    .brand p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}
+    .nav-title{
+      margin:18px 10px 8px;color:var(--muted);font-size:12px;
+      text-transform:uppercase;letter-spacing:.08em;
+    }
+    .nav{display:grid;gap:8px}
+    .nav a{
+      display:block;padding:12px 14px;border-radius:14px;border:1px solid transparent;
+      color:var(--text);
+    }
+    .nav a:hover,.nav a.active{background:var(--primary-soft);border-color:#cdd8ff;color:var(--primary)}
+    .mini-card{
+      margin-top:16px;padding:14px;border-radius:18px;border:1px solid var(--line);
+      background:var(--panel);box-shadow:var(--shadow);
+    }
+    .mini-card h3{margin:0 0 8px;font-size:14px}
+    .mini-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.55}
+    .content{padding:28px;max-width:1560px;width:100%}
+    .hero{
+      background:linear-gradient(135deg,#ffffff 0%,#f5f8ff 100%);
+      border:1px solid var(--line);border-radius:30px;box-shadow:var(--shadow);
+      padding:28px;margin-bottom:24px;display:grid;gap:18px;
+    }
+    .hero-top{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:flex-start}
+    .hero h2{margin:0;font-size:clamp(28px,4vw,44px);line-height:1.08;letter-spacing:-.03em}
+    .hero p{margin:10px 0 0;color:var(--muted);line-height:1.65;max-width:980px}
+    .pill-row{display:flex;flex-wrap:wrap;gap:10px}
+    .pill{
+      padding:8px 12px;border-radius:999px;background:#f2f5ff;color:#2f4280;
+      border:1px solid #d8e2ff;font-size:13px;white-space:nowrap;
+    }
+    .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+    .stat{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px}
+    .stat .label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+    .stat .value{margin-top:6px;font-size:28px;font-weight:800}
+    .stat .desc{margin-top:6px;color:var(--muted);font-size:13px;line-height:1.45}
+    .toolbar{
+      display:grid;grid-template-columns:1.2fr .7fr .7fr .8fr;gap:12px;margin:18px 0 24px;
+    }
+    .search,.select,.textarea{
+      width:100%;border:1px solid var(--line);background:rgba(255,255,255,.97);
+      border-radius:16px;padding:14px 16px;outline:none;box-shadow:0 4px 16px rgba(24,32,51,.04)
+    }
+    .search:focus,.select:focus,.textarea:focus{border-color:#b8c7ff;box-shadow:0 0 0 4px rgba(53,89,232,.08)}
+    .select{cursor:pointer}
+    .section{margin-bottom:24px;scroll-margin-top:18px}
+    .section-header{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+    .section-header h3{margin:0;font-size:22px}
+    .section-header p{margin:4px 0 0;color:var(--muted);line-height:1.55;max-width:980px}
+    .grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px}
+    .span-12{grid-column:span 12}
+    .span-8{grid-column:span 8}
+    .span-7{grid-column:span 7}
+    .span-6{grid-column:span 6}
+    .span-5{grid-column:span 5}
+    .span-4{grid-column:span 4}
+    .span-3{grid-column:span 3}
+    .card{
+      background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px
+    }
+    .card h4{margin:0 0 8px;font-size:16px}
+    .card p,.card li{color:var(--muted);line-height:1.65;font-size:14px}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+    .chip{
+      padding:8px 10px;border-radius:999px;background:#f4f7fc;border:1px solid var(--line);
+      font-size:13px;color:#344060
+    }
+    .btn-row{display:flex;flex-wrap:wrap;gap:8px}
+    .btn{
+      border:1px solid var(--line);background:#fff;color:var(--text);border-radius:999px;padding:9px 12px;cursor:pointer;
+      transition:transform .15s ease,box-shadow .15s ease,background .15s ease,color .15s ease
+    }
+    .btn:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(24,32,51,.08)}
+    .btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .btn.soft{background:var(--primary-soft);color:var(--primary);border-color:#d8e2ff}
+    .btn.good{background:var(--good-soft);color:var(--good);border-color:#c7f2de}
+    .btn.warn{background:var(--warn-soft);color:var(--warn);border-color:#fde68a}
+    .btn.bad{background:var(--bad-soft);color:var(--bad);border-color:#fecdd3}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .callout{
+      border-radius:18px;border:1px solid var(--line);background:#fcfdff;padding:14px 16px
+    }
+    .callout strong{color:var(--text)}
+    .example-card{
+      border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,#fff 0%,#fbfdff 100%);overflow:hidden
+    }
+    .example-head{
+      padding:16px 16px 0;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center
+    }
+    .example-head h5{margin:0;font-size:15px}
+    .example-body{padding:14px 16px 16px}
+    .example-mode{
+      min-height:118px;padding:14px;border-radius:16px;background:#f8fbff;border:1px solid #dfe7f6;
+      white-space:pre-wrap;line-height:1.65;color:var(--text);font-size:14px
+    }
+    .accordion{display:grid;gap:10px}
+    details{
+      background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden
+    }
+    summary{cursor:pointer;list-style:none;padding:16px 18px;font-weight:700}
+    summary::-webkit-details-marker{display:none}
+    .detail-body{padding:0 18px 18px;color:var(--muted);line-height:1.65}
+    .table-wrap{
+      overflow:auto;border-radius:18px;border:1px solid var(--line);background:var(--panel);box-shadow:var(--shadow)
+    }
+    table{width:100%;border-collapse:collapse;min-width:780px}
+    th,td{
+      padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top;font-size:14px
+    }
+    th{background:#f5f7ff;position:sticky;top:0;z-index:1}
+    .checklist{display:grid;gap:10px}
+    .check-item{
+      display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);
+      border-radius:14px;background:#fff
+    }
+    .check-item input{margin-top:3px}
+    .mini-tools{display:grid;gap:12px}
+    .result{
+      border:1px solid var(--line);border-radius:18px;background:#fbfdff;padding:14px;
+      white-space:pre-wrap;line-height:1.65;color:var(--muted);min-height:180px
+    }
+    .metric-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .metric{
+      border:1px solid var(--line);background:#fff;border-radius:16px;padding:12px
+    }
+    .metric .k{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+    .metric .v{font-size:22px;font-weight:800;margin-top:4px}
+    .hidden{display:none !important}
+    .footer{padding:24px 0 8px;color:var(--muted);font-size:13px}
+    .bank-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .bank-card{
+      border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:var(--shadow);padding:16px;
+      display:grid;gap:10px;min-height:220px
+    }
+    .bank-card h5{margin:0;font-size:15px}
+    .bank-card .theme{color:var(--primary);font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+    .bank-card .source{font-size:12px;color:var(--muted);line-height:1.45}
+    .bank-card .statement{font-size:14px;line-height:1.6;color:var(--text)}
+    .bank-card .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+    .pill-mini{font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:#f8fafc;color:#334155}
+    .note-box{
+      padding:14px 16px;border:1px solid var(--line);border-radius:18px;background:#f9fbff;line-height:1.6;color:var(--muted)
+    }
+    .section-title-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    @media (max-width:1180px){
+      .app{grid-template-columns:1fr}
+      .sidebar{position:relative;height:auto}
+      .toolbar,.stats,.two-col,.metric-grid,.bank-grid{grid-template-columns:1fr 1fr}
+      .span-8,.span-7,.span-6,.span-5,.span-4,.span-3{grid-column:span 12}
+    }
+    @media (max-width:760px){
+      .content{padding:18px}
+      .toolbar,.stats,.two-col,.metric-grid,.bank-grid{grid-template-columns:1fr}
+      .hero{padding:20px}
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">AW</div>
+      <div>
+        <h1>Academic Writing Companion</h1>
+        <p>Interactive support for Humanities writing: thesis work, examples, analysis, and referencing.</p>
+      </div>
+    </div>
+
+    <div class="nav-title">Navigation</div>
+    <nav class="nav" id="navLinks">
+      <a href="#overview" class="active">Overview</a>
+      <a href="#conventions">Conventions</a>
+      <a href="#sentence-lab">Sentence Lab</a>
+      <a href="#thesis-bank">Thesis Bank</a>
+      <a href="#paragraphs">Paragraphs</a>
+      <a href="#critical">Critical Inquiry</a>
+      <a href="#clarity">Conciseness & Clarity</a>
+      <a href="#referencing">Referencing</a>
+      <a href="#practice">Practice Zone</a>
+    </nav>
+
+    <div class="mini-card">
+      <h3>How to use</h3>
+      <p>Search by topic, open the thesis bank, load a model into the analyzer, and check your references in the checker.</p>
+    </div>
+
+    <div class="mini-card">
+      <h3>Source note</h3>
+      <p>The thesis bank is adapted from claim patterns in peer-reviewed journal articles, including work in applied linguistics, translation studies, identity studies, and media/humanities research.</p>
+    </div>
+  </aside>
+
+  <main class="content">
+    <section class="hero" id="overview">
+      <div class="hero-top">
+        <div>
+          <h2>Junior Year Academic Writing for Humanities</h2>
+          <p>
+            A single-file learning app for Penulisan Ilmiah / Academic Writing. It deepens each topic with source text,
+            improvement, rule extraction, analysis, complementary materials, a 55-sentence thesis bank, a stronger thesis
+            analyzer, and a Referencing Checker.
+          </p>
+        </div>
+        <div class="pill-row">
+          <span class="pill">Source → Improve</span>
+          <span class="pill">Rules + Analysis</span>
+          <span class="pill">55 thesis models</span>
+          <span class="pill">Referencing checker</span>
+          <span class="pill">Humanities focus</span>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="label">Modules</div><div class="value">8</div><div class="desc">Conventions to referencing with guided practice.</div></div>
+        <div class="stat"><div class="label">Thesis bank</div><div class="value">55</div><div class="desc">Adapted examples from journal-article claims.</div></div>
+        <div class="stat"><div class="label">Writing tools</div><div class="value">2</div><div class="desc">Thesis analyzer plus referencing checker.</div></div>
+        <div class="stat"><div class="label">Focus</div><div class="value">Argue</div><div class="desc">Build claims, not just summaries.</div></div>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <input id="searchInput" class="search" type="search" placeholder="Search modules, thesis models, or rules: citation, hedging, identity, translation, film..." />
+      <select id="filterSelect" class="select">
+        <option value="all">All modules</option>
+        <option value="conventions">Conventions</option>
+        <option value="sentence">Sentence Lab</option>
+        <option value="thesis">Thesis Bank</option>
+        <option value="paragraph">Paragraphs</option>
+        <option value="critical">Critical Inquiry</option>
+        <option value="clarity">Conciseness & Clarity</option>
+        <option value="reference">Referencing</option>
+        <option value="practice">Practice Zone</option>
+      </select>
+      <button id="resetBtn" class="select" style="background:#eef3ff;color:var(--primary);font-weight:700;cursor:pointer;">Reset filters</button>
+      <button id="randomBtn" class="select" style="background:#ecfdf5;color:var(--good);font-weight:700;cursor:pointer;">Random thesis model</button>
+    </div>
+
+    <section class="section" id="conventions" data-module="conventions">
+      <div class="section-header">
+        <div>
+          <h3>1. Basic Conventions</h3>
+          <p>Academic writing is not only about grammar. It also demands distance, precision, discipline-specific tone, and consistent source use.</p>
+        </div>
+      </div>
+
+      <div class="grid module-card" data-tags="abbreviation objectivity referencing colloquial emotive first person second person contractions academic tone">
+        <div class="card span-8">
+          <h4>What counts as academic convention?</h4>
+          <p>These conventions help the reader trust the writer: use abbreviations properly, stay objective, cite sources, and avoid informal language.</p>
+          <div class="chips">
+            <span class="chip">Define abbreviations once</span>
+            <span class="chip">Avoid slang and contractions</span>
+            <span class="chip">Avoid first and second person</span>
+            <span class="chip">Prefer neutral wording</span>
+            <span class="chip">Keep evidence visible</span>
+          </div>
+        </div>
+        <div class="card span-4">
+          <h4>Core rule</h4>
+          <p><strong>Academic style =</strong> formal, evidence-led, and controlled. A good paragraph does not sound like conversation or personal diary writing.</p>
+        </div>
+
+        <div class="card span-6 example-card" data-example="abbr">
+          <div class="example-head">
+            <h5>Abbreviation example</h5>
+            <div class="btn-row">
+              <button class="btn soft mode-btn" data-mode="source">Source text</button>
+              <button class="btn mode-btn" data-mode="improved">Improvement</button>
+              <button class="btn mode-btn" data-mode="rule">Rule</button>
+              <button class="btn mode-btn" data-mode="analysis">Analysis</button>
+            </div>
+          </div>
+          <div class="example-body"><div class="example-mode" data-panel></div></div>
+        </div>
+
+        <div class="card span-6 example-card" data-example="objectivity">
+          <div class="example-head">
+            <h5>Objectivity example</h5>
+            <div class="btn-row">
+              <button class="btn soft mode-btn" data-mode="source">Source text</button>
+              <button class="btn mode-btn" data-mode="improved">Improvement</button>
+              <button class="btn mode-btn" data-mode="rule">Rule</button>
+              <button class="btn mode-btn" data-mode="analysis">Analysis</button>
+            </div>
+          </div>
+          <div class="example-body"><div class="example-mode" data-panel></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sentence-lab" data-module="sentence">
+      <div class="section-header">
+        <div>
+          <h3>2. Sentence Lab</h3>
+          <p>Sentence work is where academic tone becomes visible: voice, structure, hedging, and rhythm affect the reader’s confidence in your argument.</p>
+        </div>
+      </div>
+
+      <div class="grid module-card" data-tags="sentence active passive hedging subject verb object sentence variety structure voice">
+        <div class="card span-6">
+          <h4>What to control in a sentence</h4>
+          <ul>
+            <li>Subject-verb-object clarity</li>
+            <li>Active or passive voice, depending on purpose</li>
+            <li>Hedging when the claim must stay cautious</li>
+            <li>Sentence length and rhythm</li>
+          </ul>
+        </div>
+        <div class="card span-6">
+          <h4>Useful rule</h4>
+          <p>Purdue OWL notes that academic writing benefits from concise structure, sentence variety, and voice choices that fit the purpose of the text rather than a fixed rule applied everywhere.</p>
+        </div>
+
+        <div class="card span-6 example-card" data-example="active-passive">
+          <div class="example-head">
+            <h5>Active and passive voice</h5>
+            <div class="btn-row">
+              <button class="btn soft mode-btn" data-mode="source">Source text</button>
+              <button class="btn mode-btn" data-mode="improved">Improvement</button>
+              <button class="btn mode-btn" data-mode="rule">Rule</button>
+              <button class="btn mode-btn" data-mode="analysis">Analysis</button>
+            </div>
+          </div>
+          <div class="example-body"><div class="example-mode" data-panel></div></div>
+        </div>
+
+        <div class="card span-6 example-card" data-example="hedging">
+          <div class="example-head">
+            <h5>Hedging and tentativeness</h5>
+            <div class="btn-row">
+              <button class="btn soft mode-btn" data-mode="source">Source text</button>
+              <button class="btn mode-btn" data-mode="improved">Improvement</button>
+              <button class="btn mode-btn" data-mode="rule">Rule</button>
+              <button class="btn mode-btn" data-mode="analysis">Analysis</button>
+            </div>
+          </div>
+          <div class="example-body"><div class="example-mode" data-panel></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="thesis-bank" data-module="thesis">
+      <div class="section-header">
+        <div>
+          <h3>3. Thesis Bank</h3>
+          <p>Fifty-five thesis-style sentences are grouped here as model patterns. They are adapted from journal-article claims, so they are useful for learning how a thesis statement sounds in Humanities writing.</p>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card span-8">
+          <h4>Thesis blueprint</h4>
+          <div class="two-col">
+            <div class="callout">
+              <strong>Object</strong><br />
+              What text, problem, genre, or event are you analyzing?
+            </div>
+            <div class="callout">
+              <strong>Lens</strong><br />
+              Through what technique, theory, or concept will you read it?
+            </div>
+            <div class="callout">
+              <strong>Claim</strong><br />
+              What argument will you defend about the object?
+            </div>
+            <div class="callout">
+              <strong>Stake</strong><br />
+              Why does this interpretation matter?
+            </div>
+          </div>
+        </div>
+        <div class="card span-4">
+          <h4>How to read the bank</h4>
+          <p>Use the bank for patterns, not as copy-paste material. A strong thesis is specific, arguable, and guided by a clear analytical lens.</p>
+          <div class="chips">
+            <span class="chip">Literature</span>
+            <span class="chip">Linguistics</span>
+            <span class="chip">Translation</span>
+            <span class="chip">Identity</span>
+            <span class="chip">Media</span>
+            <span class="chip">AI / digital</span>
+          </div>
+        </div>
+
+        <div class="card span-12">
+          <div class="section-title-row">
+            <h4 style="margin:0">Filter thesis models</h4>
+            <div class="btn-row">
+              <button class="btn soft bank-filter" data-bank-filter="all">All</button>
+              <button class="btn bank-filter" data-bank-filter="citation">Citation</button>
+              <button class="btn bank-filter" data-bank-filter="abstract">Abstract</button>
+              <button class="btn bank-filter" data-bank-filter="stance">Stance</button>
+              <button class="btn bank-filter" data-bank-filter="identity">Identity</button>
+              <button class="btn bank-filter" data-bank-filter="translation">Translation</button>
+              <button class="btn bank-filter" data-bank-filter="media">Media</button>
+              <button class="btn bank-filter" data-bank-filter="literature">Literature</button>
+              <button class="btn bank-filter" data-bank-filter="ai">AI</button>
+              <button class="btn bank-filter" data-bank-filter="society">Society</button>
+              <button class="btn bank-filter" data-bank-filter="mixed">Mixed</button>
+            </div>
+          </div>
+          <div style="height:10px"></div>
+          <input id="bankSearch" class="search" type="search" placeholder="Search thesis models by theme, source note, or wording..." />
+        </div>
+
+        <div class="span-12">
+          <div id="thesisCount" class="note-box">Loading thesis bank...</div>
+        </div>
+
+        <div class="span-12 bank-grid" id="thesisGrid"></div>
+
+        <div class="card span-12">
+          <h4>Source trail used to adapt the bank</h4>
+          <p>The bank draws on accessible publisher pages and abstracts from peer-reviewed research in applied linguistics, identity studies, translation studies, media, and humanities. The examples are adapted into thesis-form practice sentences rather than reproduced as quotations.</p>
+          <div class="chips">
+            <span class="chip">ScienceDirect</span>
+            <span class="chip">Springer</span>
+            <span class="chip">Taylor & Francis</span>
+            <span class="chip">Cambridge</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="paragraphs" data-module="paragraph">
+      <div class="section-header">
+        <div>
+          <h3>4. Paragraphs</h3>
+          <p>A strong paragraph is unified, ordered, and supported by evidence. It should have a clear topic sentence and logical development.</p>
+        </div>
+      </div>
+
+      <div class="grid module-card" data-tags="paragraph topic sentence signposting evidence cohesion thesis introduction body conclusion">
+        <div class="card span-6">
+          <h4>What a paragraph should do</h4>
+          <ul>
+            <li>Present one main idea.</li>
+            <li>Support that idea with evidence or examples.</li>
+            <li>Use signposting language to show logical flow.</li>
+            <li>Aim for about 45–75 words in many academic contexts.</li>
+          </ul>
+        </div>
+        <div class="card span-6">
+          <h4>Signposting language</h4>
+          <p>Use these to guide your reader:</p>
+          <div class="chips">
+            <span class="chip">however</span>
+            <span class="chip">by contrast</span>
+            <span class="chip">moreover</span>
+            <span class="chip">for example</span>
+            <span class="chip">in conclusion</span>
+            <span class="chip">overall</span>
+            <span class="chip">because of</span>
+            <span class="chip">in particular</span>
+          </div>
+        </div>
+
+        <div class="card span-12">
+          <h4>Good paragraph logic</h4>
+          <p>
+            Start with a topic sentence, explain the point, add evidence, then connect the evidence back to the argument.
+            A paragraph should answer: <strong>what</strong> is being said, <strong>why</strong> it matters, and <strong>how</strong> it supports the thesis.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="critical" data-module="critical">
+      <div class="section-header">
+        <div>
+          <h3>5. Critical Inquiry</h3>
+          <p>Critical writing enters the debate. It compares sources, evaluates arguments, and explains why an interpretation matters.</p>
+        </div>
+      </div>
+
+      <div class="grid module-card" data-tags="critical inquiry argument claim evidence reasoning fallacy debate question how">
+        <div class="card span-6">
+          <h4>From description to critique</h4>
+          <p>Critical writing does more than list features. It interprets evidence, links it to a claim, and shows why the claim matters in the wider academic debate.</p>
+        </div>
+        <div class="card span-6">
+          <h4>Research questions</h4>
+          <p>A productive research question is usually clear, focused, and analytical rather than merely descriptive. The question should let the writer build an argument rather than summarize a plot or list features.</p>
+        </div>
+
+        <div class="card span-6 example-card" data-example="critical-claim">
+          <div class="example-head">
+            <h5>Claim–evidence analysis</h5>
+            <div class="btn-row">
+              <button class="btn soft mode-btn" data-mode="source">Source text</button>
+              <button class="btn mode-btn" data-mode="improved">Improvement</button>
+              <button class="btn mode-btn" data-mode="rule">Rule</button>
+              <button class="btn mode-btn" data-mode="analysis">Analysis</button>
+            </div>
+          </div>
+          <div class="example-body"><div class="example-mode" data-panel></div></div>
+        </div>
+
+        <div class="card span-6 example-card" data-example="critical-fallacy">
+          <div class="example-head">
+            <h5>Fallacy check</h5>
+            <div class="btn-row">
+              <button class="btn soft mode-btn" data-mode="source">Source text</button>
+              <button class="btn mode-btn" data-mode="improved">Improvement</button>
+              <button class="btn mode-btn" data-mode="rule">Rule</button>
+              <button class="btn mode-btn" data-mode="analysis">Analysis</button>
+            </div>
+          </div>
+          <div class="example-body"><div class="example-mode" data-panel></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="clarity" data-module="clarity">
+      <div class="section-header">
+        <div>
+          <h3>6. Conciseness and Clarity</h3>
+          <p>Concision is not only shorter sentences. It means removing redundancy, choosing precise words, and preserving meaning without clutter.</p>
+        </div>
+      </div>
+
+      <div class="grid module-card" data-tags="conciseness clarity redundancy nominalisation expletive simple words modifiers verbose wordiness">
+        <div class="card span-6">
+          <h4>Writing cleanly</h4>
+          <p>Cambridge-style writing guidance emphasizes that concision means identifying redundancy, unnecessary modifiers, and throat-clearing so the sentence carries only the needed meaning.</p>
+        </div>
+        <div class="card span-6">
+          <h4>Common repairs</h4>
+          <ul>
+            <li>replace long, weak phrases with direct words</li>
+            <li>reduce expletive constructions</li>
+            <li>convert nominalisations back into verbs</li>
+            <li>remove repetition and filler</li>
+          </ul>
+        </div>
+
+        <div class="card span-6 example-card" data-example="clarity-wordy">
+          <div class="example-head">
+            <h5>Wordiness example</h5>
+            <div class="btn-row">
+              <button class="btn soft mode-btn" data-mode="source">Source text</button>
+              <button class="btn mode-btn" data-mode="improved">Improvement</button>
+              <button class="btn mode-btn" data-mode="rule">Rule</button>
+              <button class="btn mode-btn" data-mode="analysis">Analysis</button>
+            </div>
+          </div>
+          <div class="example-body"><div class="example-mode" data-panel></div></div>
+        </div>
+
+        <div class="card span-6 example-card" data-example="clarity-nominalisation">
+          <div class="example-head">
+            <h5>Nominalisation example</h5>
+            <div class="btn-row">
+              <button class="btn soft mode-btn" data-mode="source">Source text</button>
+              <button class="btn mode-btn" data-mode="improved">Improvement</button>
+              <button class="btn mode-btn" data-mode="rule">Rule</button>
+              <button class="btn mode-btn" data-mode="analysis">Analysis</button>
+            </div>
+          </div>
+          <div class="example-body"><div class="example-mode" data-panel></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="referencing" data-module="reference">
+      <div class="section-header">
+        <div>
+          <h3>7. Referencing</h3>
+          <p>Referencing shows the reader where ideas, quotations, and borrowed concepts come from. It gives credibility and protects academic integrity.</p>
+        </div>
+      </div>
+
+      <div class="grid module-card" data-tags="referencing citation bibliography harvard vancouver reference list works cited ellipsis square brackets">
+        <div class="card span-6">
+          <h4>Core parts of referencing</h4>
+          <ul>
+            <li><strong>In-text citation</strong> for the borrowed idea.</li>
+            <li><strong>Reference list</strong> for full publication details.</li>
+            <li><strong>Bibliography</strong> when your course asks for sources consulted beyond the cited ones.</li>
+          </ul>
+        </div>
+        <div class="card span-6">
+          <h4>Quotation tools</h4>
+          <p>Use ellipsis to omit words, square brackets to add clarifying words, and paraphrase when the exact wording is not essential. Do not over-quote complete sentences unless necessary.</p>
+        </div>
+
+        <div class="card span-6 example-card" data-example="reference-harvard">
+          <div class="example-head">
+            <h5>Harvard style example</h5>
+            <div class="btn-row">
+              <button class="btn soft mode-btn" data-mode="source">Source text</button>
+              <button class="btn mode-btn" data-mode="improved">Improvement</button>
+              <button class="btn mode-btn" data-mode="rule">Rule</button>
+              <button class="btn mode-btn" data-mode="analysis">Analysis</button>
+            </div>
+          </div>
+          <div class="example-body"><div class="example-mode" data-panel></div></div>
+        </div>
+
+        <div class="card span-6 example-card" data-example="reference-ellipsis">
+          <div class="example-head">
+            <h5>Ellipsis and brackets example</h5>
+            <div class="btn-row">
+              <button class="btn soft mode-btn" data-mode="source">Source text</button>
+              <button class="btn mode-btn" data-mode="improved">Improvement</button>
+              <button class="btn mode-btn" data-mode="rule">Rule</button>
+              <button class="btn mode-btn" data-mode="analysis">Analysis</button>
+            </div>
+          </div>
+          <div class="example-body"><div class="example-mode" data-panel></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="practice" data-module="practice">
+      <div class="section-header">
+        <div>
+          <h3>Practice Zone</h3>
+          <p>Use the thesis analyzer to test arguability and use the Referencing Checker to inspect citation style, quotation use, and reference-list readiness.</p>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card span-6">
+          <h4>Thesis analyzer</h4>
+          <div class="mini-tools">
+            <textarea id="analyzerInput" class="textarea" rows="9" placeholder="Paste a thesis statement or intro sentence here..."></textarea>
+            <div class="btn-row">
+              <button class="btn primary" id="analyzeBtn">Analyze thesis</button>
+              <button class="btn soft" id="loadStrongBtn">Load strong model</button>
+              <button class="btn soft" id="loadWeakBtn">Load weak model</button>
+            </div>
+            <div class="metric-grid">
+              <div class="metric"><div class="k">Score</div><div class="v" id="scoreValue">0</div></div>
+              <div class="metric"><div class="k">Quality</div><div class="v" id="qualityValue">—</div></div>
+              <div class="metric"><div class="k">Main issue</div><div class="v" id="issueValue">—</div></div>
+            </div>
+            <div id="analyzerResult" class="result">The analyzer will assess specificity, arguability, analytical language, scope, and academic tone.</div>
+          </div>
+        </div>
+
+        <div class="card span-6">
+          <h4>Referencing checker</h4>
+          <div class="mini-tools">
+            <textarea id="refInput" class="textarea" rows="9" placeholder="Paste a paragraph or section with citations here..."></textarea>
+            <div class="btn-row">
+              <button class="btn primary" id="refCheckBtn">Check referencing</button>
+              <button class="btn soft" id="loadHarvardBtn">Load Harvard sample</button>
+              <button class="btn soft" id="loadNumericBtn">Load numeric sample</button>
+              <button class="btn soft" id="loadMixedBtn">Load mixed sample</button>
+            </div>
+            <div class="metric-grid">
+              <div class="metric"><div class="k">Style</div><div class="v" id="refStyleValue">—</div></div>
+              <div class="metric"><div class="k">Citations</div><div class="v" id="refCitationValue">0</div></div>
+              <div class="metric"><div class="k">Risk</div><div class="v" id="refRiskValue">—</div></div>
+            </div>
+            <div id="refResult" class="result">Paste a paragraph or reference section. The checker will detect Harvard style, numeric style, mixed citation patterns, missing citations after quotations, and whether a reference list seems to be present.</div>
+          </div>
+        </div>
+
+        <div class="card span-12">
+          <h4>Complementary materials</h4>
+          <div class="two-col">
+            <div class="callout">
+              <strong>Strong thesis formula</strong><br />
+              Object + lens/procedure + arguable claim + why it matters.
+            </div>
+            <div class="callout">
+              <strong>Weak thesis patterns to avoid</strong><br />
+              “In this paper, I will discuss…”, “This essay is about…”, and topic-only openings with no claim.
+            </div>
+            <div class="callout">
+              <strong>Good evidence move</strong><br />
+              Introduce a source, explain the relevance, then interpret the evidence rather than merely repeating it.
+            </div>
+            <div class="callout">
+              <strong>Reference check reminder</strong><br />
+              A quotation needs a citation, and a citation needs a full item in the reference list.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">Built as a single-file HTML learning app for Academic Writing / Penulisan Ilmiah in Humanities.</div>
+  </main>
+</div>
+
+<script>
+  const THESIS_EXAMPLES = [{"theme": "citation", "source": "Ahn 2024; Li 2021", "statement": "Citation practices in applied linguistics do more than acknowledge sources; they position the writer within disciplinary debate.", "note": "Source of influence: citation practices and authorial presence in applied linguistics."}, {"theme": "citation", "source": "Ahn 2024", "statement": "Comparing theses and research articles shows that citation choices reflect different expectations of academic identity.", "note": "Source of influence: comparative citation patterns in applied linguistics."}, {"theme": "citation", "source": "Ahn 2024", "statement": "Citation form is rhetorical, not neutral, because it helps the writer claim authority while still sounding academically cautious.", "note": "Source of influence: citation as rhetorical strategy."}, {"theme": "citation", "source": "Li 2021", "statement": "Authorial presence in abstracts strengthens argument visibility by making the researcher’s stance easier to trace.", "note": "Source of influence: authorial presence in research article abstracts."}, {"theme": "citation", "source": "Li 2021", "statement": "The use of first-person voice in abstracts can be a strategic resource for clarifying responsibility and research positioning.", "note": "Source of influence: first-person representation in abstracts."}, {"theme": "abstract", "source": "Azizi 2022; Wang 2015", "statement": "Value arguments in introductions work as promotional moves that frame the study as necessary and timely.", "note": "Source of influence: value arguments and promotion in RA introductions."}, {"theme": "abstract", "source": "Wang 2015", "statement": "Claiming centrality helps writers persuade readers that the topic matters beyond a single article.", "note": "Source of influence: claiming centrality in applied linguistics introductions."}, {"theme": "abstract", "source": "Lorés 2004", "statement": "The rhetorical structure of abstracts varies by discipline, showing that genre conventions shape how knowledge is packaged.", "note": "Source of influence: rhetorical and thematic structure of abstracts."}, {"theme": "abstract", "source": "Chaisiri 2025", "statement": "Move patterns in abstracts reveal how writers balance information, persuasion, hedging, and scholarly precision.", "note": "Source of influence: move structure plus hedges and boosters."}, {"theme": "abstract", "source": "Leong 2016", "statement": "Thematic density in abstracts shows that humanities writing often condenses arguments through carefully layered clauses.", "note": "Source of influence: thematic density in abstracts."}, {"theme": "stance", "source": "Jiang 2022", "statement": "Negation in research abstracts can be persuasive because it narrows claims and anticipates counterarguments.", "note": "Source of influence: negation as a rhetorical device in abstracts."}, {"theme": "stance", "source": "Sadeghi 2020", "statement": "Academic conflict in research writing is often managed through inconsistency markers and conflict-resolution moves.", "note": "Source of influence: conflict management in applied linguistics RAs."}, {"theme": "stance", "source": "Chaisiri 2025", "statement": "Hedges and boosters reveal how writers calibrate commitment to a claim without sounding overconfident.", "note": "Source of influence: hedges and boosters in abstract moves."}, {"theme": "stance", "source": "Hellström 2025", "statement": "Claims about relevance are central to humanities writing because they help the writer justify why the study matters.", "note": "Source of influence: relevance claims in social science and humanities."}, {"theme": "stance", "source": "Hellström 2025", "statement": "Relevance expressions show that humanities researchers often argue significance indirectly rather than through direct generalization.", "note": "Source of influence: relevance expressions in SSH writing."}, {"theme": "identity", "source": "Kim 2007", "statement": "Cultural identity in intercultural communication is best understood as negotiated, contested, and situational rather than fixed.", "note": "Source of influence: ideology, identity, and intercultural communication."}, {"theme": "identity", "source": "McCrone 2010", "statement": "National identity should be studied as a dynamic social construction rather than a stable label.", "note": "Source of influence: claiming national identity."}, {"theme": "identity", "source": "Gabrielsson 2025", "statement": "When national identity becomes non-voluntary, democratic trajectories tend to weaken.", "note": "Source of influence: national identity and democratic trajectories."}, {"theme": "identity", "source": "Liaw 2024", "statement": "Identity debates become analytically richer when they are treated as conceptually plural rather than singular.", "note": "Source of influence: different concepts of identity in genome-editing debate."}, {"theme": "identity", "source": "Weng 2025", "statement": "Technology can blur the boundary between self and system, making identity a value-centered rather than purely personal question.", "note": "Source of influence: IT identity claims."}, {"theme": "translation", "source": "Leal 2025", "statement": "Translation studies has expanded beyond linguistic transfer into a broader humanistic inquiry about culture and mediation.", "note": "Source of influence: the translational turn in the humanities."}, {"theme": "translation", "source": "Foran 2025", "statement": "Translation is not only a technique of transfer but also a condition for thinking through human and posthuman relations.", "note": "Source of influence: surviving translating as the posthuman condition."}, {"theme": "translation", "source": "Littau 2016", "statement": "The materiality of communication shapes translation because meaning travels through forms, objects, and media as well as words.", "note": "Source of influence: translation and the materialities of communication."}, {"theme": "translation", "source": "Valdeón 2025", "statement": "Journalistic translation influences public meaning because it mediates how events are framed across languages.", "note": "Source of influence: journalistic translation research."}, {"theme": "translation", "source": "Marais 2025", "statement": "Complexity thinking treats translation as adaptive, relational, and context-dependent rather than mechanically equivalent.", "note": "Source of influence: complexity and translation studies."}, {"theme": "translation", "source": "Jamal 2024", "statement": "Translation analysis can reveal how politeness strategies shape the characterization of a female protagonist.", "note": "Source of influence: translation analysis of a female character."}, {"theme": "translation", "source": "Kumar? 2025", "statement": "Cultural references in translation often require adaptation or compensation to preserve reader accessibility.", "note": "Source of influence: translation procedure and accessibility."}, {"theme": "translation", "source": "translation/mediation", "statement": "A translator’s choices can shift nuance while still keeping the target text readable and culturally recognizable.", "note": "Pedagogical model inspired by translation-studies arguments."}, {"theme": "translation", "source": "journalistic translation", "statement": "The translator is not a transparent conduit but an active mediator who shapes the public interpretation of source material.", "note": "Pedagogical model inspired by translation and mediation research."}, {"theme": "translation", "source": "materiality", "statement": "Translation becomes more visible when the medium itself is treated as part of meaning production.", "note": "Pedagogical model inspired by translation-materiality studies."}, {"theme": "media", "source": "Castle 2018", "statement": "Popular films often attract audiences through social identities rooted in demographic traits.", "note": "Source of influence: social identity and popular film viewing."}, {"theme": "media", "source": "Dean 2022", "statement": "Film and television representations can shape public understanding of autism and its social meanings.", "note": "Source of influence: ASD representation in film and television."}, {"theme": "media", "source": "Lakras 2025", "statement": "Filming on heritage sites affects identity because cinematic use reshapes how places are valued and remembered.", "note": "Source of influence: architectural heritage as filming location."}, {"theme": "media", "source": "Prathap 2025", "statement": "Intertextuality is more than a textual device; it is a cognitive process linked to identity formation.", "note": "Source of influence: intertextuality as a cognitive process."}, {"theme": "media", "source": "Kirkpatrick 2026", "statement": "Deepfakes are ethically troubling because they undermine authority over the use and provenance of identity.", "note": "Source of influence: image, authority, and identity in deepfakes."}, {"theme": "literature", "source": "Wajiran 2025", "statement": "Literary narratives can function as transformative tools that critique race, gender, and identity at once.", "note": "Source of influence: Toni Morrison, race, gender, and identity."}, {"theme": "literature", "source": "Nikolova 2025", "statement": "Occupational identity in narrative can be constructed through tools, objects, and repeated practices.", "note": "Source of influence: midwifery and identity in narrative."}, {"theme": "literature", "source": "Fürst 2023", "statement": "Creative careers persist when writers connect artistic identity to commitment, role, and professional continuity.", "note": "Source of influence: claiming artistic identity."}, {"theme": "literature", "source": "Culpepper 2024", "statement": "Everyday creativity is not trivial; it depends on problem-solving habits that shape identity in social networks.", "note": "Source of influence: everyday creative identity."}, {"theme": "literature", "source": "Morton 2017", "statement": "Identity can alter how people respond to environments, showing that experience is filtered through social self-concept.", "note": "Source of influence: identity and responses to nature."}, {"theme": "ai", "source": "Akgün 2025", "statement": "AI-assisted writing challenges authorship because accountability becomes shared between human judgment and machine assistance.", "note": "Source of influence: scientific writing, identity, and AI."}, {"theme": "ai", "source": "Bouziane 2025", "statement": "AI acceptance in humanities education is significant because it changes how students interpret scholarly support and autonomy.", "note": "Source of influence: AI acceptance in humanities and social sciences."}, {"theme": "ai", "source": "Metcalf 2026", "statement": "AI-generated humanities research raises ethical problems because it blurs the line between assistance, authorship, and misconduct.", "note": "Source of influence: AI-produced humanities research."}, {"theme": "ai", "source": "Weng 2025", "statement": "Digital identity should be studied as a value system in which technology shapes how the self is recognized and performed.", "note": "Source of influence: value-centric IT identity."}, {"theme": "ai", "source": "Kirkpatrick 2026", "statement": "Image-based AI tools are not neutral because they reorganize the politics of agency and identity.", "note": "Source of influence: deepfakes and authority."}, {"theme": "society", "source": "Hellström 2025", "statement": "Humanities researchers often claim relevance by linking local analysis to larger social or ethical consequences.", "note": "Source of influence: relevance claims in SSH."}, {"theme": "society", "source": "Gabrielsson 2025", "statement": "Non-voluntary national identity is associated with weaker democratic outcomes, suggesting that identity politics can shape governance.", "note": "Source of influence: national identity and democracy."}, {"theme": "society", "source": "Żuradzki 2019", "statement": "Identifiability matters normatively because decisions about who can be recognized also affect how risks and benefits are distributed.", "note": "Source of influence: the normative significance of identifiability."}, {"theme": "society", "source": "Purnama 2026", "statement": "Virtual identity becomes an epistemic issue when social platforms determine which selves are visible and authoritative.", "note": "Source of influence: virtual identity and epistemic inequality."}, {"theme": "society", "source": "Poza-Garcia 2026", "statement": "Arts-based social work can foster voice and dignity because creative practice makes inclusion tangible.", "note": "Source of influence: decolonial arts-based social work."}, {"theme": "mixed", "source": "Morrison/identity", "statement": "The construction of identity in literary analysis is strongest when it is read as relational rather than merely representational.", "note": "Pedagogical thesis model."}, {"theme": "mixed", "source": "film/identity", "statement": "Film analysis becomes more persuasive when visual style is linked to social meaning rather than described as decoration.", "note": "Pedagogical thesis model."}, {"theme": "mixed", "source": "linguistics", "statement": "Speech act analysis should explain not just what is said but what the utterance does to social relations.", "note": "Pedagogical thesis model."}, {"theme": "mixed", "source": "translation", "statement": "A translation thesis gains force when it identifies a procedure, a pattern, and a consequence for meaning.", "note": "Pedagogical thesis model."}, {"theme": "mixed", "source": "academic writing", "statement": "A strong academic thesis is a claim with scope, evidence, and direction, not a summary of a topic.", "note": "Pedagogical thesis model."}];
+
+  const exampleLibrary = {
+    abbr: {
+      source: "The budget cuts proposed raised doubts among officials at the Ministry of Defence. A spokesman for the MoD confirmed discussions were ongoing.",
+      improved: "The budget cuts proposed raised doubts among officials at the Ministry of Defence (MoD). A spokesman for the MoD confirmed that discussions were ongoing.",
+      rule: "Write the term in full first, then place the abbreviation in parentheses. After that, use the abbreviation consistently.",
+      analysis: "The improved version helps readers by defining the abbreviation once and removing any ambiguity. This is especially useful in normal-length essays and articles where clarity must be immediate."
+    },
+    objectivity: {
+      source: "I would feel really hurt if someone passed on personal information about me without my knowledge.",
+      improved: "Sharing personal information without consent is unacceptable.",
+      rule: "Replace personal reactions with objective wording. Academic writing should sound analytical rather than emotional or conversational.",
+      analysis: "The improved sentence removes first-person language, emotional wording, and unnecessary detail, leaving a neutral evaluative claim that suits an academic tone."
+    },
+    "active-passive": {
+      source: "Active: President Clinton and a Republican Congress achieved a balanced federal budget in 1996.\nPassive: A balanced federal budget was achieved by President Clinton and a Republican Congress in 1996.",
+      improved: "President Clinton and a Republican Congress achieved a balanced federal budget in 1996.",
+      rule: "Prefer active voice for clarity, unless passive voice is needed to emphasise the object or avoid first person.",
+      analysis: "The active version is shorter and clearer. Passive voice remains useful when the result or object is more important than the actor, but it should not be the default."
+    },
+    hedging: {
+      source: "Studies conducted by Widodo (2024) and Joko (2025) mention that unemployment in Indonesia potentially increase the number of criminality.",
+      improved: "Studies conducted by Widodo (2024) and Joko (2025) suggest that unemployment in Indonesia may potentially increase crime rates.",
+      rule: "Use hedging to show tentativeness: might, may, could, perhaps, likely, potentially, seems.",
+      analysis: "The improved version corrects grammar, softens the claim appropriately, and replaces the awkward phrase 'the number of criminality' with a more natural academic expression."
+    },
+    "thesis-lit": {
+      source: "Joko Anwar’s ‘Siksa Kubur’ film plays the idea of madness through cinematography aspects and visual symbolism.",
+      improved: "Joko Anwar’s Siksa Kubur problematizes the idea of madness through cinematography and visual symbolism, revealing how fear and belief are shaped by the film’s visual design.",
+      rule: "A thesis should be specific, arguable, and analytical. It should name the object, the lens or technique, and the claim you intend to defend.",
+      analysis: "The revised thesis is stronger because it moves from vague description ('plays the idea') to a debatable claim ('problematizes'), and it signals the analytical path through film techniques."
+    },
+    "thesis-strong": {
+      source: "In this paper, I will discuss identity in Home Fire.",
+      improved: "Kamila Shamsie’s Home Fire constructs identity as fluid and contested through diasporic characterization, challenging monolithic ideas of Muslim subjectivity.",
+      rule: "Avoid announcing the topic. State the claim. Add the key concept, the method/lens, and the direction of the argument.",
+      analysis: "This version is stronger because it is debatable, specific, and guide-like. It tells the reader what the paper argues and how the argument will be built."
+    },
+    "paragraph-topic": {
+      source: "The effects of climate change are terrible.",
+      improved: "While climate change has many effects, one of its most visible consequences is the uneven disruption it causes across regions and communities.",
+      rule: "A topic sentence should be arguable and linked to the thesis. Avoid flat value judgments that cannot be developed.",
+      analysis: "The improved sentence introduces scope, contrast, and a direction for evidence. It is easier to develop into a full paragraph than a simple judgment."
+    },
+    "paragraph-signpost": {
+      source: "The pandemic changed quickly. Schneider interviewed people. Different people had different views. The government communications were not always aligned.",
+      improved: "For many people, the pandemic quickly shifted from a distant news event to a daily reality. Schneider’s interviews show that people from different backgrounds experienced this shift in different ways, and the uneven alignment between official messaging and lived experience shaped those reactions.",
+      rule: "Use signposting and thematic progression to connect ideas. Each sentence should follow logically from the previous one.",
+      analysis: "The improved version makes the paragraph cohesive by linking each sentence to the same controlling idea and using a clearer flow from context to evidence to implication."
+    },
+    "critical-claim": {
+      source: "Speech acts in the film can be divided into three types, including locutionary, illocutionary, and perlocutionary.",
+      improved: "The film’s perlocutionary speech acts challenge gendered expectations by showing how the character’s language can disturb conventional feminine subject positions.",
+      rule: "Do not stop at classification. Explain the implication of the classification and why it matters.",
+      analysis: "The revised sentence shifts from description to interpretation. It connects a linguistic category to a critical argument about gender and subject position."
+    },
+    "critical-fallacy": {
+      source: "Karl Marx’s thought on economics is not fit for Muslim people because he is a communist.",
+      improved: "Karl Marx’s economic thought may conflict with some Islamic ethical frameworks, but the relationship should be evaluated through the content of the theory rather than a personal label.",
+      rule: "Avoid ad hominem and hasty generalisation. Evaluate the argument itself, not the person or a stereotype.",
+      analysis: "The improved version replaces a dismissive identity-based claim with a more defensible analytical position and opens space for evidence-based comparison."
+    },
+    "clarity-wordy": {
+      source: "To succeed in obtaining and achieving the highest possible marks in assignments, students must engage in a genuine and concerted attempt to conduct extensive research, devote much time to the planning process and finally ensure they are entirely comfortable, and confident with the rules of English grammar.",
+      improved: "To earn high marks, students must research effectively, spend enough time planning, and master English grammar.",
+      rule: "Cut redundant wording, repeated ideas, and unnecessary intensifiers. Concision should preserve meaning, not weaken it.",
+      analysis: "The improved sentence is shorter, easier to scan, and more direct. It preserves the message while removing wordiness and repeated ideas."
+    },
+    "clarity-nominalisation": {
+      source: "The management decided that the nomination of Professor Stanwell, and his collaboration, would help them gather information about current experimentation with the configuration of the machinery.",
+      improved: "Managers decided to nominate Professor Stanwell so he could help collaborate and research current experiments and configure the machinery.",
+      rule: "Turn nominalisations into verbs when possible. Strong verbs make sentences clearer and more active.",
+      analysis: "The revised sentence reduces abstraction and lets the actions appear directly in the grammar of the sentence."
+    },
+    "reference-harvard": {
+      source: "One recent critic went as far as calling the film’s dialogue ‘unnecessarily inflammatory’.",
+      improved: "One recent critic went as far as calling the film’s dialogue 'unnecessarily inflammatory' (Davies, 2020: 36).",
+      rule: "Use in-text citation when borrowing words or ideas. The reference list then provides the full source details.",
+      analysis: "The improved version shows how a quote can be integrated with a citation so the reader can verify the source and page number."
+    },
+    "reference-ellipsis": {
+      source: "It is difficult to quantify the impact that the rise of the Internet has had on the manufacturing industry, on business, on entertainment, on education, on developing employees at work and on politics, among many others.",
+      improved: "Walters writes that 'it is difficult to quantify the impact that the rise of the Internet has had . . . on education' (2008: 209).",
+      rule: "Use ellipsis to omit words from a quotation and square brackets to add clarifying words or emphasis.",
+      analysis: "The improved version quotes only the part needed for the argument, which keeps the quotation focused and readable."
+    }
+  };
+
+  const bankGrid = document.getElementById('thesisGrid');
+  const thesisCount = document.getElementById('thesisCount');
+  const bankSearch = document.getElementById('bankSearch');
+  let currentBankFilter = 'all';
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function renderThesisBank() {
+    const q = bankSearch.value.trim().toLowerCase();
+    const filtered = THESIS_EXAMPLES.filter(item => {
+      const hay = `${item.theme} ${item.source} ${item.statement} ${item.note}`.toLowerCase();
+      const filterOk = currentBankFilter === 'all' || item.theme === currentBankFilter;
+      const queryOk = !q || hay.includes(q);
+      return filterOk && queryOk;
+    });
+
+    thesisCount.textContent = `${filtered.length} thesis models shown out of ${THESIS_EXAMPLES.length}.`;
+    bankGrid.innerHTML = filtered.map((item, idx) => `
+      <article class="bank-card" data-statement="${escapeHtml(item.statement)}" data-theme="${escapeHtml(item.theme)}">
+        <div class="theme">${item.theme}</div>
+        <h5>Model ${idx + 1}</h5>
+        <div class="statement">${escapeHtml(item.statement)}</div>
+        <div class="source"><strong>Source trail:</strong> ${escapeHtml(item.source)}.</div>
+        <div class="source"><strong>Why it works:</strong> ${escapeHtml(item.note)}.</div>
+        <div class="actions">
+          <button class="btn soft use-thesis">Use in analyzer</button>
+          <button class="btn" onclick="navigator.clipboard.writeText(this.closest('.bank-card').dataset.statement)">Copy</button>
+        </div>
+      </article>
+    `).join('');
+
+    document.querySelectorAll('.use-thesis').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const statement = btn.closest('.bank-card').dataset.statement;
+        analyzerInput.value = statement;
+        analyzeThesis();
+        document.getElementById('practice').scrollIntoView({behavior:'smooth'});
+      });
+    });
+  }
+
+  document.querySelectorAll('.example-card').forEach(card => {
+    const key = card.dataset.example;
+    const data = exampleLibrary[key];
+    const panel = card.querySelector('[data-panel]');
+    const buttons = Array.from(card.querySelectorAll('.mode-btn'));
+    let mode = 'source';
+
+    function show(m) {
+      mode = m;
+      panel.textContent = data[m];
+      buttons.forEach(btn => btn.classList.toggle('soft', btn.dataset.mode === m));
+      buttons.forEach(btn => btn.classList.toggle('primary', btn.dataset.mode === m));
+    }
+
+    buttons.forEach(btn => btn.addEventListener('click', () => show(btn.dataset.mode)));
+    show(mode);
+  });
+
+  const navLinks = Array.from(document.querySelectorAll('#navLinks a'));
+  const sections = Array.from(document.querySelectorAll('main .section'));
+  const searchInput = document.getElementById('searchInput');
+  const filterSelect = document.getElementById('filterSelect');
+  const resetBtn = document.getElementById('resetBtn');
+  const randomBtn = document.getElementById('randomBtn');
+  const moduleCards = Array.from(document.querySelectorAll('.module-card'));
+
+  function updateActiveNav() {
+    const pos = window.scrollY + 120;
+    let current = 'overview';
+    sections.forEach(sec => { if (pos >= sec.offsetTop) current = sec.id; });
+    navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + current));
+  }
+
+  function applyFilters() {
+    const query = searchInput.value.trim().toLowerCase();
+    const filter = filterSelect.value;
+
+    moduleCards.forEach(card => {
+      const section = card.closest('.section');
+      const sectionModule = section?.dataset.module || '';
+      const tags = (card.dataset.tags || '').toLowerCase();
+      const text = card.innerText.toLowerCase();
+      const matchesQuery = !query || text.includes(query) || tags.includes(query);
+      const matchesFilter = filter === 'all' || sectionModule === filter;
+      card.classList.toggle('hidden', !(matchesQuery && matchesFilter));
+    });
+
+    sections.forEach(section => {
+      const visibleCards = Array.from(section.querySelectorAll('.module-card')).some(card => !card.classList.contains('hidden'));
+      const headerOnly = section.id === 'overview' || section.id === 'practice' || section.id === 'thesis-bank';
+      section.classList.toggle('hidden', !visibleCards && !headerOnly);
+    });
+  }
+
+  searchInput.addEventListener('input', applyFilters);
+  filterSelect.addEventListener('change', applyFilters);
+  resetBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    filterSelect.value = 'all';
+    currentBankFilter = 'all';
+    document.querySelectorAll('.bank-filter').forEach(b => b.classList.remove('primary'));
+    const allBtn = document.querySelector('[data-bank-filter="all"]');
+    if (allBtn) allBtn.classList.add('soft');
+    sections.forEach(s => s.classList.remove('hidden'));
+    moduleCards.forEach(c => c.classList.remove('hidden'));
+    renderThesisBank();
+  });
+
+  randomBtn.addEventListener('click', () => {
+    const item = THESIS_EXAMPLES[Math.floor(Math.random() * THESIS_EXAMPLES.length)];
+    bankSearch.value = item.theme;
+    currentBankFilter = item.theme;
+    renderThesisBank();
+    analyzerInput.value = item.statement;
+    analyzeThesis();
+    document.getElementById('thesis-bank').scrollIntoView({behavior:'smooth'});
+  });
+
+  document.querySelectorAll('.bank-filter').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentBankFilter = btn.dataset.bankFilter;
+      document.querySelectorAll('.bank-filter').forEach(b => b.classList.remove('primary'));
+      btn.classList.add('primary');
+      renderThesisBank();
+    });
+  });
+
+  bankSearch.addEventListener('input', renderThesisBank);
+
+  window.addEventListener('scroll', updateActiveNav);
+  updateActiveNav();
+
+  const analyzerInput = document.getElementById('analyzerInput');
+  const analyzerResult = document.getElementById('analyzerResult');
+  const analyzeBtn = document.getElementById('analyzeBtn');
+  const scoreValue = document.getElementById('scoreValue');
+  const qualityValue = document.getElementById('qualityValue');
+  const issueValue = document.getElementById('issueValue');
+  const loadStrongBtn = document.getElementById('loadStrongBtn');
+  const loadWeakBtn = document.getElementById('loadWeakBtn');
+
+  const sampleTexts = {
+    strong: "Kamila Shamsie’s Home Fire constructs identity as fluid and contested through diasporic characterization, challenging monolithic ideas of Muslim subjectivity.",
+    weak: "In this paper, I will discuss identity in Home Fire.",
+    lit: "Joko Anwar’s Siksa Kubur problematizes the idea of madness through cinematography and visual symbolism, revealing how fear and belief are shaped by the film’s visual design."
+  };
+
+  loadStrongBtn.addEventListener('click', () => {
+    analyzerInput.value = sampleTexts.strong;
+    analyzeThesis();
+  });
+  loadWeakBtn.addEventListener('click', () => {
+    analyzerInput.value = sampleTexts.weak;
+    analyzeThesis();
+  });
+
+  function scoreBand(score) {
+    if (score >= 85) return 'Excellent';
+    if (score >= 70) return 'Strong';
+    if (score >= 55) return 'Developing';
+    return 'Weak';
+  }
+
+  function analyzeThesis() {
+    const text = analyzerInput.value.trim();
+    if (!text) {
+      scoreValue.textContent = '0';
+      qualityValue.textContent = '—';
+      issueValue.textContent = '—';
+      analyzerResult.textContent = 'Paste a thesis statement or an intro sentence here.';
+      return;
+    }
+
+    const lower = text.toLowerCase();
+    const words = text.split(/\s+/).filter(Boolean);
+    const wordCount = words.length;
+    const sentenceCount = Math.max(1, (text.match(/[.!?]+/g) || []).length);
+
+    const analyticalVerbs = ['problematizes','reveals','demonstrates','constructs','challenges','frames','negotiates','exposes','highlights','transfers','displays','represents','argues','shows','positions','illuminates','underscores','complicates','interrogates'];
+    const frameworkWords = ['through','using','by','via','with','in terms of','from the perspective of','based on','drawing on','according to'];
+    const weakOpeners = ['in this paper', 'this paper', 'i will', 'i am going to', 'the topic of', 'about'];
+    const firstPerson = /\b(i|we|my|our|me|us)\b/i.test(text);
+    const secondPerson = /\b(you|your)\b/i.test(text);
+    const contractions = /\b(can't|won't|don't|doesn't|isn't|aren't|I'm|we're|it's|they're|hasn't|haven't|didn't|shouldn't|wouldn't|couldn't)\b/i.test(text);
+    const hasQuote = /["“”‘’']/g.test(text);
+    const hasAnalysisMarker = analyticalVerbs.some(v => lower.includes(v));
+    const hasFramework = frameworkWords.some(v => lower.includes(v));
+    const startsWeak = weakOpeners.some(v => lower.startsWith(v));
+    const commas = (text.match(/,/g) || []).length;
+    const semicolons = (text.match(/;/g) || []).length;
+    const clauses = commas + semicolons + sentenceCount;
+
+    let score = 100;
+    const notes = [];
+
+    if (wordCount < 14) { score -= 22; notes.push('Too short to show a developed argument.'); }
+    if (wordCount > 45) { score -= 14; notes.push('Possibly too broad or overloaded for one thesis sentence.'); }
+    if (!hasAnalysisMarker) { score -= 20; notes.push('No strong analytical verb detected.'); }
+    if (!hasFramework) { score -= 12; notes.push('No clear method/lens/analytical pathway detected.'); }
+    if (startsWeak) { score -= 16; notes.push('Starts like a topic announcement instead of a claim.'); }
+    if (firstPerson || secondPerson) { score -= 10; notes.push('First- or second-person language detected.'); }
+    if (contractions) { score -= 5; notes.push('Contractions detected.'); }
+    if (clauses > 4) { score -= 10; notes.push('May contain too many clauses for a single thesis.'); }
+    if (hasQuote) { score -= 4; notes.push('Direct quotation in thesis may reduce control; consider paraphrasing the claim.'); }
+    if (!/\b(challeng|complicat|problemat|argu|revea|construct|transfer|display|represent|negotiat|demonstrat|expos|underscore|frame|illuminat)\w*/i.test(text)) {
+      score -= 12;
+    }
+
+    score = Math.max(0, Math.min(100, score));
+    const band = scoreBand(score);
+    let mainIssue = notes[0] || 'None';
+    if (!hasAnalysisMarker) mainIssue = 'Missing analytical verb';
+    if (startsWeak) mainIssue = 'Announces topic instead of arguing';
+    if (wordCount < 14) mainIssue = 'Too short';
+    if (score >= 85) mainIssue = 'Strong thesis';
+
+    const strengths = [];
+    if (hasAnalysisMarker) strengths.push('Contains an analytical verb');
+    if (hasFramework) strengths.push('Shows an analytical pathway');
+    if (!firstPerson && !secondPerson) strengths.push('Maintains academic distance');
+    if (!contractions) strengths.push('Avoids contractions');
+    if (wordCount >= 14 && wordCount <= 45) strengths.push('Reasonable thesis length');
+    if (hasQuote) strengths.push('Uses a direct source cue');
+
+    const suggestions = [];
+    if (!hasAnalysisMarker) suggestions.push('Replace vague verbs like “shows” with a stronger analytical verb such as reveals, problematizes, constructs, or challenges.');
+    if (!hasFramework) suggestions.push('Add the lens or mechanism: through symbolism, by hedging, using translation procedures, or with narrative framing.');
+    if (startsWeak) suggestions.push('Rewrite the opening so the claim comes first, not the phrase “In this paper...”.');
+    if (wordCount > 45) suggestions.push('Trim extra clauses or move secondary details to the body paragraphs.');
+    if (wordCount < 14) suggestions.push('Add the object, the technique, and the specific claim.');
+    if (firstPerson || secondPerson) suggestions.push('Remove first- or second-person pronouns to keep an objective tone.');
+    if (contractions) suggestions.push('Expand contractions to their full forms.');
+    if (clauses > 4) suggestions.push('Simplify the structure so the thesis becomes easier to scan.');
+    if (suggestions.length === 0) suggestions.push('The sentence already reads like a controlled, arguable thesis. Consider refining for precision only.');
+
+    analyzerResult.textContent = `Strengths:\n- ${strengths.join('\n- ') || 'None detected'}\n\nRevision moves:\n- ${suggestions.join('\n- ')}`;
+    scoreValue.textContent = score;
+    qualityValue.textContent = band;
+    issueValue.textContent = mainIssue;
+  }
+
+  analyzeBtn.addEventListener('click', analyzeThesis);
+  analyzerInput.addEventListener('input', () => {
+    if (analyzerInput.value.trim()) analyzeThesis();
+  });
+
+  // Referencing checker
+  const refInput = document.getElementById('refInput');
+  const refCheckBtn = document.getElementById('refCheckBtn');
+  const refStyleValue = document.getElementById('refStyleValue');
+  const refCitationValue = document.getElementById('refCitationValue');
+  const refRiskValue = document.getElementById('refRiskValue');
+  const refResult = document.getElementById('refResult');
+
+  const refSamples = {
+    harvard: `Recent studies suggest that academic identity is shaped by citation practices (Ahn, 2024: 3).\n\nReferences\nAhn, C. Y. (2024) Citation practices in applied linguistics: a comparative study. Journal of English for Academic Purposes, 67, 101276.`,
+    numeric: `Recent studies suggest that academic identity is shaped by citation practices (1).\n\nReferences\n(1) Ahn, C. Y. Citation practices in applied linguistics: a comparative study.`,
+    mixed: `The film’s dialogue is “unnecessarily inflammatory” (Davies, 2020) and this claim is important (2).\n\nReferences\nDavies, A. (2020) Fury and free speech. Oxford: OUP.\n(2) Some other source.`
+  };
+
+  document.getElementById('loadHarvardBtn').addEventListener('click', () => { refInput.value = refSamples.harvard; checkReferences(); });
+  document.getElementById('loadNumericBtn').addEventListener('click', () => { refInput.value = refSamples.numeric; checkReferences(); });
+  document.getElementById('loadMixedBtn').addEventListener('click', () => { refInput.value = refSamples.mixed; checkReferences(); });
+
+  function checkReferences() {
+    const text = refInput.value.trim();
+    if (!text) {
+      refStyleValue.textContent = '—';
+      refCitationValue.textContent = '0';
+      refRiskValue.textContent = '—';
+      refResult.textContent = 'Paste a paragraph or reference section. The checker will detect Harvard style, numeric style, mixed citation patterns, missing citations after quotations, and whether a reference list seems to be present.';
+      return;
+    }
+
+    const harvard = (text.match(/\([A-Z][A-Za-zÀ-ÿ'\-]+(?:\s+and\s+[A-Z][A-Za-zÀ-ÿ'\-]+|\s+et al\.)?,\s*\d{4}[a-z]?(?::\s*\d+(?:-\d+)?)?\)/g) || []);
+    const numeric = (text.match(/\(\d+(?:\s*,\s*\d+)*\)/g) || []);
+    const quoted = (text.match(/["“”‘’].+?["“”‘’]/g) || []);
+    const referencesBlock = /\breferences\b|\bworks cited\b|\bbibliography\b/i.test(text);
+    const lines = text.split(/\n+/).map(s => s.trim()).filter(Boolean);
+    const refLines = lines.filter(line => /^(?:[A-Z][A-Za-zÀ-ÿ'\-]+,|\(\d+\)|\d+\.)/.test(line));
+    const style = harvard.length && numeric.length ? 'Mixed' : harvard.length ? 'Harvard' : numeric.length ? 'Numeric' : 'None';
+    const issue = [];
+    let risk = 0;
+
+    if (style === 'Mixed') { issue.push('Mixed citation styles detected.'); risk += 35; }
+    if (style === 'None') { issue.push('No clear in-text citation style detected.'); risk += 25; }
+    if (quoted.length && !harvard.length && !numeric.length) { issue.push('Quoted material appears without a visible citation.'); risk += 20; }
+    if (harvard.length && /["“”‘’]/.test(text) && !/:\s*\d+/.test(text)) { issue.push('Direct quotation may need a page number in Harvard style.'); risk += 10; }
+    if (!referencesBlock && refLines.length === 0) { issue.push('No clear reference list or bibliography heading detected.'); risk += 15; }
+    if (harvard.length && numeric.length) { issue.push('Choose one citation system and use it consistently.'); risk += 20; }
+    if (!issue.length) issue.push('No major referencing problems detected in the quick scan.');
+
+    const citationTotal = harvard.length + numeric.length;
+    const score = Math.max(0, 100 - risk);
+    const band = score >= 85 ? 'Clean' : score >= 70 ? 'Mostly OK' : score >= 50 ? 'Needs review' : 'High risk';
+
+    refStyleValue.textContent = style;
+    refCitationValue.textContent = citationTotal.toString();
+    refRiskValue.textContent = band;
+
+    refResult.textContent =
+`Detected style: ${style}
+In-text citations: ${citationTotal}
+Direct quotes: ${quoted.length}
+Reference-list markers: ${referencesBlock ? 'present' : 'not found'}
+
+Issues:
+- ${issue.join('\n- ')}
+
+Quick guidance:
+- Keep one citation style only.
+- Match every quotation with a citation.
+- Add a reference-list entry for every in-text source.`;
+  }
+
+  refCheckBtn.addEventListener('click', checkReferences);
+
+  renderThesisBank();
+  analyzerInput.value = sampleTexts.strong;
+  analyzeThesis();
+  refInput.value = refSamples.harvard;
+  checkReferences();
+
+  // Quick initialization for bank controls
+  document.querySelector('[data-bank-filter="all"]').classList.add('primary');
+</script>
+</body>
+</html>
