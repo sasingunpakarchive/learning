@@ -53,6 +53,8 @@
     
     let currentSectionIdx = 0;
     let violations = 0;
+    let isFinished = false;
+    let isProcessingViolation = false; // Flag baru untuk mengunci deteksi ganda
     let jenisPelanggaranTerakhir = "Tidak Ada";
     let userData = {};
     let userScores = { listening: 0, structure: 0, reading: 0 };
@@ -356,17 +358,25 @@ function startSecurePlay() {
     
     function setupSecurity() {
     document.addEventListener("visibilitychange", () => {
-        // Jika tab disembunyikan dan ujian belum selesai
-        if (document.hidden && !isFinished) {
-            violations++; // Tetap menghitung di variabel latar belakang
+        // Hanya proses jika tab benar-benar disembunyikan, 
+        // ujian belum selesai, dan tidak sedang memproses alert lain
+        if (document.hidden && !isFinished && !isProcessingViolation) {
+            
+            isProcessingViolation = true; // Kunci agar tidak terdeteksi berkali-kali
+            violations++;
 
-            if (violations >= 3) {
-                // Popup jika sudah maksimal
-                alert("Batas pelanggaran tercapai! Anda telah berpindah tab sebanyak 3 kali. Jawaban Anda akan dikirim otomatis.");
+            if (violations === 1) {
+                alert("⚠️ PERINGATAN 1: Jangan meninggalkan halaman ujian! Aktivitas Anda tercatat.");
+                isProcessingViolation = false; // Buka kunci setelah alert ditutup
+            } 
+            else if (violations === 2) {
+                alert("⚠️ PERINGATAN 2: Ini adalah peringatan terakhir sebelum ujian dihentikan otomatis!");
+                isProcessingViolation = false; // Buka kunci
+            } 
+            else if (violations >= 3) {
+                alert("❌ BATAS PELANGGARAN TERCAPAI: Anda telah berpindah tab sebanyak 3 kali. Ujian dihentikan dan jawaban dikirim.");
                 submitFinalData();
-            } else {
-                // Popup peringatan biasa
-                alert("PERINGATAN (" + violations + "/3): Dilarang pindah tab atau membuka aplikasi lain!");
+                // Tidak perlu buka kunci karena ujian sudah selesai
             }
         }
     });
