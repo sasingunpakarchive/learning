@@ -350,23 +350,7 @@ function startSecurePlay() {
         };
     }
 }
-
-    function setupSecurity() {
-        document.addEventListener("visibilitychange", () => {
-            if (document.hidden && !isFinished) {
-                violations++;
-                document.getElementById('violation-count').innerText = `Pelanggaran: ${violations}/3`;
-                
-                if (violations >= 3) { 
-                    alert("Batas pelanggaran tercapai! Sesi otomatis diakhiri dan nilai saat ini akan disubmit."); 
-                    submitFinalData();
-                } else {
-                    alert("PERINGATAN: Dilarang pindah tab selama ujian berlangsung!");
-                }
-            }
-        });
-    }
-
+    
     function calculateCurrentScore() {
         const sec = examData[currentSectionIdx];
         let score = 0;
