@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Short Story Study Guide</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --text: #1f2937;
+      --muted: #5b6472;
+      --line: #d9e1ea;
+      --accent: #2f6fed;
+      --accent-soft: #eaf1ff;
+      --accent-2: #7c3aed;
+      --shadow: 0 10px 30px rgba(31, 41, 55, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(47,111,237,.10), transparent 30%),
+        radial-gradient(circle at top right, rgba(124,58,237,.08), transparent 28%),
+        var(--bg);
+      line-height: 1.6;
+    }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 20px 56px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #ffffff 0%, #f6faff 55%, #eef2ff 100%);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.78rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 3.1rem);
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      max-width: 900px;
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin: 0;
+    }
+
+    .top-grid {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+      margin-top: 22px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .panel h2, .panel h3 {
+      margin-top: 0;
+      line-height: 1.2;
+    }
+
+    .framework {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .step {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      background: linear-gradient(180deg, #fff, #f9fbff);
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+    }
+
+    .story-list {
+      display: grid;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .story {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .story header {
+      padding: 22px 22px 16px;
+      background: linear-gradient(135deg, rgba(47,111,237,.08), rgba(124,58,237,.06));
+      border-bottom: 1px solid var(--line);
+    }
+
+    .story-title {
+      margin: 0 0 4px;
+      font-size: clamp(1.4rem, 2vw, 1.8rem);
+    }
+
+    .author {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .story-body {
+      padding: 22px;
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 18px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      background: #fff;
+    }
+
+    .card h4 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      letter-spacing: .01em;
+    }
+
+    .label {
+      display: inline-block;
+      font-size: .75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 6px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    ul, ol {
+      margin: 10px 0 0 20px;
+      padding: 0;
+    }
+
+    li { margin: 8px 0; }
+
+    .quote {
+      padding: 14px 16px;
+      border-left: 4px solid var(--accent);
+      background: #f8fbff;
+      border-radius: 12px;
+      color: #374151;
+      font-style: italic;
+      margin-top: 10px;
+    }
+
+    .question {
+      background: #fcfdff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+
+    .question strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #111827;
+    }
+
+    .tone {
+      color: var(--muted);
+      font-size: .96rem;
+    }
+
+    .notes {
+      display: grid;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .note-line {
+      border: 1px dashed #cbd5e1;
+      border-radius: 12px;
+      min-height: 44px;
+      background: #fcfdff;
+    }
+
+    .footer {
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: .95rem;
+      text-align: center;
+    }
+
+    @media (max-width: 920px) {
+      .top-grid, .story-body, .framework { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .hero, .panel, .story { box-shadow: none; }
+      .wrap { max-width: none; padding: 0; }
+      .story { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="eyebrow">Study guide</div>
+      <h1>Short Story Analysis Guide</h1>
+      <p class="subtitle">
+        A student-friendly guide for reading, discussing, and analyzing four contemporary short stories.
+        Each section includes a summary, key questions, discussion prompts, and craft features to watch for.
+      </p>
+
+      <div class="top-grid">
+        <div class="panel">
+          <h2>How to use this guide</h2>
+          <div class="framework">
+            <div class="step"><strong>1. Read the summary</strong>Build a quick understanding of the plot and central conflict.</div>
+            <div class="step"><strong>2. Answer the questions</strong>Focus on meaning, character, theme, and context.</div>
+            <div class="step"><strong>3. Discuss the ideas</strong>Connect the story to wider issues such as gender, class, migration, trauma, and identity.</div>
+            <div class="step"><strong>4. Notice the craft</strong>Look at narrative voice, imagery, setting, structure, and language.</div>
+          </div>
+        </div>
+
+        <aside class="panel">
+          <h2>General analysis lenses</h2>
+          <ul>
+            <li><strong>Character:</strong> What does the protagonist want, fear, or hide?</li>
+            <li><strong>Theme:</strong> What bigger ideas does the story explore?</li>
+            <li><strong>Context:</strong> How do culture, class, gender, or place shape the story?</li>
+            <li><strong>Technique:</strong> How do structure, voice, imagery, and symbolism create meaning?</li>
+            <li><strong>Effect:</strong> What should the reader feel, notice, or question?</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <main class="story-list">
+      <article class="story" id="churail">
+        <header>
+          <h2 class="story-title">Churail</h2>
+          <p class="author">by Kamila Shamsie</p>
+        </header>
+        <div class="story-body">
+          <section class="card">
+            <div class="label">Summary</div>
+            <p>
+              A young Pakistani woman learns about the legend of the churail,
+              a supernatural entity that calls to men and entraps them. Her cousin says that the young woman’s mother became a churail after she died in childbirth. Later, the young woman’s father fears that she has summoned her churail mother to their garden in England.
+            </p>
+
+            <h4>Questions</h4>
+            <div class="question"><strong>1.</strong> Why is Zainab a more ideal young woman than the protagonist of the story, in her father’s opinion?</div>
+            <div class="question"><strong>2.</strong> What does Churail say about the experience of integrating into English culture as someone from another country?</div>
+            <div class="question"><strong>3.</strong> What does the list of experiences that might cause a woman to become a churail after death suggest about the experience of being a woman in Pakistan, or indeed elsewhere in the world?</div>
+            <div class="question"><strong>4.</strong> Do you think the protagonist’s father is haunted by the loss of his wife? Should he feel guilty about her death? Why, or why not?</div>
+          </section>
+
+          <section class="card">
+            <div class="label">Discussion points</div>
+            <p>
+              The protagonist of Shamsie’s story and her cousin Zainab discuss the legend of the churail with a feminist lens at one stage in the story:
+            </p>
+            <p class="quote">
+              She’s the victim of patriarchy who enacts revenge on men, I said.<br><br>
+              I guess that’s kind of feminist? Except she’s evil, Zainab said. And she’s evil because she’s attractive and without sexual restraint. She’s a manifestation of patriarchy’s guilt, I said. She allows guilty men to cast themselves as the victims, Zainab said.
+            </p>
+            <p>
+              How does the legend of the churail compare to other supernatural legends such as the succubus, mermaid and siren? How can we interpret such legends with a modern eye, and what do those legends say about gender and power?
+            </p>
+
+            <h4>What to look out for</h4>
+            <p>
+              Short stories often begin with an intriguing first line that draws the reader into the narrative. In Churail, Shamsie draws us in with:
+            </p>
+            <p class="quote">
+              My father migrated to England with me weeks after I was born to protect us from my mother, who had died giving birth to me.
+            </p>
+            <p>
+              The reader has to read on to understand that the narrator is suggesting that her dead mother has become a churail, a kind of malignant spirit, and a threat to her and her father. As well as being an intriguing first sentence, Shamsie also gives us a huge amount of information in one short line, which is also a quality of an excellent short story. Because the form is restricted, writers have to condense meaning and impact into fewer words, and make every single word work hard on the page.
+            </p>
+          </section>
+        </div>
+      </article>
+
+      <article class="story" id="ghost-kitchen">
+        <header>
+          <h2 class="story-title">Ghost Kitchen</h2>
+          <p class="author">by Ross Raisin</p>
+        </header>
+        <div class="story-body">
+          <section class="card">
+            <div class="label">Summary</div>
+            <p>
+              Sean, working as a food delivery person, begins working in a food preparation kitchen. He notices that two of his colleagues, Dougie and Mehmet, are bullying one of the other workers, Ebdo. At the same time, we discover that Sean is processing a traumatic accident with his brother, Frank. When Dougie and Mehmet’s bullying of Ebdo intensifies, Sean steps in.
+            </p>
+
+            <h4>Questions</h4>
+            <div class="question"><strong>1.</strong> Why does Sean put his hand in the fryer?</div>
+            <div class="question"><strong>2.</strong> Who are the “ghosts” referenced in the story’s title?</div>
+            <div class="question"><strong>3.</strong> Why do you think Ebdo doesn’t respond or retaliate to Dougie and Mehmet’s bullying?</div>
+            <div class="question"><strong>4.</strong> How do you think Sean feel about Frank?</div>
+          </section>
+
+          <section class="card">
+            <div class="label">Discussion points</div>
+            <p>
+              In Ghost Kitchen, Ross Raisin depicts the relentless isolation of Sean’s app-driven delivery job, where he can go for days without having a meaningful interaction with another human. Most of his interactions are mediated through technology: his work comes through the app and he dials up his voicemail to listen to his mother’s voice rather than speak to her directly. He is alienated and dehumanised, living alone in his bedsit – perhaps choosing to be that way because of what happened with Frank.
+            </p>
+            <p>
+              Yet, when Sean encounters Ebdo, it’s the first time in a long time that he relates to another human being. Discuss Sean and Ebdo’s relationship. How does Ebdo’s situation compare to Sean’s, and why do you think Sean develops compassion for him? Does the event with the fryer represent some kind of turning point for Sean, and why? What is Ross Raisin telling the reader about both characters by showing how they react to Dougie and Mehmet? What do Sean and Ebdo symbolise for each other?
+            </p>
+
+            <h4>What to look out for</h4>
+            <p>
+              Ross Raisin presents readers with a bleak and inhuman urban environment for Sean, the protagonist in Ghost Kitchen.
+            </p>
+            <p class="quote">
+              “But there was nobody about,
+              the air dead except for the muted rumble of traffic girdling the city and the occasional noise of a train distantly behind him.”
+            </p>
+            <p>
+              Indeed, even when nature is mentioned, it’s with a sense of grief and loss:
+            </p>
+            <p class="quote">
+              “sunlit clearings of abandoned ground had filled with long grasses, burrows, solitary poppies.”
+            </p>
+            <p>
+              The environment of the story reflects Sean’s state of mind: abandoned, solitary, alienated, lonely and unwelcoming. By constructing a dominant impression of the environment in this way, Raisin sets the tone for Sean’s emotions and inner life by reflecting it with the setting, using the technique of pathetic fallacy with great effect.
+            </p>
+          </section>
+        </div>
+      </article>
+
+      <article class="story" id="needle">
+        <header>
+          <h2 class="story-title">You Cannot Thread a Moving Needle</h2>
+          <p class="author">by Colwill Brown</p>
+        </header>
+        <div class="story-body">
+          <section class="card">
+            <div class="label">Summary</div>
+            <p>
+              Shaz recounts the story of her rape by two boys in her friend group, and the years after the horrific event where she tells no-one, but suffers from an eating disorder and from the effects of post-traumatic stress. Finally, on seeing both boys perform onstage, she enacts some small revenge by injuring one of them with a pint glass.
+            </p>
+
+            <h4>Questions</h4>
+            <div class="question"><strong>1.</strong> How much influence does poverty have on what happens?</div>
+            <div class="question"><strong>2.</strong> Are Rach and Kel good friends to Shaz? Why, or why not?</div>
+            <div class="question"><strong>3.</strong> After reading the story once, how does the first line read when you look at it for a second time?</div>
+            <div class="question"><strong>4.</strong> What is the relevance of this story’s title?</div>
+          </section>
+
+          <section class="card">
+            <div class="label">Discussion points</div>
+            <p>
+              In You Cannot Thread a Moving Needle, Brown hangs a short story between two major dramatic moments: Shaz’s rape, and her throwing the glass. Unusually for a short story, the scope of the story itself covers many years in-between these events.
+            </p>
+            <p>
+              Shaz’s story shows the impact of one event on the years that follow. She narrates the time passing by repeating “you don’t say owt”, indicating the times, over and over again, where she refrains from telling her story, until something in her snaps.
+            </p>
+            <p>
+              How does Colwill Brown build the sense of tension and hint at what has happened to Shaz? How effectively does Brown reveal the awful truth? How effective is it in conveying Shaz’s feelings? How does the use of time work in the story, and how does this reflect on Shaz’s memory of the event?
+            </p>
+
+            <h4>What to look out for</h4>
+            <p>
+              Stylistically, probably the most noticeable element of Brown’s story is the use of a strong dialect in the narration. Shaz’s story is written in a Yorkshire accent on the page, providing an immersive experience for the reader, and a relatively unusual reading experience.
+            </p>
+            <p>
+              As well as giving the reader a strong sense of how Shaz’s voice sounds, and making the reader feel empathy for the character, the choice to tell the story in such an idiosyncratic manner takes on an ideological focus when one considers the importance of listening to rape and sexual assault victims. By crafting Shaz’s voice in such a specific way, Brown ensures that we hear her: her specific, individual story, her character and her thoughts, as well as her experience.
+            </p>
+            <p>
+              By making the language unusual on the page, the reader has to pay more attention. As a result, Brown makes us focus and listen to Shaz: a gift women like her rarely receive.
+            </p>
+            <p>
+              The representation of a working-class regional dialect purposefully confounds the more common literary tropes of stories written (in the UK) in middle class English voices, with no noticeable accent or indicator of class. By telling Shaz’s story – including the restrictions of class and poverty on her life – Brown is also representing a part of British society that is all too often overlooked in literary fiction.
+            </p>
+          </section>
+        </div>
+      </article>
+
+      <article class="story" id="barber-erice">
+        <header>
+          <h2 class="story-title">The Barber of Erice</h2>
+          <p class="author">by Will Boast</p>
+        </header>
+        <div class="story-body">
+          <section class="card">
+            <div class="label">Summary</div>
+            <p>
+              In a small Sicilian town, Giuliu the barber is hardly keeping his business afloat. When he finds an immigrant, Baba, is giving stunning haircuts to everyone in town, he is furious. However, when Baba comes to him for help, Giuliu realises that Baba may be the key to restoring his business – and, over time, Baba helps him to reframe his opinions about the value of immigrants in society.
+            </p>
+
+            <h4>Questions</h4>
+            <div class="question"><strong>1.</strong> What is Boast saying about immigration? How does Giuliu’s opinion change by the end?</div>
+            <div class="question"><strong>2.</strong> How does Erice compare with other parts of Sicily and Italy?</div>
+            <div class="question"><strong>3.</strong> How does the tourist experience of Erice compare to the reality, and how is this shown in the scene of the sunset?</div>
+            <div class="question"><strong>4.</strong> How does men’s hair act as a symbol for a changing society in this story?</div>
+          </section>
+
+          <section class="card">
+            <div class="label">Discussion points</div>
+            <p class="quote">
+              “As a boy, Giuliu had seen grown men, pillars of Erice, sit in the chair and sorrow and confess and even weep, especially when the grappa came out. Men used to come to the barber for bloodletting, to have teeth pulled, for all sorts of ailments. Even now, his father had instructed, cutting hair is not the only service we provide.”
+            </p>
+            <p>
+              In this story, Will Boast uses the role of the barber to examine masculinity in a small Sicilian town. A business that he has inherited from his father – and a place where Giuliu reflects on his relationship with his father - Giuliu’s barber shop is also a kind of refuge for the men of the town, where they can come and talk and express emotions. The barber’s shop is a place where boys have their hair cut for rites of passage such as their confirmation, a place where, at one time, all the boys and men of the village would visit.
+            </p>
+            <p>
+              What is Will Boast saying about masculinity in The Barber of Erice? What might the barber shop symbolise at the start of the story, and how has it changed by the end? How do Marcu, Baba, Giuliu and Father Barale compare as men?
+            </p>
+
+            <h4>What to look out for</h4>
+            <p>
+              In The Barber of Erice, Boast makes excellent use of sensual imagery to evoke the physicality of barbering. Giuliu and Baba’s work – like Giuliu’s father, before him – is artistic, but the process is also relaxing and grounding. Going to the barber is a therapeutic activity for the men of the village, both physically and emotionally. We can see this in lines such as:
+            </p>
+            <p class="quote">
+              “With a scalding towel straight from the warmer, Baba wiped the foam away with quick, hard strokes. Then he molded another towel over Giuliu’s scalp and started rubbing with skull-thrumming vigor. Giuliu felt every capillary opening, every follicle letting in heat and oxygen and a strange pulsing energy.”
+            </p>
+            <p>
+              By concentrating on evoking the senses of touch, texture, smell and sensation, Boast gives the reader a sense of immediacy and connecting with the atmosphere of Erice – the sunsets, the piazza, the gritty texture of the rain – as well as the barber’s shop, and the sensual and physical experience of haircuts, shaves and male grooming. This draws the reader into Erice, Giuliu’s world, and his memories of his father, creating a memorable immersive reading experience.
+            </p>
+          </section>
+        </div>
+      </article>
+    </main>
+
+    <p class="footer">Use this page for class discussion, revision, or independent annotation.</p>
+  </div>
+</body>
+</html>
