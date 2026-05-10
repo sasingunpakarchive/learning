@@ -1220,97 +1220,308 @@
     </details>
 
     <section class="card intro" id="review" style="margin-top:18px;">
-      <h2>Mixed review</h2>
-      <p>Use this section to test whether you can identify the structure pattern quickly without focusing on just one skill.</p>
-      <div class="quiz">
-        <div class="qblock" data-answer="B">
-          <p class="qhead">1. The report _____ last night was incomplete.</p>
-          <div class="opts">
-            <label class="opt"><input type="radio" name="r1" value="A">A. submit</label>
-            <label class="opt"><input type="radio" name="r1" value="B">B. submitted</label>
-            <label class="opt"><input type="radio" name="r1" value="C">C. submitting</label>
-            <label class="opt"><input type="radio" name="r1" value="D">D. submits</label>
-          </div>
-          <button onclick="checkQuestion(this)">Check answer</button>
-          <div class="feedback"></div>
-        </div>
-        <div class="qblock" data-answer="A">
-          <p class="qhead">2. Because the class ended early, _____ home.</p>
-          <div class="opts">
-            <label class="opt"><input type="radio" name="r2" value="A">A. we went</label>
-            <label class="opt"><input type="radio" name="r2" value="B">B. went we</label>
-            <label class="opt"><input type="radio" name="r2" value="C">C. us went</label>
-            <label class="opt"><input type="radio" name="r2" value="D">D. going we</label>
-          </div>
-          <button onclick="checkQuestion(this)">Check answer</button>
-          <div class="feedback"></div>
-        </div>
-        <div class="qblock" data-answer="A">
-          <p class="qhead">3. Never _____ such a difficult task.</p>
-          <div class="opts">
-            <label class="opt"><input type="radio" name="r3" value="A">A. have I seen</label>
-            <label class="opt"><input type="radio" name="r3" value="B">B. I have seen</label>
-            <label class="opt"><input type="radio" name="r3" value="C">C. I saw</label>
-            <label class="opt"><input type="radio" name="r3" value="D">D. saw I</label>
-          </div>
-          <button onclick="checkQuestion(this)">Check answer</button>
-          <div class="feedback"></div>
-        </div>
+  <h2>Mixed review</h2>
+  <p>Use this section to test whether you can identify TOEFL structure patterns across Skills 1–19. Click a button to see whether your choice is correct and to read the explanation.</p>
+
+  <div class="quiz">
+
+    <div class="qblock" data-answer="B" data-explanation="Negative adverbs like <strong>rarely</strong> require inversion. The correct pattern is <em>Rarely + auxiliary verb + subject + main verb</em>.">
+      <p class="qhead">1. Rarely ______ located near city lights or at lower elevations.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="r1" value="A">A. observatories are</label>
+        <label class="opt"><input type="radio" name="r1" value="B">B. are observatories</label>
+        <label class="opt"><input type="radio" name="r1" value="C">C. in the observatories are</label>
+        <label class="opt"><input type="radio" name="r1" value="D">D. observatories</label>
       </div>
-    </section>
-
-    <div class="footer">
-      End of interactive guide. Expand any skill, answer the questions, and use the feedback to learn the grammar pattern behind each item.
+      <button onclick="checkQuestion(this)">Check answer</button>
+      <div class="feedback"></div>
     </div>
-  </main>
 
-  <script>
-    function checkQuestion(btn) {
-      const block = btn.closest('.qblock');
-      const answer = block.dataset.answer;
-      const selected = block.querySelector('input[type="radio"]:checked');
-      const feedback = block.querySelector('.feedback');
-      if (!selected) {
-        feedback.className = 'feedback bad';
-        feedback.textContent = 'Choose an answer first.';
-        return;
-      }
-      if (selected.value === answer) {
-        feedback.className = 'feedback good';
-        feedback.textContent = 'Correct. Good structural match.';
-      } else {
-        feedback.className = 'feedback bad';
-        feedback.textContent = 'Not quite. The correct answer is ' + answer + '.';
-      }
+    <div class="qblock" data-answer="A" data-explanation="After a question word like <strong>why</strong>, the clause uses normal subject-verb order. The subject is <em>diets</em> and the verb is <em>differ</em>.">
+      <p class="qhead">2. There are geographic, economic, and cultural reasons why ______ around the world.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="r2" value="A">A. diets differ</label>
+        <label class="opt"><input type="radio" name="r2" value="B">B. do diets differ</label>
+        <label class="opt"><input type="radio" name="r2" value="C">C. are diets different</label>
+        <label class="opt"><input type="radio" name="r2" value="D">D. to differ a diet</label>
+      </div>
+      <button onclick="checkQuestion(this)">Check answer</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="qblock" data-answer="A" data-explanation="This is an inverted conditional. The full form would be: <em>If the U.S. Army Corps of Engineers were not spending...</em> Formal English often omits <strong>if</strong> and moves <strong>were</strong> before the subject.">
+      <p class="qhead">3. Were ______ millions of dollars each year replenishing eroding beaches, the coastline would be changing even more rapidly.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="r3" value="A">A. the U.S. Army Corps of Engineers not spending</label>
+        <label class="opt"><input type="radio" name="r3" value="B">B. the U.S. Army Corps of Engineers not spend</label>
+        <label class="opt"><input type="radio" name="r3" value="C">C. the U.S. Army Corps of Engineers does not spend</label>
+        <label class="opt"><input type="radio" name="r3" value="D">D. not spending the U.S. Army Corps of Engineers</label>
+      </div>
+      <button onclick="checkQuestion(this)">Check answer</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="qblock" data-answer="B" data-explanation="The word <strong>nor</strong> requires inversion. The auxiliary <strong>will</strong> comes before the subject <em>trade unionism</em>.">
+      <p class="qhead">4. The economic background of labor legislation will not be mentioned in this course, nor ______.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="r4" value="A">A. trade unionism will be treated</label>
+        <label class="opt"><input type="radio" name="r4" value="B">B. will trade unionism be treated</label>
+        <label class="opt"><input type="radio" name="r4" value="C">C. will be treated trade unionism</label>
+        <label class="opt"><input type="radio" name="r4" value="D">D. trade unionism treated</label>
+      </div>
+      <button onclick="checkQuestion(this)">Check answer</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="qblock" data-answer="C" data-explanation="This is an inverted conditional with a passive structure. The full meaning is: <em>If milk should be tested positive...</em>">
+      <p class="qhead">5. ______ test positive for antibiotics when tanker trucks arrive at a milk-processing plant, according to federal law, the entire truckload must be discarded.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="r5" value="A">A. Should milk</label>
+        <label class="opt"><input type="radio" name="r5" value="B">B. If milk should</label>
+        <label class="opt"><input type="radio" name="r5" value="C">C. Should milk be</label>
+        <label class="opt"><input type="radio" name="r5" value="D">D. Milk should</label>
+      </div>
+      <button onclick="checkQuestion(this)">Check answer</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="qblock" data-answer="A" data-explanation="An introductory participial phrase can trigger inversion. The correct order is: <em>Located behind each eyelid are the two lacrimal glands.</em>">
+      <p class="qhead">6. Located behind ______ the two lacrimal glands.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="r6" value="A">A. each eyelid are</label>
+        <label class="opt"><input type="radio" name="r6" value="B">B. each eyelid is</label>
+        <label class="opt"><input type="radio" name="r6" value="C">C. are each eyelid</label>
+        <label class="opt"><input type="radio" name="r6" value="D">D. each eyelid which is</label>
+      </div>
+      <button onclick="checkQuestion(this)">Check answer</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="qblock" data-answer="B" data-explanation="Negative expressions such as <strong>nowhere</strong> require inversion. The verb <strong>are</strong> comes before the subject <em>retail trade figures</em>.">
+      <p class="qhead">7. Nowhere ______ more skewed than in the auto industry.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="r7" value="A">A. retail trade figures are</label>
+        <label class="opt"><input type="radio" name="r7" value="B">B. are retail trade figures</label>
+        <label class="opt"><input type="radio" name="r7" value="C">C. retail trade figures</label>
+        <label class="opt"><input type="radio" name="r7" value="D">D. do retail trade figures</label>
+      </div>
+      <button onclick="checkQuestion(this)">Check answer</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="qblock" data-answer="A" data-explanation="The comparison pattern is <em>as large as + noun</em>. So the correct answer is simply <strong>Monaco</strong>.">
+      <p class="qhead">8. New York City’s Central Park is nearly twice as large as ______, the second-smallest country in the world.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="r8" value="A">A. Monaco</label>
+        <label class="opt"><input type="radio" name="r8" value="B">B. is Monaco</label>
+        <label class="opt"><input type="radio" name="r8" value="C">C. Monaco is</label>
+        <label class="opt"><input type="radio" name="r8" value="D">D. as Monaco</label>
+      </div>
+      <button onclick="checkQuestion(this)">Check answer</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="qblock" data-answer="A" data-explanation="After <strong>when</strong>, a complete clause is needed. The clause must contain a subject and a verb: <em>it combines</em>.">
+      <p class="qhead">9. Potassium has a valence of positive one because it usually loses one electron when ______ with other elements.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="r9" value="A">A. it combines</label>
+        <label class="opt"><input type="radio" name="r9" value="B">B. does it combine</label>
+        <label class="opt"><input type="radio" name="r9" value="C">C. combining</label>
+        <label class="opt"><input type="radio" name="r9" value="D">D. in combination</label>
+      </div>
+      <button onclick="checkQuestion(this)">Check answer</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="qblock" data-answer="C" data-explanation="Expressions beginning with <strong>only</strong> require inversion. The auxiliary verb <strong>can</strong> comes before the subject <em>cheetahs</em>.">
+      <p class="qhead">10. Only for a short period of time ______ run at top speed.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="r10" value="A">A. cheetahs</label>
+        <label class="opt"><input type="radio" name="r10" value="B">B. do cheetahs</label>
+        <label class="opt"><input type="radio" name="r10" value="C">C. can cheetahs</label>
+        <label class="opt"><input type="radio" name="r10" value="D">D. cheetahs can</label>
+      </div>
+      <button onclick="checkQuestion(this)">Check answer</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="qblock" data-answer="A" data-explanation="The sentence needs a subject before <strong>variety</strong>. <strong>A wide</strong> correctly forms a noun phrase.">
+      <p class="qhead">11. ______ variety of flowers in the show, from simple carnations to the most exquisite roses.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="r11" value="A">A. A wide</label>
+        <label class="opt"><input type="radio" name="r11" value="B">B. There was a wide</label>
+        <label class="opt"><input type="radio" name="r11" value="C">C. Was there</label>
+        <label class="opt"><input type="radio" name="r11" value="D">D. Many</label>
+      </div>
+      <button onclick="checkQuestion(this)">Check answer</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="qblock" data-answer="D" data-explanation="This item needs a prepositional phrase: <em>on a dartboard</em>. That phrase modifies <strong>wedges</strong> and completes the structure correctly.">
+      <p class="qhead">12. The wedges ______ dartboard are worth from one to twenty points each.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="r12" value="A">A. they are on a</label>
+        <label class="opt"><input type="radio" name="r12" value="B">B. are on a</label>
+        <label class="opt"><input type="radio" name="r12" value="C">C. are they on a</label>
+        <label class="opt"><input type="radio" name="r12" value="D">D. on a</label>
+      </div>
+      <button onclick="checkQuestion(this)">Check answer</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="qblock" data-answer="A" data-explanation="The sentence needs a subject and verb before <strong>producing</strong>. <strong>His company is</strong> correctly completes the clause.">
+      <p class="qhead">13. ______ producing many new movies for release after the new season begins.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="r13" value="A">A. His company is</label>
+        <label class="opt"><input type="radio" name="r13" value="B">B. His companies</label>
+        <label class="opt"><input type="radio" name="r13" value="C">C. The company</label>
+        <label class="opt"><input type="radio" name="r13" value="D">D. Why the company is</label>
+      </div>
+      <button onclick="checkQuestion(this)">Check answer</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="qblock" data-answer="B" data-explanation="This is a reduced adjective clause. The full form is <em>poems that Emily Dickinson wrote</em>.">
+      <p class="qhead">14. Of the 1,800 poems ______, only 24 were given titles and 7 were published during her lifetime.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="r14" value="A">A. Emily Dickinson wrote</label>
+        <label class="opt"><input type="radio" name="r14" value="B">B. that Emily Dickinson wrote</label>
+        <label class="opt"><input type="radio" name="r14" value="C">C. Emily Dickinson writing</label>
+        <label class="opt"><input type="radio" name="r14" value="D">D. written by Emily Dickinson were</label>
+      </div>
+      <button onclick="checkQuestion(this)">Check answer</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="qblock" data-answer="B" data-explanation="A formal structure follows the introductory clause. The key idea is inversion after the opening clause, so the sentence is completed with <strong>was proposed</strong>.">
+      <p class="qhead">15. Since an immediate change was needed on an emergency basis, ______ by the governor to curtail railway expenditure.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="r15" value="A">A. so it was proposed</label>
+        <label class="opt"><input type="radio" name="r15" value="B">B. was proposed</label>
+        <label class="opt"><input type="radio" name="r15" value="C">C. because of the proposal</label>
+        <label class="opt"><input type="radio" name="r15" value="D">D. it was proposed</label>
+      </div>
+      <button onclick="checkQuestion(this)">Check answer</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="qblock" data-answer="C" data-explanation="The sentence needs inversion after the place expression. <strong>Is a collection</strong> correctly places the verb before the subject.">
+      <p class="qhead">16. In the Morgan Library in New York City ______ of medieval and Renaissance manuscripts.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="r16" value="A">A. a collection is</label>
+        <label class="opt"><input type="radio" name="r16" value="B">B. in a collection</label>
+        <label class="opt"><input type="radio" name="r16" value="C">C. is a collection</label>
+        <label class="opt"><input type="radio" name="r16" value="D">D. which is a collection</label>
+      </div>
+      <button onclick="checkQuestion(this)">Check answer</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="qblock" data-answer="C" data-explanation="This is an inverted conditional without <strong>if</strong>. The correct form is: <em>Had the government been more strict...</em>">
+      <p class="qhead">17. Some fishing fleets might not have been so inefficient in limiting their catch to target species ______ more strict in enforcing penalties.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="r17" value="A">A. the government had been</label>
+        <label class="opt"><input type="radio" name="r17" value="B">B. if the government had</label>
+        <label class="opt"><input type="radio" name="r17" value="C">C. had the government been</label>
+        <label class="opt"><input type="radio" name="r17" value="D">D. if the government</label>
+      </div>
+      <button onclick="checkQuestion(this)">Check answer</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="qblock" data-answer="B" data-explanation="The Dewey Decimal System is the subject, and the verb is <strong>divides</strong>. This is a simple main-clause verb, not a participle.">
+      <p class="qhead">18. The Dewey Decimal System, currently used in libraries throughout the world, ______ all written works into ten classes according to subject.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="r18" value="A">A. dividing</label>
+        <label class="opt"><input type="radio" name="r18" value="B">B. divides</label>
+        <label class="opt"><input type="radio" name="r18" value="C">C. it would divide</label>
+        <label class="opt"><input type="radio" name="r18" value="D">D. was divided</label>
+      </div>
+      <button onclick="checkQuestion(this)">Check answer</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="qblock" data-answer="D" data-explanation="This is a comparative structure. The correct completion is <strong>than are others</strong>.">
+      <p class="qhead">19. Individual differences in brainwave activity may shed light on why some people are more prone to emotional stress disorders ______.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="r19" value="A">A. that others are</label>
+        <label class="opt"><input type="radio" name="r19" value="B">B. and others are</label>
+        <label class="opt"><input type="radio" name="r19" value="C">C. others are</label>
+        <label class="opt"><input type="radio" name="r19" value="D">D. than are others</label>
+      </div>
+      <button onclick="checkQuestion(this)">Check answer</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="qblock" data-answer="C" data-explanation="This is a reduced adverb clause. The full form is <em>When it is freshly squeezed...</em> or simply <em>Freshly squeezed...</em> in reduced form.">
+      <p class="qhead">20. ______ squeezed, the orange juice in a one-cup serving provides twice the minimum daily requirement for vitamin C.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="r20" value="A">A. It is freshly</label>
+        <label class="opt"><input type="radio" name="r20" value="B">B. If freshly</label>
+        <label class="opt"><input type="radio" name="r20" value="C">C. Freshly</label>
+        <label class="opt"><input type="radio" name="r20" value="D">D. If it freshly</label>
+      </div>
+      <button onclick="checkQuestion(this)">Check answer</button>
+      <div class="feedback"></div>
+    </div>
+
+  </div>
+</section>
+
+<div class="footer">
+  End of interactive guide. Expand any skill, answer the questions, and use the feedback to learn the grammar pattern behind each item.
+</div>
+
+<script>
+  function checkQuestion(btn) {
+    const block = btn.closest('.qblock');
+    const answer = block.dataset.answer;
+    const explanation = block.dataset.explanation;
+    const selected = block.querySelector('input[type="radio"]:checked');
+    const feedback = block.querySelector('.feedback');
+
+    if (!selected) {
+      feedback.className = 'feedback bad';
+      feedback.innerHTML = 'Choose an answer first.';
+      return;
     }
 
-    function expandAll() {
-      document.querySelectorAll('details.skill').forEach(d => d.open = true);
-      document.getElementById('review').scrollIntoView({behavior:'smooth'});
+    if (selected.value === answer) {
+      feedback.className = 'feedback good';
+      feedback.innerHTML = '<strong>Correct.</strong><br>' + explanation;
+    } else {
+      feedback.className = 'feedback bad';
+      feedback.innerHTML = '<strong>Incorrect.</strong><br>The correct answer is <strong>' + answer + '</strong>.<br>' + explanation;
     }
+  }
 
-    function collapseAll() {
-      document.querySelectorAll('details.skill').forEach(d => d.open = false);
-    }
+  function expandAll() {
+    document.querySelectorAll('details.skill').forEach(d => d.open = true);
+    document.getElementById('review').scrollIntoView({ behavior: 'smooth' });
+  }
 
-    function jumpToSkill(id) {
-      if (!id) return;
-      const el = document.getElementById(id);
-      if (el) {
-        el.open = true;
-        el.scrollIntoView({behavior:'smooth', block:'start'});
-      }
-    }
+  function collapseAll() {
+    document.querySelectorAll('details.skill').forEach(d => d.open = false);
+  }
 
-    function filterSkills() {
-      const q = document.getElementById('searchBox').value.toLowerCase().trim();
-      const skills = document.querySelectorAll('details.skill');
-      skills.forEach(skill => {
-        const text = skill.innerText.toLowerCase();
-        const match = !q || text.includes(q) || skill.id.includes(q.replace(/\s+/g, ''));
-        skill.style.display = match ? '' : 'none';
-      });
+  function jumpToSkill(id) {
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (el) {
+      el.open = true;
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  </script>
+  }
+
+  function filterSkills() {
+    const q = document.getElementById('searchBox').value.toLowerCase().trim();
+    const skills = document.querySelectorAll('details.skill');
+    skills.forEach(skill => {
+      const text = skill.innerText.toLowerCase();
+      const match = !q || text.includes(q) || skill.id.includes(q.replace(/\s+/g, ''));
+      skill.style.display = match ? '' : 'none';
+    });
+  }
+</script>
 </body>
 </html>
