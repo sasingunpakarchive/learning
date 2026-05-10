@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEEC Mastery: Facilitator Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        [x-cloak] { display: none !important; }
+        .animate-pop { animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes pop { from { opacity: 0; transform: translateY(10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .theory-text { line-height: 1.8; text-align: justify; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900" x-data="peecApp()" x-init="initIcons()">
+
+    <template x-if="view === 'login'">
+        <div class="min-h-screen flex items-center justify-center bg-indigo-900 p-6 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-64 h-64 bg-indigo-500 rounded-full blur-3xl opacity-20 -ml-32 -mt-32"></div>
+            <div class="bg-white p-10 rounded-[32px] shadow-2xl w-full max-w-md animate-pop relative z-10">
+                <div class="text-center mb-8">
+                    <div class="inline-flex p-4 bg-indigo-50 rounded-2xl text-indigo-600 mb-4">
+                        <i data-lucide="user-plus" class="w-8 h-8"></i>
+                    </div>
+                    <h2 class="text-3xl font-black text-slate-800">Registrasi</h2>
+                    <p class="text-slate-500 text-sm">Masukan identitas Anda untuk mencatat skor</p>
+                </div>
+                
+                <div class="space-y-5">
+                    <div>
+                        <label class="text-[10px] font-black uppercase text-slate-400 ml-2">Nama Lengkap</label>
+                        <input type="text" x-model="userData.nama" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-indigo-500 focus:bg-white outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black uppercase text-slate-400 ml-2">Kelas</label>
+                        <input type="text" x-model="userData.kelas" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-indigo-500 focus:bg-white outline-none transition-all" placeholder="Contoh: 4I MGMT/4D BDI">
+                    </div>
+                    <button @click="startToSplash()" :disabled="!userData.nama || !userData.kelas" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black text-lg hover:bg-indigo-700 disabled:opacity-50 shadow-lg shadow-indigo-200 transition-all">
+                        Masuk Ke Pelatihan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template x-if="view === 'splash'">
+        <div class="min-h-screen flex items-center justify-center bg-indigo-700 p-4 relative overflow-hidden text-white">
+            <div class="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-48 -mt-48 blur-3xl"></div>
+            <div class="max-w-2xl w-full bg-white rounded-[40px] shadow-2xl p-10 md:p-16 text-center relative z-10 animate-pop text-slate-900">
+                <div class="inline-flex p-4 bg-indigo-50 rounded-3xl text-indigo-600 mb-6">
+                    <i data-lucide="book-open-check" class="w-16 h-16"></i>
+                </div>
+                <h1 class="text-5xl font-black mb-4 tracking-tighter">TOEFL <span class="text-indigo-600">Skills</span></h1>
+                <p class="text-slate-500 font-medium mb-8 italic">"Structure and Written Expressions"</p>
+                
+                <div class="bg-slate-50 border border-slate-100 rounded-2xl p-6 mb-10 text-center">
+                    <p class="text-slate-400 font-bold uppercase text-[10px] tracking-widest mb-1">Fasilitator</p>
+                    <h3 class="text-2xl font-extrabold text-slate-800">Padel M Rallie Rivaldy, M.Hum.</h3>
+                </div>
+                
+                <button @click="view = 'lesson'; $nextTick(() => initIcons())" class="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black text-xl hover:bg-indigo-800 transition-all shadow-xl flex items-center justify-center gap-3 group">
+                    Mulai Belajar
+                    <i data-lucide="arrow-right" class="group-hover:translate-x-2 transition-transform"></i>
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <template x-if="view === 'lesson'">
+        <div x-cloak>
+            <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+                <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="font-black text-xl tracking-tighter text-indigo-600">Structure skills <span class="text-slate-800">1-19</span></span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-right hidden md:block">
+                            <p class="text-[10px] font-black text-slate-400 uppercase leading-none" x-text="userData.nama"></p>
+                            <p class="text-[10px] font-bold text-indigo-500 uppercase" x-text="userData.kelas"></p>
+                        </div>
+                        <div class="w-32 h-2.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
+                            <div class="h-full bg-indigo-500 transition-all duration-700" :style="{ width: `${((currentSkill + 1) / skillsData.length) * 100}%` }"></div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <main class="max-w-6xl mx-auto px-4 py-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    
+                    <div class="lg:col-span-8 space-y-6">
+                        <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-200 relative">
+                            <div class="flex items-center gap-2 mb-4">
+                                <span class="bg-indigo-100 text-indigo-700 text-xs font-black px-3 py-1 rounded-full uppercase">Skill <span x-text="currentSkillData().id"></span></span>
+                            </div>
+                            <h2 class="text-3xl font-black text-slate-800 mb-6" x-text="currentSkillData().title"></h2>
+                            <div class="theory-text text-slate-600 mb-8 p-6 bg-slate-50 rounded-2xl border-l-4 border-indigo-500 italic">
+                                <p x-text="currentSkillData().theory"></p>
+                            </div>
+                            <div class="bg-slate-900 text-white px-6 py-3 rounded-xl font-mono text-lg shadow-lg inline-flex items-center gap-3">
+                                <i data-lucide="terminal" class="w-5 h-5 text-indigo-400"></i>
+                                <span x-text="currentSkillData().formula"></span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
+                            <div class="mb-8 p-8 bg-slate-900 text-white rounded-[32px]">
+                                <h4 class="text-[10px] font-black text-indigo-400 uppercase mb-4 tracking-widest">Latihan Soal:</h4>
+                                <div class="text-2xl font-medium leading-relaxed italic">
+                                    <span x-html="renderQuestion()"></span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 gap-4">
+                                <template x-for="(option, idx) in currentSkillData().options" :key="idx">
+                                    <button
+                                        @click="handleOptionSelect(idx)"
+                                        :disabled="selectedOption !== null"
+                                        class="w-full p-5 rounded-2xl border-2 font-bold transition-all flex items-center justify-between"
+                                        :class="{
+                                            'border-slate-100 bg-white hover:border-indigo-50': selectedOption === null,
+                                            'border-emerald-500 bg-emerald-50 text-emerald-700': (selectedOption !== null && idx === currentSkillData().correct),
+                                            'border-rose-500 bg-rose-50 text-rose-700': (selectedOption === idx && idx !== currentSkillData().correct),
+                                            'opacity-50': selectedOption !== null && idx !== selectedOption && idx !== currentSkillData().correct
+                                        }"
+                                    >
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 rounded-xl flex items-center justify-center border-2" x-text="String.fromCharCode(65 + idx)"></div>
+                                            <span class="text-lg" x-text="option"></span>
+                                        </div>
+                                        <div x-show="selectedOption !== null">
+                                            <i :data-lucide="idx === currentSkillData().correct ? 'check-circle' : 'x-circle'" class="w-6 h-6"></i>
+                                        </div>
+                                    </button>
+                                </template>
+                            </div>
+
+                            <template x-if="selectedOption !== null">
+                                <div class="mt-8 p-8 rounded-3xl animate-pop border-b-8 shadow-xl" 
+                                     :class="isCorrect ? 'bg-emerald-50 border-emerald-500 text-emerald-900' : 'bg-rose-50 border-rose-500 text-rose-900'">
+                                    <h5 class="text-xl font-black mb-2" x-text="isCorrect ? 'Benar!' : 'Salah!'"></h5>
+                                    <p class="font-medium mb-6" x-text="currentSkillData().explanation"></p>
+                                    <button @click="nextSkill()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black hover:bg-indigo-600 transition-all flex items-center justify-center gap-2">
+                                        Lanjut <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-4">
+                        <div class="bg-white border border-slate-200 rounded-[32px] p-8 shadow-sm sticky top-24">
+                            <h3 class="text-rose-600 font-black text-xs uppercase tracking-widest mb-6">Danger Zone (Common Error)</h3>
+                            <h4 class="text-lg font-black text-slate-800 mb-4" x-text="currentSkillData().commonMistake"></h4>
+                            <div class="space-y-4 mb-6">
+                                <div class="p-4 bg-rose-50 rounded-xl border border-rose-100">
+                                    <span class="text-[10px] font-black text-rose-500 uppercase block mb-1">Salah</span>
+                                    <p class="text-sm italic" x-text="currentSkillData().wrongExample"></p>
+                                </div>
+                                <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                                    <span class="text-[10px] font-black text-emerald-600 uppercase block mb-1">Benar</span>
+                                    <p class="text-sm font-bold" x-text="currentSkillData().rightExample"></p>
+                                </div>
+                            </div>
+                            <div class="p-4 bg-indigo-50 rounded-2xl">
+                                <p class="text-xs text-indigo-900 leading-relaxed italic" x-text="currentSkillData().errorAnalysis"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </template>
+
+    <template x-if="view === 'results'">
+        <div class="min-h-screen flex items-center justify-center bg-slate-50 p-6">
+            <div class="max-w-xl w-full bg-white rounded-[40px] shadow-2xl p-12 text-center animate-pop">
+                <div class="w-24 h-24 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-8">
+                    <i data-lucide="award" class="w-12 h-12"></i>
+                </div>
+                <h2 class="text-4xl font-black mb-2">Luar Biasa!</h2>
+                <p class="text-slate-500 mb-8" x-text="`${userData.nama}, Anda telah menyelesaikan Skill 1-19.`"></p>
+                
+                <div class="bg-indigo-50 rounded-[32px] p-8 mb-8 border-2 border-indigo-100">
+                    <p class="text-sm font-black text-indigo-400 uppercase mb-2">Skor Akhir Anda</p>
+                    <div class="text-7xl font-black text-indigo-600" x-text="score"></div>
+                    <p class="text-xs text-slate-400 mt-2" x-text="`Dikerjakan pada: ${new Date().toLocaleDateString()}`"></p>
+                </div>
+
+                <div class="space-y-4">
+                    <button @click="sendToGSheet()" x-show="!isExported" :disabled="isExporting" class="w-full bg-emerald-500 text-white py-5 rounded-2xl font-black text-xl hover:bg-emerald-600 shadow-xl shadow-emerald-100 transition-all flex items-center justify-center gap-3">
+                        <span x-text="isExporting ? 'Mengirim...' : 'Kirim Nilai ke Guru'"></span>
+                        <i data-lucide="send" x-show="!isExporting"></i>
+                        <div x-show="isExporting" class="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                    </button>
+                    
+                    <div x-show="isExported" class="bg-emerald-100 text-emerald-700 p-4 rounded-2xl font-bold flex items-center justify-center gap-2">
+                        <i data-lucide="check-circle-2"></i> Data Berhasil Terkirim!
+                    </div>
+
+                    <button @click="reset()" class="w-full bg-slate-100 text-slate-600 py-4 rounded-2xl font-bold hover:bg-slate-200 transition-all">
+                        Ulangi Pelatihan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        function peecApp() {
+            return {
+                view: 'login',
+                userData: { nama: '', kelas: '' },
+                currentSkill: 0,
+                score: 0,
+                selectedOption: null,
+                isCorrect: null,
+                isExporting: false,
+                isExported: false,
+                // URL AppScript Anda
+                scriptUrl: 'https://script.google.com/macros/s/AKfycbzS1dd9hz1jh7uwPGns5MkLG4d5nHcT75HH9JlpzUHSKT5t1mOnqKapbr1l6C3AE2sxHg/exec',
+
+                skillsData: [
+                    { 
+                        id: 1, title: "Subject and Verb", category: "Basics", 
+                        theory: "Landasan utama dari sebuah kalimat bahasa Inggris adalah kehadiran satu subjek dan satu kata kerja (verb). Kesalahan paling fatal dalam TOEFL adalah membiarkan subjek menghilang karena adanya kata keterangan waktu yang panjang di depan, atau menggunakan kata benda yang tidak berfungsi sebagai subjek asli.",
+                        formula: "Subject + Verb",
+                        commonMistake: "Missing Subject/Verb Duo",
+                        wrongExample: "Yesterday went to the market.", 
+                        rightExample: "Yesterday, he went to the market.",
+                        errorAnalysis: "Kata 'Yesterday' adalah adverb (keterangan waktu), bukan subjek. Kalimat membutuhkan pelaku (he, she, it, etc.) sebelum verb 'went'.",
+                        question: "_______ was backed up for miles on the freeway.",
+                        options: ["Yesterday", "In the morning", "Traffic", "Cars"],
+                        correct: 2,
+                        explanation: "Kita membutuhkan subjek tunggal karena verb-nya adalah 'was'. 'Traffic' adalah uncountable noun yang bersifat tunggal."
+                    },
+                    { 
+                        id: 2, title: "Objects of Prepositions", category: "Confusion", 
+                        theory: "Banyak peserta TOEFL terkecoh oleh kata benda yang terletak tepat setelah preposisi (in, at, on, of, for, to). Ingatlah: kata benda yang mengikuti preposisi adalah 'Objek Preposisi' dan TIDAK PERNAH bisa menjadi subjek kalimat. Jika Anda melihat subjek hilang, carilah kata benda yang tidak didahului preposisi.",
+                        formula: "Preposition + Object (Noun)",
+                        commonMistake: "Misidentifying the Subject",
+                        wrongExample: "To the girl was given a flower.", 
+                        rightExample: "To the girl, he gave a flower.",
+                        errorAnalysis: "Dalam contoh salah, 'the girl' adalah objek dari 'To'. Kalimat tersebut kehilangan subjek asli yang melakukan tindakan.",
+                        question: "With his friend _______ found the movie theater.",
+                        options: ["has", "he", "later", "when"],
+                        correct: 1,
+                        explanation: "'With his friend' adalah keterangan (prepositional phrase). Kalimat membutuhkan subjek 'he' untuk verb 'found'."
+                    },
+                    { 
+                        id: 3, title: "Appositives Mastery", category: "Structure", 
+                        theory: "Appositive adalah kata benda yang datang sebelum atau sesudah subjek untuk memberikan informasi tambahan. Kunci mengenali Appositive adalah tanda koma. Jika ia dipisahkan oleh koma, ia bukanlah subjek utama. Jangan sampai Anda menambahkan verb baru di dalam appositive tersebut.",
+                        formula: "Subject, Appositive, Verb",
+                        commonMistake: "Treating Appositive as Subject",
+                        wrongExample: "Sally, is a student, is smart.", 
+                        rightExample: "Sally, a student, is smart.",
+                        errorAnalysis: "Appositive tidak boleh diawali verb 'is' di dalam tanda koma jika ia berfungsi sebagai penjelas subjek Sally.",
+                        question: "_______, George, is attending the lecture.",
+                        options: ["Right now", "Happily", "Because of", "My friend"],
+                        correct: 3,
+                        explanation: "Karena 'George' berada di antara koma sebagai penjelas, kita membutuhkan subjek utama di awal kalimat: 'My friend'."
+                    },
+                    { 
+                        id: 4, title: "Present Participles (-ing)", category: "Adjectives", 
+                        theory: "Kata berakhiran -ing bisa membingungkan. Ia bisa menjadi bagian dari verb (jika ada 'be' sebelumnya), namun ia juga bisa menjadi ADJECTIVE (kata sifat) jika berdiri sendiri tanpa 'be'. Sebagai adjective, ia menjelaskan subjek yang sedang melakukan sesuatu secara aktif.",
+                        formula: "Noun + V-ing (as Adjective)",
+                        commonMistake: "Double Verbs in One Sentence",
+                        wrongExample: "The man is standing there is my boss.", 
+                        rightExample: "The man standing there is my boss.",
+                        errorAnalysis: "Jika sudah ada 'is my boss' sebagai verb utama, jangan gunakan 'is' sebelum 'standing'. 'Standing' di sini cukup menjadi penjelas 'the man'.",
+                        question: "The child _______ playing in the yard is my son.",
+                        options: ["now", "is", "he", "was"],
+                        correct: 0,
+                        explanation: "Verb utamanya adalah 'is'. 'Playing' bertindak sebagai adjective. Kita hanya perlu adverb 'now' untuk memperjelas konteks."
+                    },
+                    { 
+                        id: 5, title: "Past Participles (V3)", category: "Adjectives", 
+                        theory: "Mirip dengan Skill 4, V3 (ed/irregular) bisa menjadi verb (setelah 'have' atau 'be') atau adjective. Sebagai adjective, V3 bermakna pasif (yang di...). Tantangannya adalah membedakan V3 yang merupakan verb utama dan V3 yang hanya penjelas subjek.",
+                        formula: "Noun + V3 (Passive Meaning)",
+                        commonMistake: "Confusing V3 Verb with V3 Adjective",
+                        wrongExample: "The food served it was delicious.", 
+                        rightExample: "The food served was delicious.",
+                        errorAnalysis: "'Served' adalah adjective (yang disajikan). Menambahkan 'it' setelahnya menciptakan subjek ganda yang salah.",
+                        question: "The packages _______ mailed at the post office will arrive Monday.",
+                        options: ["have", "were", "them", "just"],
+                        correct: 3,
+                        explanation: "'Will arrive' adalah verb utama. 'Mailed' adalah V3 adjective. Kita butuh adverb 'just' untuk melengkapi makna."
+                    },
+                    { 
+                        id: 6, title: "Coordinate Connectors", category: "Clauses", 
+                        theory: "Bila Anda menggabungkan dua kalimat lengkap (klausa), Anda membutuhkan penghubung koordinatif: and, but, or, so, yet (FANBOYS). Syarat mutlaknya adalah harus ada koma SEBELUM penghubung tersebut jika ia menghubungkan dua klausa mandiri.",
+                        formula: "S + V, (Connector) S + V",
+                        commonMistake: "Missing Connector or Missing Comma",
+                        wrongExample: "The sun was shining I went out.", 
+                        rightExample: "The sun was shining, so I went out.",
+                        errorAnalysis: "Dua klausa mandiri tidak boleh digabung tanpa penghubung dan koma (comma splice).",
+                        question: "The rain stopped, _______ the sun came out.",
+                        options: ["and", "but", "so", "or"],
+                        correct: 0,
+                        explanation: "Klausa kedua menambahkan informasi yang setara dan berkelanjutan, sehingga 'and' adalah pilihan yang paling logis."
+                    },
+                    { 
+                        id: 7, title: "Adverb Time & Cause Connectors", category: "Clauses", 
+                        theory: "Adverb connectors (before, after, because, since) digunakan untuk menunjukkan waktu atau alasan. Jika penghubung ini berada di depan kalimat, Anda wajib meletakkan koma di tengah. Jika di tengah, koma biasanya tidak diperlukan.",
+                        formula: "Connector S + V, S + V",
+                        commonMistake: "Omitting Comma at Mid-sentence",
+                        wrongExample: "Since it rained I stayed home.", 
+                        rightExample: "Since it rained, I stayed home.",
+                        errorAnalysis: "Tanpa koma di tengah, pembaca akan sulit membedakan mana anak kalimat dan mana induk kalimat.",
+                        question: "_______ the bank is open, I will deposit the money.",
+                        options: ["Since", "Now", "Therefore", "In case"],
+                        correct: 0,
+                        explanation: "'Since' adalah connector yang menunjukkan alasan (karena) dan tepat diletakkan di awal kalimat."
+                    },
+                    { 
+                        id: 8, title: "Other Adverb Connectors", category: "Clauses", 
+                        theory: "Skill ini mencakup penghubung untuk kondisi (if, unless), kontras (although, while), dan tujuan. Hati-hati jangan menggunakan dua penghubung sekaligus dalam satu kalimat (misal: Although... but...). Pilih salah satu saja agar struktur kalimat tetap efektif.",
+                        formula: "S + V + Connector + S + V",
+                        commonMistake: "Double Connectors (Redundancy)",
+                        wrongExample: "Although he was sick, but he came.", 
+                        rightExample: "Although he was sick, he came.",
+                        errorAnalysis: "Meskipun dalam bahasa Indonesia kita sering berkata 'Meskipun... tapi...', dalam bahasa Inggris itu adalah kesalahan fatal.",
+                        question: "_______ she is tired, she keeps working.",
+                        options: ["Despite", "Even though", "However", "In spite of"],
+                        correct: 1,
+                        explanation: "'Even though' adalah connector yang diikuti oleh klausa (S+V). 'Despite' hanya diikuti kata benda."
+                    },
+                    { 
+                        id: 9, title: "Noun Clause Connectors", category: "Complex", 
+                        theory: "Noun clause adalah klausa yang berfungsi sebagai kata benda (bisa jadi subjek atau objek). Penghubung seperti 'what, when, why, how, that' digunakan di sini. Urutan kata setelah penghubung HARUS subjek + verb, bukan seperti kalimat tanya.",
+                        formula: "S + V + (Conn + S + V)",
+                        commonMistake: "Using Question Order in Noun Clause",
+                        wrongExample: "I know what is he doing.", 
+                        rightExample: "I know what he is doing.",
+                        errorAnalysis: "Dalam noun clause, struktur tidak dibalik (inverted). Harus mengikuti pola kalimat pernyataan.",
+                        question: "I agree with _______ you said.",
+                        options: ["that", "which", "what", "when"],
+                        correct: 2,
+                        explanation: "'What' digunakan sebagai connector noun clause yang berfungsi sebagai objek dari preposisi 'with'."
+                    },
+                    { 
+                        id: 10, title: "Noun Clause as Subject", category: "Complex", 
+                        theory: "Seluruh rangkaian [Connector + S + V] bisa menduduki posisi subjek di awal kalimat. Karena satu paket klausa ini dianggap sebagai satu kesatuan ide, maka verb utama kalimat tersebut harus selalu berbentuk tunggal (singular).",
+                        formula: "[Conn + S + V] + Verb Utama",
+                        commonMistake: "Missing the Main Verb",
+                        wrongExample: "What he said very important.", 
+                        rightExample: "What he said is very important.",
+                        errorAnalysis: "Frasa 'What he said' baru berperan sebagai subjek. Kalimat tersebut masih butuh kata kerja 'is'.",
+                        question: "_______ was late caused many problems.",
+                        options: ["That he", "He", "The driver", "Because he"],
+                        correct: 0,
+                        explanation: "'That he was late' adalah noun clause yang menjadi subjek utuh untuk kata kerja 'caused'."
+                    },
+                    { 
+                        id: 11, title: "Adjective Clause (Whom/Which)", category: "Complex", 
+                        theory: "Adjective clause menjelaskan kata benda di depannya. 'Whom' untuk orang (objek) dan 'Which' untuk benda. Kesalahan tersering adalah menyisipkan kembali kata ganti (it, them, him) di dalam klausa penjelas tersebut.",
+                        formula: "Noun + [Connector + S + V]",
+                        commonMistake: "Repeating the Pronoun",
+                        wrongExample: "The movie which I saw it was good.", 
+                        rightExample: "The movie which I saw was good.",
+                        errorAnalysis: "Kata 'which' sudah menggantikan 'the movie'. Menambah 'it' membuat objek menjadi ganda.",
+                        question: "The gift _______ I selected was expensive.",
+                        options: ["whom", "which", "whose", "it"],
+                        correct: 1,
+                        explanation: "'Gift' adalah benda, maka penghubung yang tepat untuk menjelaskan benda tersebut adalah 'which'."
+                    },
+                    { 
+                        id: 12, title: "Adjective Clause (Who/Which)", category: "Complex", 
+                        theory: "Di sini, penghubung (Who/Which/That) berperan ganda: sebagai penghubung SEKALIGUS sebagai subjek bagi kata kerja di dalam klausa tersebut. Jangan menambahkan subjek tambahan setelah penghubung ini.",
+                        formula: "Noun + [Who/Which/That + Verb]",
+                        commonMistake: "Adding Extra Subject after Connector",
+                        wrongExample: "The man who he lives next door is nice.", 
+                        rightExample: "The man who lives next door is nice.",
+                        errorAnalysis: "Jangan gunakan 'he' setelah 'who', karena 'who' sudah bertindak sebagai subjek bagi 'lives'.",
+                        question: "The woman _______ answered the phone was polite.",
+                        options: ["who", "whom", "which", "she"],
+                        correct: 0,
+                        explanation: "'Who' merujuk pada 'The woman' dan sekaligus menjadi subjek bagi kata kerja 'answered'."
+                    },
+                    { 
+                        id: 13, title: "Reduced Adjective Clauses", category: "Advanced", 
+                        theory: "Kita bisa meringkas adjective clause untuk efisiensi. Caranya: hapus connector dan be-verb. Jika tidak ada be-verb, ubah verb menjadi V-ing (untuk makna aktif). Teknik ini sering muncul di TOEFL untuk membuat kalimat terlihat lebih rumit.",
+                        formula: "Noun + V-ing / V3",
+                        commonMistake: "Leaving the Be-Verb Alone",
+                        wrongExample: "The man is working there is my friend.", 
+                        rightExample: "The man working there is my friend.",
+                        errorAnalysis: "Jika connector dihapus, 'is' juga harus dihapus. Sisakan 'working' sebagai adjective.",
+                        question: "The house _______ on the hill is very old.",
+                        options: ["stands", "standing", "is stood", "stood"],
+                        correct: 1,
+                        explanation: "'Standing' adalah reduksi dari 'which stands' atau 'which is standing'. Menunjukkan kondisi aktif.",
+                        
+                    },
+                    { 
+                        id: 14, title: "Reduced Adverb Clauses", category: "Advanced", 
+                        theory: "Adverb clause bisa diringkas (misal: 'While he was walking' menjadi 'While walking') HANYA JIKA subjek di anak kalimat sama dengan subjek di induk kalimat. Jika subjek berbeda, reduksi tidak boleh dilakukan karena akan merusak logika kalimat.",
+                        formula: "Connector + V-ing / V3, S + V",
+                        commonMistake: "Dangling Participle (Subject Mismatch)",
+                        wrongExample: "While walking, the dog bit me.", 
+                        rightExample: "While walking, I was bitten by the dog.",
+                        errorAnalysis: "Logika contoh salah: seolah-olah anjingnya yang sedang jalan-jalan (walking). Padahal sayalah yang jalan-jalan.",
+                        question: "Once _______, the finished report should be sent.",
+                        options: ["completing", "complete", "completed", "is complete"],
+                        correct: 2,
+                        explanation: "Laporan (report) memiliki hubungan pasif dengan kata 'selesai'. Maka digunakan V3 'completed'."
+                    },
+                    { 
+                        id: 15, title: "Inversion (Question Words)", category: "Inversion", 
+                        theory: "Inversi adalah pembalikan urutan subjek dan verb (seperti pola tanya). Ini terjadi setelah kata tanya (what, where, when) jika mereka mengawali kalimat tanya. Namun, jika kata tanya tersebut berada di tengah kalimat sebagai connector, urutan TIDAK dibalik.",
+                        formula: "Question Word + Verb + Subject ?",
+                        commonMistake: "Failing to Invert in Questions",
+                        wrongExample: "What the man is saying?", 
+                        rightExample: "What is the man saying?",
+                        errorAnalysis: "Dalam kalimat tanya langsung, verb bantu harus diletakkan sebelum subjek.",
+                        question: "Only once _______ the sun during the entire trip.",
+                        options: ["we saw", "did we see", "saw we", "we did see"],
+                        correct: 1,
+                        explanation: "Frasa pembatas 'Only once' di awal kalimat memaksa terjadinya inversi (did we see)."
+                    },
+                    { 
+                        id: 16, title: "Inversion (Place Expressions)", category: "Inversion", 
+                        theory: "Jika keterangan tempat (place expression) diletakkan di awal kalimat untuk penekanan, urutan subjek dan kata kerja harus dibalik secara total. Sering digunakan dalam gaya bahasa formal atau deskripsi lokasi.",
+                        formula: "Place + Verb + Subject",
+                        commonMistake: "Using Normal Order after Place Emphasis",
+                        wrongExample: "In the forest a bear was.", 
+                        rightExample: "In the forest was a bear.",
+                        errorAnalysis: "Untuk memberikan efek dramatis pada lokasi, kata kerja diletakkan mendahului subjek.",
+                        question: "Nowhere _______ more beautiful flowers than in this garden.",
+                        options: ["you can find", "can you find", "you find", "can find you"],
+                        correct: 1,
+                        explanation: "Kata 'Nowhere' (keterangan tempat negatif) memicu pembalikan kata kerja bantu 'can' ke depan subjek."
+                    },
+                    { 
+                        id: 17, title: "Inversion (Negatives)", category: "Inversion", 
+                        theory: "Ketika kata-kata bermakna negatif atau terbatas (never, rarely, seldom, hardly) mengawali kalimat, subjek dan verb bantu harus dibalik. Ini adalah aturan emas dalam struktur TOEFL yang sering menjebak peserta yang terbiasa dengan pola standar.",
+                        formula: "Negative + Aux + Subject + Verb",
+                        commonMistake: "Normal S-V order after Negative Adv",
+                        wrongExample: "Never I have seen such a thing.", 
+                        rightExample: "Never have I seen such a thing.",
+                        errorAnalysis: "Kata 'Never' mengharuskan verb bantu 'have' pindah ke posisi sebelum subjek 'I'.",
+                        question: "Seldom _______ so much snow in May.",
+                        options: ["it rains", "does it rain", "is it raining", "it does rain"],
+                        correct: 1,
+                        explanation: "'Seldom' adalah kata negatif. Kita butuh verb bantu 'does' sebelum subjek 'it' (inversi)."
+                    },
+                    { 
+                        id: 18, title: "Inversion (Conditionals)", category: "Inversion", 
+                        theory: "Dalam kalimat pengandaian (if-clause), kata 'if' bisa dihilangkan. Jika 'if' hilang, maka subjek dan verb (were, had, should) harus dibalik. Ini memberikan kesan bahasa yang sangat formal dan akademis.",
+                        formula: "Had / Were / Should + S + V",
+                        commonMistake: "Keeping 'If' during Inversion",
+                        wrongExample: "If had I known, I would tell you.", 
+                        rightExample: "Had I known, I would tell you.",
+                        errorAnalysis: "Gunakan 'If' ATAU inversi. Jangan gunakan keduanya secara bersamaan dalam satu klausa.",
+                        question: "_______ more time, I would have finished.",
+                        options: ["If I had", "Had I", "I had", "Should I"],
+                        correct: 1,
+                        explanation: "'Had I' adalah bentuk inversi dari 'If I had had'. Digunakan untuk pengandaian tipe 3."
+                    },
+                    { 
+                        id: 19, title: "Inversion (Comparisons)", category: "Inversion", 
+                        theory: "Pembalikan subjek-verb bersifat opsional setelah kata 'than' atau 'as' dalam perbandingan. Meskipun tidak wajib, bentuk inversi ini sering muncul di soal TOEFL bagian Structure karena dianggap lebih formal (misal: 'than is his sister').",
+                        formula: "Than / As + Verb + Subject",
+                        commonMistake: "Using Wrong Auxiliary Verb",
+                        wrongExample: "He is taller than do I.", 
+                        rightExample: "He is taller than am I / than I am.",
+                        errorAnalysis: "Verb bantu yang dibalik harus sinkron dengan verb utama di klausa sebelumnya (is -> am).",
+                        question: "She is much more intelligent than _______.",
+                        options: ["is her brother", "her brother", "does her brother", "is"],
+                        correct: 0,
+                        explanation: "Bentuk inversi 'is her brother' setelah 'than' adalah struktur formal yang sering diuji di TOEFL." }
+                ],
+
+                startToSplash() {
+                    this.view = 'splash';
+                    this.$nextTick(() => this.initIcons());
+                },
+
+                initIcons() {
+                    if (window.lucide) window.lucide.createIcons();
+                },
+
+                currentSkillData() {
+                    return this.skillsData[this.currentSkill];
+                },
+
+                renderQuestion() {
+                    const skill = this.currentSkillData();
+                    const parts = skill.question.split('_______');
+                    const fill = this.selectedOption !== null 
+                        ? `<span class="text-indigo-400 font-black underline animate-pop">${skill.options[this.selectedOption]}</span>`
+                        : `<span class="text-slate-600 font-black border-b-2 border-slate-700 px-6">_______</span>`;
+                    return (parts[0] || "") + fill + (parts[1] || "");
+                },
+
+                handleOptionSelect(idx) {
+                    this.selectedOption = idx;
+                    this.isCorrect = (idx === this.currentSkillData().correct);
+                    if (this.isCorrect) this.score++;
+                    this.$nextTick(() => this.initIcons());
+                },
+
+                nextSkill() {
+                    if (this.currentSkill < this.skillsData.length - 1) {
+                        this.currentSkill++;
+                        this.selectedOption = null;
+                        this.isCorrect = null;
+                        window.scrollTo(0,0);
+                        this.$nextTick(() => this.initIcons());
+                    } else {
+                        this.view = 'results';
+                        this.$nextTick(() => this.initIcons());
+                    }
+                },
+
+                async sendToGSheet() {
+                    this.isExporting = true;
+                    try {
+                        const payload = {
+                            nama: this.userData.nama,
+                            kelas: this.userData.kelas,
+                            skor: this.score,
+                            waktu: new Date().toLocaleString()
+                        };
+
+                        await fetch(this.scriptUrl, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+
+                        this.isExported = true;
+                    } catch (e) {
+                        alert('Error saat mengirim data. Pastikan link AppScript benar.');
+                    } finally {
+                        this.isExporting = false;
+                        this.$nextTick(() => this.initIcons());
+                    }
+                },
+
+                reset() {
+                    this.view = 'login';
+                    this.currentSkill = 0;
+                    this.score = 0;
+                    this.selectedOption = null;
+                    this.isCorrect = null;
+                    this.isExported = false;
+                }
+            };
+        }
+    </script>
+</body>
+</html>
