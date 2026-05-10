@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TOEFL Structure Skills 1–19 Interactive Guide</title>
+  <style>
+    :root {
+      --bg: #f6f8fc;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #5b6472;
+      --line: #dbe3ef;
+      --accent: #2563eb;
+      --accent-2: #0f766e;
+      --good: #157f3b;
+      --bad: #b91c1c;
+      --soft: #eff6ff;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f9fbff 0%, #f3f6fb 100%);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    header {
+      background: linear-gradient(135deg, #0f172a, #1d4ed8);
+      color: white;
+      padding: 48px 20px 32px;
+    }
+    .wrap { max-width: 1180px; margin: 0 auto; }
+    h1, h2, h3 { line-height: 1.2; margin: 0 0 12px; }
+    h1 { font-size: clamp(2rem, 4vw, 3.4rem); }
+    .subtitle { max-width: 860px; font-size: 1.02rem; color: rgba(255,255,255,.88); }
+    .toolbar {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1.3fr .9fr .9fr;
+      margin-top: 26px;
+    }
+    .tool {
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 16px;
+      padding: 14px 16px;
+      backdrop-filter: blur(8px);
+    }
+    .tool b { display:block; margin-bottom: 6px; }
+    .tool input, .tool select {
+      width: 100%;
+      padding: 12px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      outline: none;
+      font-size: 0.98rem;
+      background: white;
+      color: var(--ink);
+    }
+    main { padding: 24px 20px 60px; }
+    .topnav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 18px;
+    }
+    .topnav a {
+      text-decoration: none;
+      color: var(--accent);
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      box-shadow: var(--shadow);
+      font-size: .92rem;
+    }
+    .grid { display: grid; gap: 18px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .intro { padding: 18px; }
+    .intro p { margin: 0 0 10px; color: var(--muted); }
+    details.skill {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    details.skill + details.skill { margin-top: 14px; }
+    summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: linear-gradient(180deg, #ffffff, #f8fbff);
+      border-bottom: 1px solid var(--line);
+    }
+    summary::-webkit-details-marker { display: none; }
+    .skill-title { font-size: 1.08rem; font-weight: 800; }
+    .skill-tag {
+      font-size: .82rem;
+      color: var(--accent);
+      background: var(--soft);
+      padding: 6px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .skill-body { padding: 18px 20px 8px; }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 14px 0 6px;
+    }
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px 15px;
+      background: #fbfdff;
+    }
+    .panel h4 { margin: 0 0 8px; font-size: 1rem; }
+    .panel ul { margin: 8px 0 0 18px; color: var(--muted); }
+    .note { color: var(--muted); font-size: .96rem; }
+    .formula {
+      display: inline-block;
+      margin: 8px 0 0;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .95rem;
+    }
+    .examples {
+      display: grid;
+      gap: 10px;
+      margin: 12px 0 0;
+    }
+    .ex {
+      border-left: 4px solid var(--accent);
+      background: #f8fbff;
+      padding: 10px 12px;
+      border-radius: 10px;
+    }
+    .quiz {
+      margin-top: 14px;
+      border-top: 1px dashed var(--line);
+      padding-top: 14px;
+    }
+    .qblock {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      margin: 12px 0;
+      background: white;
+    }
+    .qhead { font-weight: 700; margin: 0 0 8px; }
+    .opts { display: grid; gap: 8px; }
+    label.opt {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      cursor: pointer;
+      background: #fcfdff;
+    }
+    label.opt:hover { border-color: #b8c7e6; }
+    .actions { display:flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--accent);
+      color: white;
+    }
+    button.secondary { background: #0f766e; }
+    button.ghost {
+      background: white;
+      color: var(--accent);
+      border: 1px solid var(--line);
+    }
+    .feedback {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      display: none;
+      font-weight: 600;
+    }
+    .feedback.good { display:block; background: #eefaf1; color: var(--good); border: 1px solid #cdebd6; }
+    .feedback.bad { display:block; background: #fff1f2; color: var(--bad); border: 1px solid #fecdd3; }
+    .answer-key {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 16px;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      display: none;
+    }
+    .footer {
+      margin-top: 26px;
+      padding: 18px;
+      color: var(--muted);
+      font-size: .96rem;
+      text-align: center;
+    }
+    .small { font-size: .93rem; color: var(--muted); }
+    @media (max-width: 920px) {
+      .toolbar, .two-col { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>TOEFL Structure Skills 1–19</h1>
+      <p class="subtitle">An interactive study guide with expanded theory, grammar patterns, common traps, and built-in exercises for every skill. Use the navigation to jump between sections and check answers directly on the page.</p>
+
+      <div class="toolbar">
+        <div class="tool">
+          <b>Search skills</b>
+          <input id="searchBox" type="text" placeholder="Type a skill number or keyword: subject, clause, inversion..." oninput="filterSkills()" />
+        </div>
+        <div class="tool">
+          <b>Jump to skill</b>
+          <select id="jumpSelect" onchange="jumpToSkill(this.value)">
+            <option value="">Select a skill</option>
+            <option value="skill1">Skill 1</option>
+            <option value="skill2">Skill 2</option>
+            <option value="skill3">Skill 3</option>
+            <option value="skill4">Skill 4</option>
+            <option value="skill5">Skill 5</option>
+            <option value="skill6">Skill 6</option>
+            <option value="skill7">Skill 7</option>
+            <option value="skill8">Skill 8</option>
+            <option value="skill9">Skill 9</option>
+            <option value="skill10">Skill 10</option>
+            <option value="skill11">Skill 11</option>
+            <option value="skill12">Skill 12</option>
+            <option value="skill13">Skill 13</option>
+            <option value="skill14">Skill 14</option>
+            <option value="skill15">Skill 15</option>
+            <option value="skill16">Skill 16</option>
+            <option value="skill17">Skill 17</option>
+            <option value="skill18">Skill 18</option>
+            <option value="skill19">Skill 19</option>
+          </select>
+        </div>
+        <div class="tool">
+          <b>Tools</b>
+          <div class="actions" style="margin-top:0;">
+            <button class="ghost" onclick="expandAll()">Expand all</button>
+            <button class="ghost" onclick="collapseAll()">Collapse all</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="topnav">
+      <a href="#skill1">1</a><a href="#skill2">2</a><a href="#skill3">3</a><a href="#skill4">4</a><a href="#skill5">5</a>
+      <a href="#skill6">6</a><a href="#skill7">7</a><a href="#skill8">8</a><a href="#skill9">9</a><a href="#skill10">10</a>
+      <a href="#skill11">11</a><a href="#skill12">12</a><a href="#skill13">13</a><a href="#skill14">14</a><a href="#skill15">15</a>
+      <a href="#skill16">16</a><a href="#skill17">17</a><a href="#skill18">18</a><a href="#skill19">19</a>
+      <a href="#review">Review</a>
+    </div>
+
+    <section class="card intro">
+      <h2>How to use this page</h2>
+      <p>Each skill section opens with a theory block that explains what the skill tests, how to recognize it, and what TOEFL is trying to trap you into doing. After that, you will find an exercise set with checkable multiple-choice questions and instant feedback.</p>
+      <p class="note">Tip: read the theory first, then answer the exercise without looking at the explanation. After checking your answer, read the feedback carefully to build pattern recognition.</p>
+    </section>
+
+    <details class="skill" id="skill1" open>
+      <summary><span class="skill-title">Skill 1 — Be sure the sentence has a subject and a verb</span><span class="skill-tag">single clause</span></summary>
+      <div class="skill-body">
+        <div class="two-col">
+          <div class="panel">
+            <h4>Theory</h4>
+            <p>A complete English clause needs at least one subject and one main verb. TOEFL often tests this by giving you a sentence fragment that looks almost complete. The most common problem is that the subject is missing, the verb is missing, or the wrong word is mistakenly treated as the subject or verb. The safest approach is to locate the main verb first, then ask who or what performs that action. If no clear subject appears, the sentence is incomplete. If there are two subject-like words or two verb-like words in a short clause, one of them may be extra or may belong to a different structure.</p>
+            <p class="formula">Subject + Verb</p>
+          </div>
+          <div class="panel">
+            <h4>Common traps</h4>
+            <ul>
+              <li>Adverbs pretending to be subjects: yesterday, today, soon</li>
+              <li>Subject already present, but no verb</li>
+              <li>Extra helping verb or extra subject</li>
+              <li>Subject-verb agreement mistakes in singular/plural form</li>
+            </ul>
+          </div>
+        </div>
+        <div class="examples">
+          <div class="ex"><b>Example:</b> The researchers <i>are studying</i> the data. <span class="small">Subject = researchers; verb = are studying.</span></div>
+          <div class="ex"><b>Example:</b> Yesterday <i>was</i> very cold. <span class="small">Here “yesterday” is not the subject; the clause still needs an understood subject or a corrected structure.</span></div>
+        </div>
+        <div class="quiz">
+          <div class="qblock" data-answer="B">
+            <p class="qhead">1. _____ was delayed because of the storm.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s1q1" value="A">A. Yesterday</label>
+              <label class="opt"><input type="radio" name="s1q1" value="B">B. The flight</label>
+              <label class="opt"><input type="radio" name="s1q1" value="C">C. During the night</label>
+              <label class="opt"><input type="radio" name="s1q1" value="D">D. Quickly</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+          <div class="qblock" data-answer="B">
+            <p class="qhead">2. The new policy _____ approved by the committee.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s1q2" value="A">A. are</label>
+              <label class="opt"><input type="radio" name="s1q2" value="B">B. was</label>
+              <label class="opt"><input type="radio" name="s1q2" value="C">C. were</label>
+              <label class="opt"><input type="radio" name="s1q2" value="D">D. approving</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="skill" id="skill2">
+      <summary><span class="skill-title">Skill 2 — Be careful of objects of prepositions</span><span class="skill-tag">prepositional phrase</span></summary>
+      <div class="skill-body">
+        <div class="two-col">
+          <div class="panel">
+            <h4>Theory</h4>
+            <p>A noun that follows a preposition is the object of that preposition, not the subject of the clause. This is one of the biggest TOEFL traps because nouns inside prepositional phrases often appear close to the verb and can look like subjects. The solution is to identify prepositions first and mentally remove the whole prepositional phrase. What remains should reveal the true subject. Remember that objects of prepositions may be nouns, pronouns, gerunds, or noun clauses.</p>
+            <p class="formula">Preposition + object → prepositional phrase</p>
+          </div>
+          <div class="panel">
+            <h4>Common traps</h4>
+            <ul>
+              <li>Subject hidden before or after long prepositional phrases</li>
+              <li>Plural noun inside a phrase causing agreement confusion</li>
+              <li>Prepositional phrase before the verb</li>
+            </ul>
+          </div>
+        </div>
+        <div class="examples">
+          <div class="ex"><b>Example:</b> The flowers <i>in the garden</i> are blooming. <span class="small">Subject = flowers; “garden” is object of preposition “in.”</span></div>
+          <div class="ex"><b>Example:</b> A report <i>from the committee</i> was released. <span class="small">Subject = report; not committee.</span></div>
+        </div>
+        <div class="quiz">
+          <div class="qblock" data-answer="B">
+            <p class="qhead">1. The quality of these products _____ excellent.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s2q1" value="A">A. are</label>
+              <label class="opt"><input type="radio" name="s2q1" value="B">B. is</label>
+              <label class="opt"><input type="radio" name="s2q1" value="C">C. were</label>
+              <label class="opt"><input type="radio" name="s2q1" value="D">D. have</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+          <div class="qblock" data-answer="B">
+            <p class="qhead">2. The students in the library _____ studying.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s2q2" value="A">A. is</label>
+              <label class="opt"><input type="radio" name="s2q2" value="B">B. are</label>
+              <label class="opt"><input type="radio" name="s2q2" value="C">C. was</label>
+              <label class="opt"><input type="radio" name="s2q2" value="D">D. has</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="skill" id="skill3">
+      <summary><span class="skill-title">Skill 3 — Be careful of appositives</span><span class="skill-tag">renaming noun</span></summary>
+      <div class="skill-body">
+        <div class="two-col">
+          <div class="panel">
+            <h4>Theory</h4>
+            <p>An appositive is a noun or noun phrase that renames another noun. It is not another subject. TOEFL loves to place appositives next to the subject so that test-takers accidentally identify the wrong noun as the subject. Appositives are often separated by commas, which helps you spot them. If you remove the appositive phrase and the sentence still makes sense, that phrase is probably extra information rather than the main subject.</p>
+            <p class="formula">Subject, appositive, verb</p>
+          </div>
+          <div class="panel">
+            <h4>Common traps</h4>
+            <ul>
+              <li>Appositive before the subject</li>
+              <li>Appositive between subject and verb</li>
+              <li>Long noun phrase that looks like the subject</li>
+            </ul>
+          </div>
+        </div>
+        <div class="examples">
+          <div class="ex"><b>Example:</b> My uncle, <i>a skilled mechanic</i>, repaired the car. <span class="small">Subject = uncle; appositive = a skilled mechanic.</span></div>
+          <div class="ex"><b>Example:</b> <i>A skilled mechanic</i>, my uncle repaired the car. <span class="small">The appositive comes first, but the true subject is still uncle.</span></div>
+        </div>
+        <div class="quiz">
+          <div class="qblock" data-answer="B">
+            <p class="qhead">1. Maria, the best student in the class, _____ the award.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s3q1" value="A">A. receive</label>
+              <label class="opt"><input type="radio" name="s3q1" value="B">B. received</label>
+              <label class="opt"><input type="radio" name="s3q1" value="C">C. receiving</label>
+              <label class="opt"><input type="radio" name="s3q1" value="D">D. receives</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+          <div class="qblock" data-answer="C">
+            <p class="qhead">2. The car, a vintage model, _____ expensive.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s3q2" value="A">A. are</label>
+              <label class="opt"><input type="radio" name="s3q2" value="B">B. were</label>
+              <label class="opt"><input type="radio" name="s3q2" value="C">C. is</label>
+              <label class="opt"><input type="radio" name="s3q2" value="D">D. have</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="skill" id="skill4">
+      <summary><span class="skill-title">Skill 4 — Be careful of present participles</span><span class="skill-tag">-ing form</span></summary>
+      <div class="skill-body">
+        <div class="two-col">
+          <div class="panel">
+            <h4>Theory</h4>
+            <p>Present participles end in -ing and can function in two very different ways. They can be part of the verb when they follow a form of <i>be</i> (is, are, was, were), or they can function as adjectives when they modify a noun. TOEFL often hides the real verb later in the sentence, so the -ing word you first notice is not always the main verb. If another complete verb already exists, the -ing word is probably adjectival rather than verbal.</p>
+            <p class="formula">be + present participle = verb</p>
+          </div>
+          <div class="panel">
+            <h4>Common traps</h4>
+            <ul>
+              <li>Reducing an adjective into a verb by mistake</li>
+              <li>Confusing a participle phrase with the main clause</li>
+              <li>Double verb errors</li>
+            </ul>
+          </div>
+        </div>
+        <div class="examples">
+          <div class="ex"><b>Example:</b> The children <i>are playing</i> in the yard. <span class="small">Verb = are playing.</span></div>
+          <div class="ex"><b>Example:</b> The children <i>playing in the yard</i> are my neighbors. <span class="small">Playing is adjectival.</span></div>
+        </div>
+        <div class="quiz">
+          <div class="qblock" data-answer="B">
+            <p class="qhead">1. The students _____ in the hall are waiting.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s4q1" value="A">A. sit</label>
+              <label class="opt"><input type="radio" name="s4q1" value="B">B. sitting</label>
+              <label class="opt"><input type="radio" name="s4q1" value="C">C. sits</label>
+              <label class="opt"><input type="radio" name="s4q1" value="D">D. sat</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+          <div class="qblock" data-answer="B">
+            <p class="qhead">2. The teacher _____ the lesson is very experienced.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s4q2" value="A">A. explain</label>
+              <label class="opt"><input type="radio" name="s4q2" value="B">B. explaining</label>
+              <label class="opt"><input type="radio" name="s4q2" value="C">C. explained</label>
+              <label class="opt"><input type="radio" name="s4q2" value="D">D. explains</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="skill" id="skill5">
+      <summary><span class="skill-title">Skill 5 — Be careful of past participles</span><span class="skill-tag">ed / irregular</span></summary>
+      <div class="skill-body">
+        <div class="two-col">
+          <div class="panel">
+            <h4>Theory</h4>
+            <p>Past participles can be part of a verb phrase with <i>be</i> or <i>have</i>, or they can function as adjectives. This matters because TOEFL frequently places a participle near the front of the sentence to distract you from the real verb later in the clause. A past participle without a helping verb is often adjectival. A participle with a helping verb is verbal. Watch for passive voice and reduced adjective clauses.</p>
+            <p class="formula">be / have + past participle = verb</p>
+          </div>
+          <div class="panel">
+            <h4>Common traps</h4>
+            <ul>
+              <li>Passive voice mistaken for adjective</li>
+              <li>Irregular participles: written, taken, given, known</li>
+              <li>Extra verb after a participial phrase</li>
+            </ul>
+          </div>
+        </div>
+        <div class="examples">
+          <div class="ex"><b>Example:</b> The package <i>was delivered</i> yesterday. <span class="small">Verb = was delivered.</span></div>
+          <div class="ex"><b>Example:</b> The package <i>delivered yesterday</i> was damaged. <span class="small">Delivered is adjectival.</span></div>
+        </div>
+        <div class="quiz">
+          <div class="qblock" data-answer="A">
+            <p class="qhead">1. The documents _____ yesterday are confidential.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s5q1" value="A">A. signed</label>
+              <label class="opt"><input type="radio" name="s5q1" value="B">B. signing</label>
+              <label class="opt"><input type="radio" name="s5q1" value="C">C. sign</label>
+              <label class="opt"><input type="radio" name="s5q1" value="D">D. signs</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+          <div class="qblock" data-answer="B">
+            <p class="qhead">2. The package was _____ this morning.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s5q2" value="A">A. deliver</label>
+              <label class="opt"><input type="radio" name="s5q2" value="B">B. delivered</label>
+              <label class="opt"><input type="radio" name="s5q2" value="C">C. delivering</label>
+              <label class="opt"><input type="radio" name="s5q2" value="D">D. delivers</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="skill" id="skill6">
+      <summary><span class="skill-title">Skill 6 — Use coordinate connectors correctly</span><span class="skill-tag">and / but / or / so / yet</span></summary>
+      <div class="skill-body">
+        <div class="two-col">
+          <div class="panel">
+            <h4>Theory</h4>
+            <p>Coordinate connectors join two complete clauses. The most common are <i>and, but, or, so, yet</i>. If the sentence has two clauses, each clause must be grammatically complete on its own. A comma usually appears before the coordinate connector when both clauses are independent. TOEFL often removes the connector and asks you to supply the one that best joins the ideas logically.</p>
+            <p class="formula">Clause, coordinate connector clause</p>
+          </div>
+          <div class="panel">
+            <h4>Common traps</h4>
+            <ul>
+              <li>Comma splice without a connector</li>
+              <li>Choosing a subordinate connector when a coordinate one is needed</li>
+              <li>Connector with only one clause on one side</li>
+            </ul>
+          </div>
+        </div>
+        <div class="examples">
+          <div class="ex"><b>Example:</b> The rain stopped, <i>so</i> we went outside.</div>
+          <div class="ex"><b>Example:</b> She wanted to stay, <i>but</i> she had to leave.</div>
+        </div>
+        <div class="quiz">
+          <div class="qblock" data-answer="A">
+            <p class="qhead">1. The rain stopped, _____ we continued the game.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s6q1" value="A">A. but</label>
+              <label class="opt"><input type="radio" name="s6q1" value="B">B. because</label>
+              <label class="opt"><input type="radio" name="s6q1" value="C">C. although</label>
+              <label class="opt"><input type="radio" name="s6q1" value="D">D. during</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+          <div class="qblock" data-answer="A">
+            <p class="qhead">2. She studied hard, _____ she passed the exam.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s6q2" value="A">A. so</label>
+              <label class="opt"><input type="radio" name="s6q2" value="B">B. because of</label>
+              <label class="opt"><input type="radio" name="s6q2" value="C">C. despite</label>
+              <label class="opt"><input type="radio" name="s6q2" value="D">D. however</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="skill" id="skill7">
+      <summary><span class="skill-title">Skill 7 — Use adverb time and cause connectors correctly</span><span class="skill-tag">because / before / since</span></summary>
+      <div class="skill-body">
+        <div class="two-col">
+          <div class="panel">
+            <h4>Theory</h4>
+            <p>Adverb clause connectors introduce dependent clauses that express time or cause. These clauses are not complete sentences by themselves; they must attach to an independent clause. If the adverb clause comes first, a comma is usually used. If it comes second, no comma is generally needed. The key idea on TOEFL is to make sure the clause has a connector and both clauses remain grammatically complete.</p>
+            <p class="formula">Adverb connector + clause, independent clause</p>
+          </div>
+          <div class="panel">
+            <h4>Common traps</h4>
+            <ul>
+              <li>Missing subject after connector</li>
+              <li>Using a coordinate connector instead of a subordinating one</li>
+              <li>Comma mistake when connector appears second</li>
+            </ul>
+          </div>
+        </div>
+        <div class="examples">
+          <div class="ex"><b>Example:</b> Because it was late, we left early.</div>
+          <div class="ex"><b>Example:</b> We left early because it was late.</div>
+        </div>
+        <div class="quiz">
+          <div class="qblock" data-answer="A">
+            <p class="qhead">1. _____ the class ended, the students left.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s7q1" value="A">A. After</label>
+              <label class="opt"><input type="radio" name="s7q1" value="B">B. Despite</label>
+              <label class="opt"><input type="radio" name="s7q1" value="C">C. Although</label>
+              <label class="opt"><input type="radio" name="s7q1" value="D">D. During</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+          <div class="qblock" data-answer="A">
+            <p class="qhead">2. We stayed inside _____ it was snowing.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s7q2" value="A">A. because</label>
+              <label class="opt"><input type="radio" name="s7q2" value="B">B. unless</label>
+              <label class="opt"><input type="radio" name="s7q2" value="C">C. however</label>
+              <label class="opt"><input type="radio" name="s7q2" value="D">D. meanwhile</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="skill" id="skill8">
+      <summary><span class="skill-title">Skill 8 — Use other adverb connectors correctly</span><span class="skill-tag">contrast / condition / place / manner</span></summary>
+      <div class="skill-body">
+        <div class="two-col">
+          <div class="panel">
+            <h4>Theory</h4>
+            <p>Adverb connectors can signal contrast, condition, place, or manner. These connectors still create dependent clauses, so the sentence must remain structurally balanced. Contrast connectors often appear with a comma when the dependent clause comes first. Condition connectors frequently require a full subject and verb after the connector. Place connectors such as <i>where</i> and <i>wherever</i> often describe location or destination, while manner connectors describe how something happens.</p>
+            <p class="formula">Adverb connector + clause + main clause</p>
+          </div>
+          <div class="panel">
+            <h4>Common traps</h4>
+            <ul>
+              <li>Misusing a contrast word as a coordinate connector</li>
+              <li>Leaving out the subject after where/wherever</li>
+              <li>Using condition connectors with fragment structure</li>
+            </ul>
+          </div>
+        </div>
+        <div class="examples">
+          <div class="ex"><b>Example:</b> Although she was tired, she kept working.</div>
+          <div class="ex"><b>Example:</b> You can sit wherever you like.</div>
+        </div>
+        <div class="quiz">
+          <div class="qblock" data-answer="A">
+            <p class="qhead">1. _____ he was tired, he continued working.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s8q1" value="A">A. Although</label>
+              <label class="opt"><input type="radio" name="s8q1" value="B">B. Because</label>
+              <label class="opt"><input type="radio" name="s8q1" value="C">C. Since</label>
+              <label class="opt"><input type="radio" name="s8q1" value="D">D. During</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+          <div class="qblock" data-answer="A">
+            <p class="qhead">2. You can go _____ you finish your work.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s8q2" value="A">A. if</label>
+              <label class="opt"><input type="radio" name="s8q2" value="B">B. because</label>
+              <label class="opt"><input type="radio" name="s8q2" value="C">C. despite</label>
+              <label class="opt"><input type="radio" name="s8q2" value="D">D. during</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="skill" id="skill9">
+      <summary><span class="skill-title">Skill 9 — Use noun clause connectors correctly</span><span class="skill-tag">that / what / whether / if</span></summary>
+      <div class="skill-body">
+        <div class="two-col">
+          <div class="panel">
+            <h4>Theory</h4>
+            <p>A noun clause acts like a noun. It can be the subject, object, or object of a preposition. This makes noun clauses extremely important on TOEFL because they often replace a single noun where you might expect a sentence. Connectors such as <i>that</i>, <i>what</i>, <i>when</i>, <i>where</i>, <i>why</i>, <i>how</i>, <i>whether</i>, and <i>if</i> can introduce noun clauses. When a noun clause is the subject, the whole clause may come before the main verb.</p>
+            <p class="formula">Noun clause = noun function</p>
+          </div>
+          <div class="panel">
+            <h4>Common traps</h4>
+            <ul>
+              <li>Inverting subject and verb inside a noun clause</li>
+              <li>Confusing noun clause connectors with question words</li>
+              <li>Forgetting that the entire clause can act as one subject</li>
+            </ul>
+          </div>
+        </div>
+        <div class="examples">
+          <div class="ex"><b>Example:</b> I know <i>what he said</i>. <span class="small">The whole clause is the object of “know.”</span></div>
+          <div class="ex"><b>Example:</b> <i>What he said</i> surprised everyone. <span class="small">The clause functions as subject.</span></div>
+        </div>
+        <div class="quiz">
+          <div class="qblock" data-answer="A">
+            <p class="qhead">1. _____ he said was surprising.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s9q1" value="A">A. What</label>
+              <label class="opt"><input type="radio" name="s9q1" value="B">B. Because</label>
+              <label class="opt"><input type="radio" name="s9q1" value="C">C. Although</label>
+              <label class="opt"><input type="radio" name="s9q1" value="D">D. During</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+          <div class="qblock" data-answer="A">
+            <p class="qhead">2. I do not know _____ she left.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s9q2" value="A">A. why</label>
+              <label class="opt"><input type="radio" name="s9q2" value="B">B. despite</label>
+              <label class="opt"><input type="radio" name="s9q2" value="C">C. during</label>
+              <label class="opt"><input type="radio" name="s9q2" value="D">D. however</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="skill" id="skill10">
+      <summary><span class="skill-title">Skill 10 — Use noun clause connector/subjects correctly</span><span class="skill-tag">whoever / whatever / whichever</span></summary>
+      <div class="skill-body">
+        <div class="two-col">
+          <div class="panel">
+            <h4>Theory</h4>
+            <p>Some noun clause words function as both connector and subject at the same time. These are especially common in TOEFL because they remove the need for a separate subject after the connector. Words like <i>whoever</i>, <i>whatever</i>, <i>whichever</i>, <i>who</i>, <i>what</i>, and <i>which</i> may serve this dual role depending on the structure. When that happens, the clause does not need another subject immediately after the connector.</p>
+            <p class="formula">Connector + subject in one word</p>
+          </div>
+          <div class="panel">
+            <h4>Common traps</h4>
+            <ul>
+              <li>Adding an unnecessary subject after whoever/whatever</li>
+              <li>Using inverted question order inside a noun clause</li>
+              <li>Forgetting that the clause can be the subject of the main verb</li>
+            </ul>
+          </div>
+        </div>
+        <div class="examples">
+          <div class="ex"><b>Example:</b> <i>Whoever arrives first</i> will win the prize.</div>
+          <div class="ex"><b>Example:</b> I’ll take <i>whatever is available</i>.</div>
+        </div>
+        <div class="quiz">
+          <div class="qblock" data-answer="A">
+            <p class="qhead">1. _____ caused the accident remains unknown.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s10q1" value="A">A. What</label>
+              <label class="opt"><input type="radio" name="s10q1" value="B">B. Because</label>
+              <label class="opt"><input type="radio" name="s10q1" value="C">C. During</label>
+              <label class="opt"><input type="radio" name="s10q1" value="D">D. Although</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+          <div class="qblock" data-answer="A">
+            <p class="qhead">2. I will choose _____ is cheaper.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s10q2" value="A">A. whichever</label>
+              <label class="opt"><input type="radio" name="s10q2" value="B">B. because</label>
+              <label class="opt"><input type="radio" name="s10q2" value="C">C. despite</label>
+              <label class="opt"><input type="radio" name="s10q2" value="D">D. during</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="skill" id="skill11">
+      <summary><span class="skill-title">Skill 11 — Use adjective clause connectors correctly</span><span class="skill-tag">relative pronouns</span></summary>
+      <div class="skill-body">
+        <div class="two-col">
+          <div class="panel">
+            <h4>Theory</h4>
+            <p>An adjective clause describes a noun. It usually follows the noun it describes and begins with a relative pronoun or relative adverb. On TOEFL, the main issue is recognizing that the clause is modifying a noun and therefore must contain a connector that introduces the description. These clauses are often essential for combining or expanding ideas in a compact sentence.</p>
+            <p class="formula">Noun + adjective clause</p>
+          </div>
+          <div class="panel">
+            <h4>Common traps</h4>
+            <ul>
+              <li>Using a noun clause connector instead of an adjective clause connector</li>
+              <li>Placing the clause too far from the noun it describes</li>
+              <li>Forgetting the clause needs its own subject/verb structure unless reduced</li>
+            </ul>
+          </div>
+        </div>
+        <div class="examples">
+          <div class="ex"><b>Example:</b> The book <i>that I bought</i> was expensive.</div>
+          <div class="ex"><b>Example:</b> The woman <i>who lives next door</i> is a doctor.</div>
+        </div>
+        <div class="quiz">
+          <div class="qblock" data-answer="A">
+            <p class="qhead">1. The student _____ won the prize is absent.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s11q1" value="A">A. who</label>
+              <label class="opt"><input type="radio" name="s11q1" value="B">B. whom</label>
+              <label class="opt"><input type="radio" name="s11q1" value="C">C. where</label>
+              <label class="opt"><input type="radio" name="s11q1" value="D">D. when</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+          <div class="qblock" data-answer="A">
+            <p class="qhead">2. The book _____ I borrowed was interesting.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s11q2" value="A">A. which</label>
+              <label class="opt"><input type="radio" name="s11q2" value="B">B. where</label>
+              <label class="opt"><input type="radio" name="s11q2" value="C">C. when</label>
+              <label class="opt"><input type="radio" name="s11q2" value="D">D. why</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="skill" id="skill12">
+      <summary><span class="skill-title">Skill 12 — Use adjective clause connector/subjects correctly</span><span class="skill-tag">who / which / that as subject</span></summary>
+      <div class="skill-body">
+        <div class="two-col">
+          <div class="panel">
+            <h4>Theory</h4>
+            <p>In some adjective clauses, the relative pronoun does more than connect the clause: it also acts as the subject of the clause. That means the word after the connector should be a verb, not another subject. This structure is a favorite TOEFL trap because students often insert an unnecessary subject after the relative pronoun. Once you see this pattern, remember that the connector itself supplies the subject slot.</p>
+            <p class="formula">who / which / that + verb</p>
+          </div>
+          <div class="panel">
+            <h4>Common traps</h4>
+            <ul>
+              <li>“who she...”, “which it...”, “that he...” style duplication</li>
+              <li>Using whom where a subject is needed</li>
+              <li>Extra pronoun after the connector</li>
+            </ul>
+          </div>
+        </div>
+        <div class="examples">
+          <div class="ex"><b>Example:</b> The notebook <i>that is on the table</i> is mine.</div>
+          <div class="ex"><b>Example:</b> A secretary <i>who types fast</i> is useful.</div>
+        </div>
+        <div class="quiz">
+          <div class="qblock" data-answer="A">
+            <p class="qhead">1. The car _____ is parked outside belongs to me.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s12q1" value="A">A. which</label>
+              <label class="opt"><input type="radio" name="s12q1" value="B">B. whom</label>
+              <label class="opt"><input type="radio" name="s12q1" value="C">C. where</label>
+              <label class="opt"><input type="radio" name="s12q1" value="D">D. when</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+          <div class="qblock" data-answer="A">
+            <p class="qhead">2. The students _____ study regularly succeed.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s12q2" value="A">A. who</label>
+              <label class="opt"><input type="radio" name="s12q2" value="B">B. whom</label>
+              <label class="opt"><input type="radio" name="s12q2" value="C">C. where</label>
+              <label class="opt"><input type="radio" name="s12q2" value="D">D. when</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="skill" id="skill13">
+      <summary><span class="skill-title">Skill 13 — Use reduced adjective clauses correctly</span><span class="skill-tag">reduction with -ing / past participle</span></summary>
+      <div class="skill-body">
+        <div class="two-col">
+          <div class="panel">
+            <h4>Theory</h4>
+            <p>An adjective clause can often be reduced by removing the relative pronoun and the be-verb. If the clause contains a form of <i>be</i>, reduction usually leaves a participle or adjective. If the clause has no be-verb, the verb changes to the -ing form. This is important for TOEFL because the reduced clause may appear before or after the noun, and the reduced form still modifies the noun in the same way as the full clause.</p>
+            <p class="formula">relative pronoun + be → reduced clause</p>
+          </div>
+          <div class="panel">
+            <h4>Common traps</h4>
+            <ul>
+              <li>Reducing a clause that cannot be reduced</li>
+              <li>Leaving a subject in the reduced clause</li>
+              <li>Using the wrong participle form</li>
+            </ul>
+          </div>
+        </div>
+        <div class="examples">
+          <div class="ex"><b>Example:</b> The man <i>standing near the door</i> is my uncle.</div>
+          <div class="ex"><b>Example:</b> The letter <i>written last week</i> arrived today.</div>
+        </div>
+        <div class="quiz">
+          <div class="qblock" data-answer="A">
+            <p class="qhead">1. The students _____ in the hall are waiting.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s13q1" value="A">A. standing</label>
+              <label class="opt"><input type="radio" name="s13q1" value="B">B. stand</label>
+              <label class="opt"><input type="radio" name="s13q1" value="C">C. stood</label>
+              <label class="opt"><input type="radio" name="s13q1" value="D">D. stands</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+          <div class="qblock" data-answer="A">
+            <p class="qhead">2. The books _____ on the shelf belong to me.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s13q2" value="A">A. placed</label>
+              <label class="opt"><input type="radio" name="s13q2" value="B">B. placing</label>
+              <label class="opt"><input type="radio" name="s13q2" value="C">C. place</label>
+              <label class="opt"><input type="radio" name="s13q2" value="D">D. places</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="skill" id="skill14">
+      <summary><span class="skill-title">Skill 14 — Use reduced adverb clauses correctly</span><span class="skill-tag">reducing time / contrast / condition</span></summary>
+      <div class="skill-body">
+        <div class="two-col">
+          <div class="panel">
+            <h4>Theory</h4>
+            <p>Adverb clauses may also be reduced. In reduced form, the subject is removed and the verb is often changed to the -ing form or left as a past participle depending on the structure. Some adverb clauses with <i>be</i> reduce by dropping the subject and be-verb. Others, especially passive forms or certain connectors, require a participial reduction. This is a common advanced TOEFL pattern because the reduced clause may appear at the beginning of the sentence and look like an introductory phrase rather than a clause.</p>
+            <p class="formula">adverb connector + reduced clause</p>
+          </div>
+          <div class="panel">
+            <h4>Common traps</h4>
+            <ul>
+              <li>Using a reduced clause without a logical subject</li>
+              <li>Forgetting that the connector remains</li>
+              <li>Choosing the wrong verb form for the reduction</li>
+            </ul>
+          </div>
+        </div>
+        <div class="examples">
+          <div class="ex"><b>Example:</b> <i>Although tired</i>, he continued working.</div>
+          <div class="ex"><b>Example:</b> <i>When finished</i>, the report should be submitted immediately.</div>
+        </div>
+        <div class="quiz">
+          <div class="qblock" data-answer="A">
+            <p class="qhead">1. _____ with the report, she left the office.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s14q1" value="A">A. Finished</label>
+              <label class="opt"><input type="radio" name="s14q1" value="B">B. Finish</label>
+              <label class="opt"><input type="radio" name="s14q1" value="C">C. Finishing</label>
+              <label class="opt"><input type="radio" name="s14q1" value="D">D. Finishes</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+          <div class="qblock" data-answer="A">
+            <p class="qhead">2. While _____ to school, he listened to music.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s14q2" value="A">A. driving</label>
+              <label class="opt"><input type="radio" name="s14q2" value="B">B. drove</label>
+              <label class="opt"><input type="radio" name="s14q2" value="C">C. drives</label>
+              <label class="opt"><input type="radio" name="s14q2" value="D">D. driven</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="skill" id="skill15">
+      <summary><span class="skill-title">Skill 15 — Invert subject and verb with question words</span><span class="skill-tag">direct question vs noun clause</span></summary>
+      <div class="skill-body">
+        <div class="two-col">
+          <div class="panel">
+            <h4>Theory</h4>
+            <p>Question words such as <i>what, when, where, why, how</i> can introduce either direct questions or noun clauses. In direct questions, subject and verb are inverted. In noun clauses, they are not inverted. TOEFL often tests this difference by placing a question word in a sentence where it does not introduce a question. If you are reading a statement rather than asking a question, keep normal subject-verb order.</p>
+            <p class="formula">Direct question: question word + auxiliary + subject</p>
+          </div>
+          <div class="panel">
+            <h4>Common traps</h4>
+            <ul>
+              <li>Inverting after a question word inside a noun clause</li>
+              <li>Forgetting auxiliary support in a question</li>
+              <li>Confusing indirect and direct question order</li>
+            </ul>
+          </div>
+        </div>
+        <div class="examples">
+          <div class="ex"><b>Example:</b> I do not know <i>where he is</i>.</div>
+          <div class="ex"><b>Example:</b> <i>Where is he?</i></div>
+        </div>
+        <div class="quiz">
+          <div class="qblock" data-answer="B">
+            <p class="qhead">1. Do you know where _____?</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s15q1" value="A">A. is the library</label>
+              <label class="opt"><input type="radio" name="s15q1" value="B">B. the library is</label>
+              <label class="opt"><input type="radio" name="s15q1" value="C">C. the library</label>
+              <label class="opt"><input type="radio" name="s15q1" value="D">D. library is</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+          <div class="qblock" data-answer="B">
+            <p class="qhead">2. She asked why _____ early.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s15q2" value="A">A. did he leave</label>
+              <label class="opt"><input type="radio" name="s15q2" value="B">B. he left</label>
+              <label class="opt"><input type="radio" name="s15q2" value="C">C. left he</label>
+              <label class="opt"><input type="radio" name="s15q2" value="D">D. he did leave</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="skill" id="skill16">
+      <summary><span class="skill-title">Skill 16 — Invert subject and verb with place expressions</span><span class="skill-tag">here / there / in the room</span></summary>
+      <div class="skill-body">
+        <div class="two-col">
+          <div class="panel">
+            <h4>Theory</h4>
+            <p>Inversion can happen after place expressions when the sentence begins with a location that is necessary to complete the meaning. Words like <i>here</i>, <i>there</i>, and <i>nowhere</i> can trigger inversion, and prepositional phrases of place can sometimes do the same. This structure is more formal and is often used in descriptive sentences. The key question is whether the opening place expression is required to complete the idea of the sentence.</p>
+            <p class="formula">Place expression + verb + subject</p>
+          </div>
+          <div class="panel">
+            <h4>Common traps</h4>
+            <ul>
+              <li>Using inversion where the sentence is already complete</li>
+              <li>Failing to invert after a required opening place phrase</li>
+              <li>Mixing up there as existential subject vs place adverb</li>
+            </ul>
+          </div>
+        </div>
+        <div class="examples">
+          <div class="ex"><b>Example:</b> Here <i>are</i> the keys you lost.</div>
+          <div class="ex"><b>Example:</b> On the hill <i>stands</i> an old house.</div>
+        </div>
+        <div class="quiz">
+          <div class="qblock" data-answer="A">
+            <p class="qhead">1. On the table _____ a vase of flowers.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s16q1" value="A">A. is</label>
+              <label class="opt"><input type="radio" name="s16q1" value="B">B. are</label>
+              <label class="opt"><input type="radio" name="s16q1" value="C">C. were</label>
+              <label class="opt"><input type="radio" name="s16q1" value="D">D. being</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+          <div class="qblock" data-answer="B">
+            <p class="qhead">2. Here _____ the documents you requested.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s16q2" value="A">A. is</label>
+              <label class="opt"><input type="radio" name="s16q2" value="B">B. are</label>
+              <label class="opt"><input type="radio" name="s16q2" value="C">C. was</label>
+              <label class="opt"><input type="radio" name="s16q2" value="D">D. has</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="skill" id="skill17">
+      <summary><span class="skill-title">Skill 17 — Invert subject and verb with negative expressions</span><span class="skill-tag">never / rarely / scarcely</span></summary>
+      <div class="skill-body">
+        <div class="two-col">
+          <div class="panel">
+            <h4>Theory</h4>
+            <p>Negative or restrictive expressions can trigger inversion. This happens when expressions like <i>never</i>, <i>rarely</i>, <i>seldom</i>, <i>hardly</i>, <i>scarcely</i>, or <i>under no circumstances</i> begin the sentence. The auxiliary verb comes before the subject. This pattern is formal and common in advanced writing and TOEFL items. Recognizing it quickly helps you avoid thinking the sentence is incorrect simply because the word order is unusual.</p>
+            <p class="formula">Negative expression + auxiliary + subject + main verb</p>
+          </div>
+          <div class="panel">
+            <h4>Common traps</h4>
+            <ul>
+              <li>Forgetting the auxiliary</li>
+              <li>Using normal word order after a fronted negative expression</li>
+              <li>Misreading a negative adverb as part of the main predicate</li>
+            </ul>
+          </div>
+        </div>
+        <div class="examples">
+          <div class="ex"><b>Example:</b> Never <i>have I seen</i> such a thing.</div>
+          <div class="ex"><b>Example:</b> Rarely <i>does he complain</i>.</div>
+        </div>
+        <div class="quiz">
+          <div class="qblock" data-answer="B">
+            <p class="qhead">1. Never _____ such a beautiful view.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s17q1" value="A">A. I have seen</label>
+              <label class="opt"><input type="radio" name="s17q1" value="B">B. have I seen</label>
+              <label class="opt"><input type="radio" name="s17q1" value="C">C. I saw</label>
+              <label class="opt"><input type="radio" name="s17q1" value="D">D. saw I</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+          <div class="qblock" data-answer="B">
+            <p class="qhead">2. Rarely _____ late.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s17q2" value="A">A. she arrives</label>
+              <label class="opt"><input type="radio" name="s17q2" value="B">B. does she arrive</label>
+              <label class="opt"><input type="radio" name="s17q2" value="C">C. she does arrive</label>
+              <label class="opt"><input type="radio" name="s17q2" value="D">D. arrive she</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="skill" id="skill18">
+      <summary><span class="skill-title">Skill 18 — Invert subject and verb in conditionals</span><span class="skill-tag">had / were / should</span></summary>
+      <div class="skill-body">
+        <div class="two-col">
+          <div class="panel">
+            <h4>Theory</h4>
+            <p>Formal conditional inversion removes <i>if</i> and places the auxiliary before the subject. This creates a concise, elegant structure often used in academic English and TOEFL. Typical patterns are <i>Had I known...</i>, <i>Were he here...</i>, and <i>Should you need help...</i>. The meaning remains conditional, but the order changes. TOEFL sometimes tests whether you can recognize the implied if-clause even when <i>if</i> is absent.</p>
+            <p class="formula">Had / Were / Should + subject + verb</p>
+          </div>
+          <div class="panel">
+            <h4>Common traps</h4>
+            <ul>
+              <li>Leaving out the auxiliary inversion</li>
+              <li>Confusing inverted condition with a question</li>
+              <li>Using the wrong tense after the inverted auxiliary</li>
+            </ul>
+          </div>
+        </div>
+        <div class="examples">
+          <div class="ex"><b>Example:</b> <i>Had I known</i>, I would have helped.</div>
+          <div class="ex"><b>Example:</b> <i>Were she available</i>, she would join us.</div>
+        </div>
+        <div class="quiz">
+          <div class="qblock" data-answer="A">
+            <p class="qhead">1. _____ known the truth, I would have acted differently.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s18q1" value="A">A. Had I</label>
+              <label class="opt"><input type="radio" name="s18q1" value="B">B. I had</label>
+              <label class="opt"><input type="radio" name="s18q1" value="C">C. If I</label>
+              <label class="opt"><input type="radio" name="s18q1" value="D">D. Having</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+          <div class="qblock" data-answer="A">
+            <p class="qhead">2. _____ he here, he would support us.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s18q2" value="A">A. Were</label>
+              <label class="opt"><input type="radio" name="s18q2" value="B">B. Was</label>
+              <label class="opt"><input type="radio" name="s18q2" value="C">C. Had</label>
+              <label class="opt"><input type="radio" name="s18q2" value="D">D. If</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="skill" id="skill19">
+      <summary><span class="skill-title">Skill 19 — Invert subject and verb with comparisons</span><span class="skill-tag">than / as formal inversion</span></summary>
+      <div class="skill-body">
+        <div class="two-col">
+          <div class="panel">
+            <h4>Theory</h4>
+            <p>Comparative structures sometimes use inversion in formal English, especially after <i>than</i> and in certain parallel constructions. The important lesson for TOEFL is not that inversion is always required, but that comparative clauses can differ from simple statements. When a sentence uses a comparison, check whether the clause has a full subject and verb or whether a formal inversion pattern is being used. This skill is less frequent than others but still appears in advanced structure questions.</p>
+            <p class="formula">Comparative clause + subject/verb pattern</p>
+          </div>
+          <div class="panel">
+            <h4>Common traps</h4>
+            <ul>
+              <li>Misreading comparative structure as a question</li>
+              <li>Using the wrong verb form after comparison</li>
+              <li>Breaking parallelism in comparative clauses</li>
+            </ul>
+          </div>
+        </div>
+        <div class="examples">
+          <div class="ex"><b>Example:</b> She speaks French better than <i>I do</i>.</div>
+          <div class="ex"><b>Example:</b> The city is larger than it <i>was</i> ten years ago.</div>
+        </div>
+        <div class="quiz">
+          <div class="qblock" data-answer="B">
+            <p class="qhead">1. She speaks French better than _____.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s19q1" value="A">A. do I</label>
+              <label class="opt"><input type="radio" name="s19q1" value="B">B. I do</label>
+              <label class="opt"><input type="radio" name="s19q1" value="C">C. me</label>
+              <label class="opt"><input type="radio" name="s19q1" value="D">D. mine</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+          <div class="qblock" data-answer="A">
+            <p class="qhead">2. The city is larger than _____ ten years ago.</p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="s19q2" value="A">A. it was</label>
+              <label class="opt"><input type="radio" name="s19q2" value="B">B. was it</label>
+              <label class="opt"><input type="radio" name="s19q2" value="C">C. it is</label>
+              <label class="opt"><input type="radio" name="s19q2" value="D">D. is it</label>
+            </div>
+            <button onclick="checkQuestion(this)">Check answer</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <section class="card intro" id="review" style="margin-top:18px;">
+      <h2>Mixed review</h2>
+      <p>Use this section to test whether you can identify the structure pattern quickly without focusing on just one skill.</p>
+      <div class="quiz">
+        <div class="qblock" data-answer="B">
+          <p class="qhead">1. The report _____ last night was incomplete.</p>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="r1" value="A">A. submit</label>
+            <label class="opt"><input type="radio" name="r1" value="B">B. submitted</label>
+            <label class="opt"><input type="radio" name="r1" value="C">C. submitting</label>
+            <label class="opt"><input type="radio" name="r1" value="D">D. submits</label>
+          </div>
+          <button onclick="checkQuestion(this)">Check answer</button>
+          <div class="feedback"></div>
+        </div>
+        <div class="qblock" data-answer="A">
+          <p class="qhead">2. Because the class ended early, _____ home.</p>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="r2" value="A">A. we went</label>
+            <label class="opt"><input type="radio" name="r2" value="B">B. went we</label>
+            <label class="opt"><input type="radio" name="r2" value="C">C. us went</label>
+            <label class="opt"><input type="radio" name="r2" value="D">D. going we</label>
+          </div>
+          <button onclick="checkQuestion(this)">Check answer</button>
+          <div class="feedback"></div>
+        </div>
+        <div class="qblock" data-answer="A">
+          <p class="qhead">3. Never _____ such a difficult task.</p>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="r3" value="A">A. have I seen</label>
+            <label class="opt"><input type="radio" name="r3" value="B">B. I have seen</label>
+            <label class="opt"><input type="radio" name="r3" value="C">C. I saw</label>
+            <label class="opt"><input type="radio" name="r3" value="D">D. saw I</label>
+          </div>
+          <button onclick="checkQuestion(this)">Check answer</button>
+          <div class="feedback"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      End of interactive guide. Expand any skill, answer the questions, and use the feedback to learn the grammar pattern behind each item.
+    </div>
+  </main>
+
+  <script>
+    function checkQuestion(btn) {
+      const block = btn.closest('.qblock');
+      const answer = block.dataset.answer;
+      const selected = block.querySelector('input[type="radio"]:checked');
+      const feedback = block.querySelector('.feedback');
+      if (!selected) {
+        feedback.className = 'feedback bad';
+        feedback.textContent = 'Choose an answer first.';
+        return;
+      }
+      if (selected.value === answer) {
+        feedback.className = 'feedback good';
+        feedback.textContent = 'Correct. Good structural match.';
+      } else {
+        feedback.className = 'feedback bad';
+        feedback.textContent = 'Not quite. The correct answer is ' + answer + '.';
+      }
+    }
+
+    function expandAll() {
+      document.querySelectorAll('details.skill').forEach(d => d.open = true);
+      document.getElementById('review').scrollIntoView({behavior:'smooth'});
+    }
+
+    function collapseAll() {
+      document.querySelectorAll('details.skill').forEach(d => d.open = false);
+    }
+
+    function jumpToSkill(id) {
+      if (!id) return;
+      const el = document.getElementById(id);
+      if (el) {
+        el.open = true;
+        el.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+    }
+
+    function filterSkills() {
+      const q = document.getElementById('searchBox').value.toLowerCase().trim();
+      const skills = document.querySelectorAll('details.skill');
+      skills.forEach(skill => {
+        const text = skill.innerText.toLowerCase();
+        const match = !q || text.includes(q) || skill.id.includes(q.replace(/\s+/g, ''));
+        skill.style.display = match ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>
