@@ -1,0 +1,2355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TOEFL Written Expression · Skills 20–60</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ─── CSS VARIABLES ──────────────────────────────────────────────────────── */
+:root {
+  --ink:       #0f1923;
+  --ink2:      #2c3e50;
+  --ink3:      #5a6a7a;
+  --bg:        #f5f3ee;
+  --bg2:       #eceae3;
+  --bg3:       #e0ddd5;
+  --gold:      #c8922a;
+  --gold2:     #e8b84b;
+  --teal:      #1a6b6b;
+  --teal2:     #2a9090;
+  --red:       #c0392b;
+  --green:     #1e7e4a;
+  --blue:      #1a4fa0;
+  --surface:   #ffffff;
+  --radius:    12px;
+  --shadow:    0 4px 24px rgba(15,25,35,0.10);
+  --shadow-sm: 0 2px 8px rgba(15,25,35,0.07);
+  --transition: 0.22s cubic-bezier(.4,0,.2,1);
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans:  'DM Sans', system-ui, sans-serif;
+  --mono:  'DM Mono', monospace;
+}
+
+/* ─── RESET & BASE ────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+button { cursor: pointer; font-family: var(--sans); }
+input, select { font-family: var(--sans); }
+a { color: inherit; }
+
+/* ─── SCROLLBAR ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 99px; }
+
+/* ─── SCREENS ─────────────────────────────────────────────────────────────── */
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: flex; flex-direction: column; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LOGIN SCREEN
+══════════════════════════════════════════════════════════════════════════ */
+#loginScreen {
+  background: var(--ink);
+  position: relative;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* Decorative background elements */
+#loginScreen::before {
+  content: '';
+  position: absolute;
+  top: -120px; right: -120px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(200,146,42,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+#loginScreen::after {
+  content: '';
+  position: absolute;
+  bottom: -80px; left: -80px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(26,107,107,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.login-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 20px;
+  padding: 52px 48px;
+  width: 100%;
+  max-width: 480px;
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 1;
+  animation: loginFadeIn 0.6s ease forwards;
+}
+
+@keyframes loginFadeIn {
+  from { opacity:0; transform: translateY(24px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+.login-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(200,146,42,0.15);
+  border: 1px solid rgba(200,146,42,0.35);
+  color: var(--gold2);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 99px;
+  margin-bottom: 28px;
+}
+.login-badge::before { content:'◆'; font-size:8px; }
+
+.login-title {
+  font-family: var(--serif);
+  font-size: 38px;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+.login-title em { color: var(--gold2); font-style: italic; }
+
+.login-sub {
+  color: rgba(255,255,255,0.45);
+  font-size: 14px;
+  margin-bottom: 36px;
+  line-height: 1.5;
+}
+
+.login-divider {
+  width: 40px; height: 2px;
+  background: var(--gold);
+  margin: 0 0 32px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+.form-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 8px;
+}
+.form-input {
+  width: 100%;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 14px 16px;
+  color: #fff;
+  font-size: 15px;
+  outline: none;
+  transition: border-color var(--transition), background var(--transition);
+}
+.form-input::placeholder { color: rgba(255,255,255,0.25); }
+.form-input:focus {
+  border-color: var(--gold);
+  background: rgba(255,255,255,0.10);
+}
+.form-input option { background: var(--ink); color: #fff; }
+
+.login-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  margin-top: 8px;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.login-btn:hover {
+  background: var(--gold2);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(200,146,42,0.35);
+}
+.login-btn:active { transform: translateY(0); }
+.login-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.login-error {
+  color: #ff7070;
+  font-size: 13px;
+  margin-top: 12px;
+  text-align: center;
+  min-height: 20px;
+}
+
+.login-footer {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  gap: 20px;
+}
+.login-stat {
+  text-align: center;
+  flex: 1;
+}
+.login-stat-n {
+  font-family: var(--serif);
+  font-size: 24px;
+  color: var(--gold2);
+}
+.login-stat-l {
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MAIN LAYOUT
+══════════════════════════════════════════════════════════════════════════ */
+#mainScreen {
+  flex-direction: row;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 280px;
+  min-width: 280px;
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.sidebar-header {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.sidebar-logo {
+  font-family: var(--serif);
+  font-size: 20px;
+  color: #fff;
+  line-height: 1.2;
+}
+.sidebar-logo span { color: var(--gold2); }
+
+.sidebar-user {
+  padding: 16px 24px;
+  background: rgba(200,146,42,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.sidebar-user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sidebar-user-meta {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  margin-top: 2px;
+}
+
+.sidebar-section-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  padding: 20px 24px 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 24px;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+  color: rgba(255,255,255,0.55);
+  font-size: 13.5px;
+  font-weight: 500;
+  position: relative;
+  border-left: 3px solid transparent;
+}
+.nav-item:hover {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.85);
+}
+.nav-item.active {
+  background: rgba(200,146,42,0.12);
+  color: var(--gold2);
+  border-left-color: var(--gold);
+}
+.nav-item .nav-icon { font-size: 16px; width: 18px; text-align: center; }
+.nav-item .nav-badge {
+  margin-left: auto;
+  background: var(--teal);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 99px;
+}
+.nav-item .nav-done {
+  margin-left: auto;
+  color: var(--green);
+  font-size: 14px;
+}
+.nav-item .nav-score {
+  margin-left: auto;
+  color: var(--gold2);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Progress bar on sidebar */
+.sidebar-progress-wrap {
+  padding: 16px 24px;
+  margin-top: auto;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+.sidebar-progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 6px;
+}
+.sidebar-progress-bar {
+  height: 4px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.sidebar-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+  border-radius: 99px;
+  transition: width 0.5s ease;
+}
+
+.sidebar-logout {
+  padding: 16px 24px;
+  color: rgba(255,255,255,0.3);
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color var(--transition);
+}
+.sidebar-logout:hover { color: rgba(255,80,80,0.8); }
+
+/* CONTENT AREA */
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 40px 48px;
+  max-width: 900px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   DASHBOARD
+══════════════════════════════════════════════════════════════════════════ */
+.page { display: none; }
+.page.active { display: block; animation: pageIn 0.3s ease; }
+@keyframes pageIn {
+  from { opacity:0; transform: translateY(12px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+.page-header {
+  margin-bottom: 36px;
+}
+.page-header h1 {
+  font-family: var(--serif);
+  font-size: 36px;
+  color: var(--ink);
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.page-header p {
+  color: var(--ink3);
+  font-size: 15px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.stat-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--bg3);
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top:0; left:0; right:0;
+  height: 3px;
+}
+.stat-card.gold::before { background: linear-gradient(90deg, var(--gold), var(--gold2)); }
+.stat-card.teal::before { background: linear-gradient(90deg, var(--teal), var(--teal2)); }
+.stat-card.blue::before { background: linear-gradient(90deg, var(--blue), #4a80d0); }
+
+.stat-icon { font-size: 28px; margin-bottom: 12px; }
+.stat-num {
+  font-family: var(--serif);
+  font-size: 36px;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-label { font-size: 13px; color: var(--ink3); }
+
+/* Unit cards on dashboard */
+.units-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.unit-card {
+  background: var(--surface);
+  border: 1px solid var(--bg3);
+  border-radius: var(--radius);
+  padding: 24px;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+.unit-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+  border-color: var(--gold);
+}
+.unit-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.unit-num {
+  background: var(--ink);
+  color: var(--gold2);
+  font-family: var(--serif);
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+.unit-status {
+  font-size: 18px;
+}
+.unit-title {
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 4px;
+  color: var(--ink);
+}
+.unit-skills {
+  font-size: 12px;
+  color: var(--ink3);
+  margin-bottom: 14px;
+}
+.unit-progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.unit-progress-bar {
+  flex: 1;
+  height: 5px;
+  background: var(--bg2);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.unit-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+  border-radius: 99px;
+  transition: width 0.5s ease;
+}
+.unit-progress-pct {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink3);
+  min-width: 30px;
+  text-align: right;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   UNIT / LESSON PAGES — Theory
+══════════════════════════════════════════════════════════════════════════ */
+.lesson-tabs {
+  display: flex;
+  gap: 0;
+  background: var(--bg2);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 32px;
+}
+.lesson-tab {
+  flex: 1;
+  padding: 10px 14px;
+  text-align: center;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  color: var(--ink3);
+  border: none;
+  background: none;
+}
+.lesson-tab.active {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Theory sections */
+.theory-block {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 20px;
+  border: 1px solid var(--bg3);
+  box-shadow: var(--shadow-sm);
+}
+.theory-block h2 {
+  font-family: var(--serif);
+  font-size: 22px;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.theory-block h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--teal);
+  margin: 20px 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 12px;
+}
+.theory-block p {
+  font-size: 14.5px;
+  color: var(--ink2);
+  line-height: 1.75;
+  margin-bottom: 12px;
+}
+.theory-block ul {
+  padding-left: 20px;
+  margin-bottom: 12px;
+}
+.theory-block li {
+  font-size: 14.5px;
+  color: var(--ink2);
+  line-height: 1.75;
+  margin-bottom: 4px;
+}
+
+.formula-box {
+  background: var(--ink);
+  color: var(--gold2);
+  font-family: var(--mono);
+  font-size: 14px;
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin: 16px 0;
+  letter-spacing: 0.02em;
+}
+
+.rule-box {
+  background: rgba(26,107,107,0.07);
+  border-left: 4px solid var(--teal);
+  border-radius: 0 10px 10px 0;
+  padding: 16px 20px;
+  margin: 16px 0;
+}
+.rule-box strong { color: var(--teal); }
+
+.warning-box {
+  background: rgba(200,57,43,0.06);
+  border-left: 4px solid var(--red);
+  border-radius: 0 10px 10px 0;
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 14px;
+}
+
+.tip-box {
+  background: rgba(200,146,42,0.08);
+  border-left: 4px solid var(--gold);
+  border-radius: 0 10px 10px 0;
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 14px;
+}
+
+/* ── Pattern Examples ─────────────────────────────────────────────────── */
+.pattern-block {
+  background: var(--surface);
+  border: 1px solid var(--bg3);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+}
+.pattern-block h3 {
+  font-family: var(--serif);
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: var(--ink);
+}
+.example-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.example-wrong, .example-right {
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 14px;
+}
+.example-wrong {
+  background: rgba(192,57,43,0.07);
+  border: 1px solid rgba(192,57,43,0.2);
+  color: var(--ink2);
+}
+.example-right {
+  background: rgba(30,126,74,0.07);
+  border: 1px solid rgba(30,126,74,0.2);
+  color: var(--ink2);
+}
+.example-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.example-wrong .example-label { color: var(--red); }
+.example-right .example-label { color: var(--green); }
+
+.example-note {
+  font-size: 13px;
+  color: var(--ink3);
+  font-style: italic;
+  padding: 8px 12px;
+  background: var(--bg2);
+  border-radius: 6px;
+}
+
+/* ─── Comparison Table ───────────────────────────────────────────────── */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  margin: 16px 0;
+}
+.compare-table th {
+  background: var(--ink);
+  color: var(--gold2);
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.compare-table th:first-child { border-radius: 8px 0 0 0; }
+.compare-table th:last-child  { border-radius: 0 8px 0 0; }
+.compare-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--bg2);
+  vertical-align: top;
+}
+.compare-table tr:nth-child(even) td { background: var(--bg); }
+.compare-table tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+.compare-table tr:last-child td:last-child  { border-radius: 0 0 8px 0; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   EXERCISE ENGINE
+══════════════════════════════════════════════════════════════════════════ */
+.exercise-header {
+  background: var(--ink);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  color: #fff;
+}
+.ex-meta { display: flex; flex-direction: column; gap: 2px; }
+.ex-title { font-family: var(--serif); font-size: 18px; color: #fff; }
+.ex-subtitle { font-size: 12px; color: rgba(255,255,255,0.45); }
+.ex-progress-wrap { display: flex; align-items: center; gap: 12px; }
+.ex-counter {
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--gold2);
+}
+.ex-progress-circle { position: relative; width: 56px; height: 56px; }
+.ex-progress-circle svg { transform: rotate(-90deg); }
+.ex-progress-circle .track { stroke: rgba(255,255,255,0.1); }
+.ex-progress-circle .fill  { stroke: var(--gold); stroke-linecap: round; transition: stroke-dashoffset 0.4s ease; }
+.ex-progress-circle .label {
+  position: absolute; inset:0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: #fff;
+}
+
+/* Question card */
+.question-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--bg3);
+  overflow: hidden;
+  margin-bottom: 20px;
+  animation: cardIn 0.3s ease;
+}
+@keyframes cardIn {
+  from { opacity:0; transform: translateX(12px); }
+  to   { opacity:1; transform: translateX(0); }
+}
+
+.question-body {
+  padding: 28px 32px 24px;
+}
+.question-num {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.question-num::after {
+  content:'';
+  flex:1;
+  height:1px;
+  background: var(--bg3);
+}
+.question-type-tag {
+  background: var(--bg2);
+  color: var(--ink3);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 99px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.question-sentence {
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--ink);
+  margin-bottom: 0;
+}
+.question-sentence .q-part {
+  display: inline-block;
+  padding: 2px 0;
+}
+.question-sentence .q-underlined {
+  border-bottom: 2px solid var(--ink3);
+  cursor: default;
+}
+
+/* Answer choices */
+.choices-grid {
+  padding: 0 32px 28px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.choice-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--bg);
+  border: 2px solid var(--bg3);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: left;
+  font-size: 14px;
+  color: var(--ink2);
+  line-height: 1.5;
+}
+.choice-btn:hover:not(:disabled) {
+  border-color: var(--gold);
+  background: rgba(200,146,42,0.06);
+  color: var(--ink);
+}
+.choice-btn:disabled { cursor: not-allowed; }
+.choice-letter {
+  width: 26px; height: 26px;
+  min-width: 26px;
+  border-radius: 50%;
+  background: var(--bg3);
+  color: var(--ink3);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+}
+.choice-btn.correct {
+  border-color: var(--green);
+  background: rgba(30,126,74,0.08);
+}
+.choice-btn.correct .choice-letter {
+  background: var(--green);
+  color: #fff;
+}
+.choice-btn.wrong {
+  border-color: var(--red);
+  background: rgba(192,57,43,0.07);
+}
+.choice-btn.wrong .choice-letter {
+  background: var(--red);
+  color: #fff;
+}
+.choice-btn.missed {
+  border-color: var(--green);
+  border-style: dashed;
+}
+.choice-btn.missed .choice-letter {
+  border: 2px solid var(--green);
+  background: transparent;
+  color: var(--green);
+}
+
+/* Explanation panel */
+.explanation-panel {
+  margin: 0 32px 28px;
+  border-radius: 10px;
+  overflow: hidden;
+  animation: explainIn 0.35s ease;
+  display: none;
+}
+.explanation-panel.visible { display: block; }
+@keyframes explainIn {
+  from { opacity:0; transform: translateY(8px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+.explanation-inner {
+  padding: 20px 22px;
+}
+.explanation-panel.correct-panel .explanation-inner {
+  background: rgba(30,126,74,0.08);
+  border: 1px solid rgba(30,126,74,0.25);
+}
+.explanation-panel.wrong-panel .explanation-inner {
+  background: rgba(192,57,43,0.06);
+  border: 1px solid rgba(192,57,43,0.2);
+}
+.exp-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.exp-icon { font-size: 20px; }
+.exp-verdict {
+  font-weight: 700;
+  font-size: 14px;
+}
+.correct-panel .exp-verdict { color: var(--green); }
+.wrong-panel .exp-verdict { color: var(--red); }
+.exp-text {
+  font-size: 14px;
+  color: var(--ink2);
+  line-height: 1.7;
+}
+.exp-text strong { color: var(--ink); }
+.exp-skill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  background: var(--bg2);
+  color: var(--ink3);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 99px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Next button */
+.next-btn-wrap {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 32px 24px;
+}
+.next-btn {
+  background: var(--ink);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background var(--transition), transform var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.next-btn:hover {
+  background: var(--teal);
+  transform: translateY(-1px);
+}
+.next-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+  background: var(--ink);
+}
+
+/* ── Results card ───────────────────────────────────────────────────────── */
+.results-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--bg3);
+  padding: 40px;
+  text-align: center;
+  animation: cardIn 0.4s ease;
+}
+.results-score {
+  font-family: var(--serif);
+  font-size: 80px;
+  color: var(--ink);
+  line-height: 1;
+  margin: 20px 0 8px;
+}
+.results-score span { color: var(--gold); }
+.results-grade {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.results-summary {
+  font-size: 14px;
+  color: var(--ink3);
+  margin-bottom: 32px;
+}
+.results-breakdown {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.rb-item {
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 18px;
+}
+.rb-num {
+  font-family: var(--serif);
+  font-size: 32px;
+  margin-bottom: 4px;
+}
+.rb-num.correct { color: var(--green); }
+.rb-num.wrong   { color: var(--red); }
+.rb-num.pct     { color: var(--gold); }
+.rb-label { font-size: 12px; color: var(--ink3); }
+.results-btns {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.results-btn {
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 2px solid transparent;
+  transition: all var(--transition);
+}
+.results-btn.primary {
+  background: var(--ink);
+  color: #fff;
+}
+.results-btn.primary:hover { background: var(--teal); }
+.results-btn.secondary {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--bg3);
+}
+.results-btn.secondary:hover { border-color: var(--ink); }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PROGRESS / SCORES PAGE
+══════════════════════════════════════════════════════════════════════════ */
+.scores-table-wrap {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--bg3);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  margin-top: 20px;
+}
+.scores-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+.scores-table th {
+  background: var(--ink);
+  color: rgba(255,255,255,0.6);
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.scores-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--bg2);
+  color: var(--ink2);
+}
+.scores-table tr:last-child td { border-bottom: none; }
+.scores-table tr:hover td { background: var(--bg); }
+.score-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.score-pill.high  { background: rgba(30,126,74,0.12); color: var(--green); }
+.score-pill.mid   { background: rgba(200,146,42,0.12); color: var(--gold); }
+.score-pill.low   { background: rgba(192,57,43,0.10); color: var(--red); }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   TOAST NOTIFICATIONS
+══════════════════════════════════════════════════════════════════════════ */
+#toastContainer {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.toast {
+  background: var(--ink);
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 260px;
+  animation: toastIn 0.3s ease;
+  border-left: 4px solid var(--gold);
+}
+.toast.success { border-left-color: var(--green); }
+.toast.error   { border-left-color: var(--red); }
+@keyframes toastIn {
+  from { opacity:0; transform: translateX(20px); }
+  to   { opacity:1; transform: translateX(0); }
+}
+
+/* ── Loading overlay ─────────────────────────────────────────────────── */
+#loadingOverlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15,25,35,0.6);
+  z-index: 9998;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+#loadingOverlay.visible { display: flex; }
+.spinner {
+  width: 48px; height: 48px;
+  border: 4px solid rgba(255,255,255,0.15);
+  border-top-color: var(--gold2);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Responsive ──────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .content-area { padding: 24px 20px; }
+  .stats-grid, .units-grid { grid-template-columns: 1fr; }
+  .example-pair, .choices-grid { grid-template-columns: 1fr; }
+  .results-breakdown { grid-template-columns: 1fr; }
+}
+@media (max-width: 700px) {
+  #mainScreen { flex-direction: column; }
+  .sidebar {
+    width: 100%; height: auto; position: static;
+    flex-direction: row; overflow-x: auto; min-width: 0;
+  }
+  .sidebar-user, .sidebar-section-title, .sidebar-progress-wrap, .sidebar-logout { display: none; }
+  .sidebar-header { padding: 12px 16px; }
+  .nav-item { padding: 12px 14px; flex-direction: column; gap: 4px; font-size: 10px; }
+  .nav-item .nav-badge, .nav-item .nav-done, .nav-item .nav-score { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════
+     LOADING OVERLAY
+═════════════════════════════════════════════════════════ -->
+<div id="loadingOverlay">
+  <div class="spinner"></div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     TOAST CONTAINER
+═════════════════════════════════════════════════════════ -->
+<div id="toastContainer"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     LOGIN SCREEN
+═════════════════════════════════════════════════════════ -->
+<div id="loginScreen" class="screen active">
+  <div class="login-card">
+    <div class="login-badge">TOEFL® Preparation</div>
+    <h1 class="login-title"><em>Written</em><br>Expression</h1>
+    <p class="login-sub">Skills 20–60 · Interactive Practice with Instant Feedback & Score Tracking</p>
+    <div class="login-divider"></div>
+
+    <div class="form-group">
+      <label class="form-label" for="inputName">Full Name</label>
+      <input class="form-input" id="inputName" type="text" placeholder="Enter your full name" autocomplete="name"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="inputNPM">NPM / Student ID</label>
+      <input class="form-input" id="inputNPM" type="text" placeholder="e.g. 2021001234" autocomplete="off"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="inputClass">Class</label>
+      <select class="form-input" id="inputClass">
+        <option value="" disabled selected>Select your class</option>
+        <option>A</option><option>B</option><option>C</option><option>D</option>
+        <option>E</option><option>F</option><option>G</option><option>H</option>
+        <option>1A</option><option>1B</option><option>2A</option><option>2B</option>
+        <option>3A</option><option>3B</option><option>4A</option><option>4B</option>
+      </select>
+    </div>
+
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">Start Learning →</button>
+    <div class="login-error" id="loginError"></div>
+
+    <div class="login-footer">
+      <div class="login-stat"><div class="login-stat-n">7</div><div class="login-stat-l">Units</div></div>
+      <div class="login-stat"><div class="login-stat-n">41</div><div class="login-stat-l">Skills</div></div>
+      <div class="login-stat"><div class="login-stat-n">150+</div><div class="login-stat-l">Exercises</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     MAIN SCREEN
+═════════════════════════════════════════════════════════ -->
+<div id="mainScreen" class="screen">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">TOEFL <span>WE</span><br><small style="font-family:var(--sans);font-size:11px;color:rgba(255,255,255,0.35);font-weight:400;">Skills 20–60</small></div>
+    </div>
+    <div class="sidebar-user">
+      <div class="sidebar-user-name" id="sidebarName">—</div>
+      <div class="sidebar-user-meta" id="sidebarMeta">—</div>
+    </div>
+
+    <div class="sidebar-section-title">Navigation</div>
+    <div class="nav-item active" onclick="showPage('dashboard')" id="nav-dashboard">
+      <span class="nav-icon">⊞</span> Dashboard
+    </div>
+    <div class="nav-item" onclick="showPage('progress')" id="nav-progress">
+      <span class="nav-icon">◈</span> My Progress
+    </div>
+
+    <div class="sidebar-section-title">Units</div>
+    <div class="nav-item" onclick="showPage('unit1')" id="nav-unit1">
+      <span class="nav-icon">①</span> Subject/Verb Agree.
+      <span class="nav-score" id="nscore-unit1"></span>
+    </div>
+    <div class="nav-item" onclick="showPage('unit2')" id="nav-unit2">
+      <span class="nav-icon">②</span> Parallel Structure
+      <span class="nav-score" id="nscore-unit2"></span>
+    </div>
+    <div class="nav-item" onclick="showPage('unit3')" id="nav-unit3">
+      <span class="nav-icon">③</span> Nouns & Pronouns
+      <span class="nav-score" id="nscore-unit3"></span>
+    </div>
+    <div class="nav-item" onclick="showPage('unit4')" id="nav-unit4">
+      <span class="nav-icon">④</span> Adj. & Adverbs
+      <span class="nav-score" id="nscore-unit4"></span>
+    </div>
+    <div class="nav-item" onclick="showPage('unit5')" id="nav-unit5">
+      <span class="nav-icon">⑤</span> Verb Forms
+      <span class="nav-score" id="nscore-unit5"></span>
+    </div>
+    <div class="nav-item" onclick="showPage('unit6')" id="nav-unit6">
+      <span class="nav-icon">⑥</span> Prepositions
+      <span class="nav-score" id="nscore-unit6"></span>
+    </div>
+    <div class="nav-item" onclick="showPage('unit7')" id="nav-unit7">
+      <span class="nav-icon">⑦</span> Usage (58–60)
+      <span class="nav-score" id="nscore-unit7"></span>
+    </div>
+    <div class="nav-item" onclick="showPage('simulation')" id="nav-simulation">
+      <span class="nav-icon">◉</span> Final Simulation
+      <span class="nav-badge">40 Q</span>
+    </div>
+
+    <div class="sidebar-progress-wrap">
+      <div class="sidebar-progress-label">
+        <span>Overall Progress</span>
+        <span id="sidebarProgressPct">0%</span>
+      </div>
+      <div class="sidebar-progress-bar">
+        <div class="sidebar-progress-fill" id="sidebarProgressFill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="sidebar-logout" onclick="doLogout()">✕ &nbsp;Logout</div>
+  </nav>
+
+  <!-- CONTENT AREA -->
+  <main class="content-area" id="contentArea">
+
+    <!-- ── DASHBOARD ─────────────────────────────────────────────────── -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <h1>Welcome back, <span id="dashName">—</span> 👋</h1>
+        <p>Continue where you left off or start a new unit.</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card gold">
+          <div class="stat-icon">🏆</div>
+          <div class="stat-num" id="dashTotalScore">0</div>
+          <div class="stat-label">Total Score Points</div>
+        </div>
+        <div class="stat-card teal">
+          <div class="stat-icon">✅</div>
+          <div class="stat-num" id="dashCompleted">0<span style="font-size:18px;color:var(--ink3)">/8</span></div>
+          <div class="stat-label">Units Completed</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-icon">📊</div>
+          <div class="stat-num" id="dashAvgScore">—</div>
+          <div class="stat-label">Average Score</div>
+        </div>
+      </div>
+
+      <h2 style="font-family:var(--serif);font-size:22px;margin-bottom:16px;color:var(--ink)">Course Units</h2>
+      <div class="units-grid" id="unitsGrid">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <!-- ── PROGRESS ───────────────────────────────────────────────────── -->
+    <div class="page" id="page-progress">
+      <div class="page-header">
+        <h1>My Progress</h1>
+        <p>Your exercise history and score details.</p>
+      </div>
+      <div class="scores-table-wrap">
+        <table class="scores-table">
+          <thead>
+            <tr>
+              <th>Unit</th>
+              <th>Topic</th>
+              <th>Correct</th>
+              <th>Total</th>
+              <th>Score %</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="progressTableBody">
+            <!-- populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── UNIT PAGES (1–7 + simulation) ──────────────────────────────── -->
+    <!-- Each has tabs: Theory | Patterns | Exercise -->
+    <!-- Generated by JS -->
+    <div class="page" id="page-unit1"></div>
+    <div class="page" id="page-unit2"></div>
+    <div class="page" id="page-unit3"></div>
+    <div class="page" id="page-unit4"></div>
+    <div class="page" id="page-unit5"></div>
+    <div class="page" id="page-unit6"></div>
+    <div class="page" id="page-unit7"></div>
+    <div class="page" id="page-simulation"></div>
+
+  </main>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════════════════
+//  ▶ CONFIGURATION — PASTE YOUR APPS SCRIPT WEB APP URL HERE
+// ════════════════════════════════════════════════════════════════════════════
+// 1. Deploy your code.gs as a Web App in Google Apps Script
+// 2. Set "Execute as: Me" and "Who has access: Anyone"
+// 3. Copy the deployment URL and paste it below:
+const APPS_SCRIPT_URL = "YOUR_APPS_SCRIPT_WEBAPP_URL_HERE";
+// Example: "https://script.google.com/macros/s/AKfy.../exec"
+
+// ════════════════════════════════════════════════════════════════════════════
+//  COURSE DATA
+// ════════════════════════════════════════════════════════════════════════════
+const UNITS = [
+  {
+    id: "unit1",
+    num: 1,
+    title: "Subject / Verb Agreement",
+    skills: "Skills 20–23",
+    icon: "①",
+    theory: [
+      {
+        heading: "Overview",
+        body: `<p>Subject/verb agreement means: if the subject is singular, use a singular verb; if plural, use a plural verb. An <em>-s</em> on a regular present-tense verb signals third-person singular. Four TOEFL traps make this tricky.</p>
+        <div class="formula-box">SUBJECT (prepositional phrase / expression) ↔ VERB must agree</div>`
+      },
+      {
+        heading: "Skill 20 — After Prepositional Phrases",
+        body: `<p>A prepositional phrase between subject and verb can mislead you. The verb must agree with the <strong>subject</strong>, not the object of the preposition.</p>
+        <div class="rule-box"><strong>Ignore the prep phrase.</strong> Find the real subject and match the verb to it.</div>
+        <p>Common prepositions that introduce these phrases: <em>of, in, on, at, by, with, for, through, between, among, including, along with, as well as</em>.</p>
+        <div class="warning-box">⚠ "Along with / together with / as well as / including" do NOT create compound subjects. The verb still agrees with the original subject only.</div>`
+      },
+      {
+        heading: "Skill 21 — After Expressions of Quantity",
+        body: `<p>When the subject is <strong>all, most, some, half, a lot</strong> followed by <em>of</em>, the verb agrees with the noun after <em>of</em>.</p>
+        <table class="compare-table">
+          <tr><th>Noun after "of"</th><th>Verb</th><th>Example</th></tr>
+          <tr><td>Plural countable</td><td>Plural</td><td>Most of the <em>books</em> <strong>were</strong> interesting.</td></tr>
+          <tr><td>Singular countable</td><td>Singular</td><td>Most of the <em>book</em> <strong>was</strong> interesting.</td></tr>
+          <tr><td>Uncountable</td><td>Singular</td><td>All of the <em>information</em> <strong>was</strong> useful.</td></tr>
+        </table>`
+      },
+      {
+        heading: "Skill 22 — After Inverted Verbs",
+        body: `<p>In inverted sentences the verb comes before the subject. You must still find the real subject and match the verb to it.</p>
+        <div class="rule-box"><strong>Inversion triggers:</strong> question words · place/direction expressions · negative adverbs (Seldom, Rarely, Never, Not only…) · omitted conditionals (Were he here…) · comparisons (…than does/is…)</div>`
+      },
+      {
+        heading: "Skill 23 — After Certain Singular Words",
+        body: `<p>These indefinite words are grammatically singular even when their meaning is plural:</p>
+        <div class="formula-box">anybody / anyone / anything
+everybody / everyone / everything
+nobody / no one / nothing
+somebody / someone / something
+each (+ noun) / every (+ noun)</div>
+        <div class="warning-box">⚠ "Every man, woman, and child" — <em>every</em> still makes the whole phrase singular.</div>`
+      }
+    ],
+    patterns: [
+      {
+        title: "Skill 20 Patterns",
+        pairs: [
+          { wrong: "The key to the doors ARE in the drawer.", right: "The key to the doors IS in the drawer.", note: "Key (singular) is the subject. 'to the doors' is a prepositional phrase." },
+          { wrong: "The results of the study SHOWS a decline.", right: "The results of the study SHOW a decline.", note: "Results (plural) is the subject." },
+          { wrong: "The CEO, along with her managers, ARE attending.", right: "The CEO, along with her managers, IS attending.", note: "Along with does not compound; CEO remains singular." }
+        ]
+      },
+      {
+        title: "Skill 21 Patterns",
+        pairs: [
+          { wrong: "Most of the information ARE useful.", right: "Most of the information IS useful.", note: "Information is uncountable → singular verb." },
+          { wrong: "Half of the students WAS absent.", right: "Half of the students WERE absent.", note: "Students is countable plural → plural verb." }
+        ]
+      },
+      {
+        title: "Skill 22 Patterns",
+        pairs: [
+          { wrong: "Seldom HAS two new shows been so popular.", right: "Seldom HAVE two new shows been so popular.", note: "Shows (plural) is the true subject after inversion." },
+          { wrong: "In the box WAS the documents.", right: "In the box WERE the documents.", note: "Documents (plural) is the true subject after place expression." }
+        ]
+      },
+      {
+        title: "Skill 23 Patterns",
+        pairs: [
+          { wrong: "Everybody ARE going to the meeting.", right: "Everybody IS going to the meeting.", note: "Everybody is always singular." },
+          { wrong: "Each of the delegates HAVE a packet.", right: "Each of the delegates HAS a packet.", note: "Each is always singular." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "unit2",
+    num: 2,
+    title: "Parallel Structure",
+    skills: "Skills 24–27",
+    icon: "②",
+    theory: [
+      {
+        heading: "Overview",
+        body: `<p>Parallel structure requires that words, phrases, or clauses connected by a conjunction share the <strong>same grammatical form</strong>. This applies to coordinating conjunctions (<em>and, but, or, nor</em>), correlative conjunctions (<em>both…and, either…or, neither…nor, not only…but also</em>), and items in a list or series.</p>
+        <div class="formula-box">X  and/but/or  Y  →  X and Y must be the same grammatical form</div>`
+      },
+      {
+        heading: "Skill 24 — Coordinate Conjunctions",
+        body: `<p>When and, but, or, nor connect items, every item must have the same form.</p>
+        <div class="rule-box"><strong>Forms that must match:</strong> noun ↔ noun · verb ↔ verb · adjective ↔ adjective · gerund ↔ gerund · infinitive ↔ infinitive · clause ↔ clause</div>`
+      },
+      {
+        heading: "Skill 25–26 — Correlative Conjunctions",
+        body: `<p>Correlative pairs (<em>both…and, either…or, neither…nor, not only…but also</em>) demand that the elements following each half be grammatically identical.</p>
+        <div class="formula-box">not only [VERB PHRASE] but also [VERB PHRASE]
+both [NOUN]         and  [NOUN]</div>
+        <div class="warning-box">⚠ With <em>neither…nor</em> and <em>either…or</em>, the verb agrees with the closer subject.</div>`
+      },
+      {
+        heading: "Skill 27 — Comparisons",
+        body: `<p>In comparative constructions (<em>than, as…as</em>), the two compared elements must be parallel in form.</p>
+        <p>Example: It is easier to <em>prevent</em> a problem than <em>to correct</em> it. (infinitive ↔ infinitive)</p>`
+      }
+    ],
+    patterns: [
+      {
+        title: "Coordinate Conjunction Patterns",
+        pairs: [
+          { wrong: "She likes running, swimming, and to hike.", right: "She likes running, swimming, and hiking.", note: "All three must be gerunds." },
+          { wrong: "The report is thorough, accurate, and it covers all aspects.", right: "The report is thorough, accurate, and comprehensive.", note: "Three adjectives in parallel." },
+          { wrong: "He was warned, fined, and they suspended him.", right: "He was warned, fined, and suspended.", note: "Three past participles in passive parallel." }
+        ]
+      },
+      {
+        title: "Correlative Patterns",
+        pairs: [
+          { wrong: "She is not only talented but also she works hard.", right: "She is not only talented but also hardworking.", note: "Both elements must be adjectives." },
+          { wrong: "Either reduce costs or the prices should be raised.", right: "Either reduce costs or raise prices.", note: "Both elements must be imperatives." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "unit3",
+    num: 3,
+    title: "Nouns & Pronouns",
+    skills: "Skills 28–31",
+    icon: "③",
+    theory: [
+      {
+        heading: "Overview",
+        body: `<p>Four key noun/pronoun problems appear on TOEFL: incorrect plural forms, confusion between countable and uncountable nouns, pronoun-antecedent disagreement, and ambiguous pronoun reference.</p>`
+      },
+      {
+        heading: "Skill 28 — Correct Plural Forms",
+        body: `<p>Irregular plurals:</p>
+        <table class="compare-table">
+          <tr><th>Singular</th><th>Plural</th><th>Singular</th><th>Plural</th></tr>
+          <tr><td>criterion</td><td>criteria</td><td>phenomenon</td><td>phenomena</td></tr>
+          <tr><td>datum</td><td>data</td><td>medium</td><td>media</td></tr>
+          <tr><td>alumnus</td><td>alumni</td><td>analysis</td><td>analyses</td></tr>
+          <tr><td>thesis</td><td>theses</td><td>hypothesis</td><td>hypotheses</td></tr>
+        </table>`
+      },
+      {
+        heading: "Skill 29 — Countable vs Uncountable Nouns",
+        body: `<p>Uncountable nouns cannot be pluralized and do not take <em>a/an</em>. Common ones on TOEFL:</p>
+        <div class="formula-box">information · research · evidence · advice · furniture
+equipment · software · progress · knowledge · weather
+traffic · luggage · damage · homework · work</div>
+        <div class="rule-box">Use <strong>much/less/a great deal of</strong> with uncountables.<br>Use <strong>many/fewer/a number of</strong> with countable plurals.</div>`
+      },
+      {
+        heading: "Skill 30–31 — Pronouns",
+        body: `<p>Pronouns must agree with their antecedent in <strong>number</strong> and <strong>gender</strong>, and must have a <strong>clear, unambiguous</strong> reference.</p>
+        <div class="warning-box">⚠ Ambiguous: "The CEO told the manager she would resign." (Who is <em>she</em>?) — Restructure for clarity.</div>`
+      }
+    ],
+    patterns: [
+      {
+        title: "Noun Patterns",
+        pairs: [
+          { wrong: "The criterias for admission are strict.", right: "The criteria for admission are strict.", note: "Criteria is already plural (singular: criterion)." },
+          { wrong: "She gave me several informations about the job.", right: "She gave me some information about the job.", note: "Information is uncountable; cannot be pluralized." },
+          { wrong: "A large amount of students attended.", right: "A large number of students attended.", note: "Amount is for uncountable; number is for countable plurals." }
+        ]
+      },
+      {
+        title: "Pronoun Patterns",
+        pairs: [
+          { wrong: "Everyone must submit their reports by Friday. ✓ (accepted)", right: "Everyone must submit his or her report by Friday. ✓ (formal)", note: "Both are acceptable; TOEFL usually prefers singular his/her with everyone." },
+          { wrong: "The company announced that they will expand. (informal)", right: "The company announced that it will expand.", note: "Company is singular → it, not they (in formal writing)." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "unit4",
+    num: 4,
+    title: "Adjectives & Adverbs",
+    skills: "Skills 32–35",
+    icon: "④",
+    theory: [
+      {
+        heading: "Overview",
+        body: `<p>Adjectives modify nouns and pronouns. Adverbs modify verbs, adjectives, and other adverbs. TOEFL tests whether you use the correct form in context.</p>
+        <div class="formula-box">Linking verb + ADJECTIVE  (the soup smells good)
+Action verb + ADVERB     (she writes quickly)</div>`
+      },
+      {
+        heading: "Skill 32 — After Linking Verbs",
+        body: `<p>Use an adjective, not an adverb, after linking verbs:</p>
+        <div class="rule-box"><strong>Common linking verbs:</strong> be, seem, appear, become, feel, look, smell, taste, sound, remain, stay, grow, turn, get (when meaning "become")</div>
+        <p>The patient <em>looks</em> <strong>pale</strong>. (not <em>palely</em>) &nbsp;·&nbsp; The music <em>sounds</em> <strong>beautiful</strong>. (not <em>beautifully</em>)</p>`
+      },
+      {
+        heading: "Skill 33 — After Action Verbs",
+        body: `<p>Use an adverb (usually -ly) to modify an action verb: She <em>drives</em> <strong>carefully</strong>. He <em>performed</em> <strong>impressively</strong>.</p>`
+      },
+      {
+        heading: "Skill 34–35 — Comparatives & Superlatives",
+        body: `<table class="compare-table">
+          <tr><th>Form</th><th>Short adj</th><th>Long adj</th></tr>
+          <tr><td>Comparative</td><td>faster</td><td>more efficient</td></tr>
+          <tr><td>Superlative</td><td>fastest</td><td>most efficient</td></tr>
+        </table>
+        <div class="warning-box">⚠ Never double-compare: <em>more faster, most biggest</em> are errors. <br>⚠ Absolute adjectives (unique, perfect, complete, infinite) cannot be compared: <em>most unique</em> is illogical.</div>`
+      }
+    ],
+    patterns: [
+      {
+        title: "Adjective vs Adverb Patterns",
+        pairs: [
+          { wrong: "The situation looks bleakly for investors.", right: "The situation looks bleak for investors.", note: "Looks is a linking verb → adjective bleak, not adverb bleakly." },
+          { wrong: "The team worked efficient to meet the deadline.", right: "The team worked efficiently to meet the deadline.", note: "Worked is an action verb → adverb efficiently." },
+          { wrong: "She felt badly about the mistake.", right: "She felt bad about the mistake.", note: "Felt (emotion) is linking → adjective bad. Felt badly means impaired sense of touch." }
+        ]
+      },
+      {
+        title: "Comparison Patterns",
+        pairs: [
+          { wrong: "This is the most unique design I have seen.", right: "This is a unique design. / an exceptionally unique design.", note: "Unique is absolute; it cannot be made more/most." },
+          { wrong: "The recovery was more quicker than expected.", right: "The recovery was quicker than expected.", note: "Never double-compare; drop 'more' with -er form." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "unit5",
+    num: 5,
+    title: "Verb Forms & Tenses",
+    skills: "Skills 41–45",
+    icon: "⑤",
+    theory: [
+      {
+        heading: "Overview",
+        body: `<p>TOEFL tests verb form errors in four main areas: modal + base verb, subjunctive mood, tense sequence, and infinitive vs. gerund after specific verbs.</p>`
+      },
+      {
+        heading: "Skill 41 — Modal + Base Form",
+        body: `<div class="rule-box"><strong>After any modal auxiliary</strong> (can, could, will, would, shall, should, may, might, must), always use the <strong>base form</strong> of the verb — never add -s, -ed, or -ing.</div>
+        <p>She <em>can</em> <strong>speak</strong> French. (not <em>speaks</em>) &nbsp;·&nbsp; You <em>should</em> <strong>submit</strong> it now. (not <em>submitted</em>)</p>`
+      },
+      {
+        heading: "Skill 42 — Subjunctive Mood",
+        body: `<p>After verbs of recommendation, suggestion, demand, or requirement, use the <strong>base form</strong> in the that-clause regardless of subject or tense:</p>
+        <div class="formula-box">recommend / suggest / insist / demand / require / propose / urge
++ that + SUBJECT + BASE FORM</div>
+        <p>The doctor <em>recommended</em> that he <strong>take</strong> the medication. (not <em>takes/took</em>)</p>`
+      },
+      {
+        heading: "Skill 43–44 — Tense Sequence",
+        body: `<table class="compare-table">
+          <tr><th>Situation</th><th>Correct Tense</th></tr>
+          <tr><td>Action completed before another past action</td><td>Past perfect (had + pp)</td></tr>
+          <tr><td>Action in progress when another occurred</td><td>Past progressive (was/were + -ing)</td></tr>
+          <tr><td>Future action before a future point</td><td>Future perfect (will have + pp)</td></tr>
+        </table>
+        <div class="warning-box">⚠ Do NOT mix past and present in the same time frame: "…until penicillin <em>became</em> (not <em>becomes</em>) available."</div>`
+      },
+      {
+        heading: "Skill 45 — Infinitive vs Gerund",
+        body: `<table class="compare-table">
+          <tr><th>Verb + Infinitive (to + base)</th><th>Verb + Gerund (-ing)</th></tr>
+          <tr><td>want, hope, plan, expect, decide, need, refuse, manage, agree, promise, tend</td><td>enjoy, avoid, finish, consider, keep, risk, suggest, recommend, mind, delay, admit, deny</td></tr>
+        </table>
+        <p>Some verbs take both with different meanings: <em>stop to eat</em> (pause in order to eat) vs <em>stop eating</em> (quit eating).</p>`
+      }
+    ],
+    patterns: [
+      {
+        title: "Modal & Subjunctive Patterns",
+        pairs: [
+          { wrong: "She can speaks three languages.", right: "She can speak three languages.", note: "After modal can, use base form speak." },
+          { wrong: "The board recommended that he reviews the draft.", right: "The board recommended that he review the draft.", note: "Subjunctive after recommended: base form review (no -s)." }
+        ]
+      },
+      {
+        title: "Tense Sequence Patterns",
+        pairs: [
+          { wrong: "By the time we arrived, the meeting already ended.", right: "By the time we arrived, the meeting had already ended.", note: "Action before another past event → past perfect." },
+          { wrong: "Sulfa drugs had been used until penicillin becomes available.", right: "Sulfa drugs had been used until penicillin became available.", note: "Both events in the past → past tense, not present." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "unit6",
+    num: 6,
+    title: "Prepositions",
+    skills: "Skills 56–57",
+    icon: "⑥",
+    theory: [
+      {
+        heading: "Overview",
+        body: `<p>TOEFL tests two preposition problems: <strong>wrong preposition</strong> (incorrect fixed expression) and <strong>missing preposition</strong> (required preposition omitted). Many preposition uses are idiomatic and must be memorized.</p>`
+      },
+      {
+        heading: "Skill 56 — Wrong Preposition",
+        body: `<p>High-frequency TOEFL collocations:</p>
+        <table class="compare-table">
+          <tr><th>Correct Expression</th><th>Common Error</th></tr>
+          <tr><td>composed <strong>of</strong></td><td>composed <em>by</em></td></tr>
+          <tr><td>result <strong>of</strong></td><td>result <em>for/in</em></td></tr>
+          <tr><td>covered <strong>with</strong></td><td>covered <em>for</em></td></tr>
+          <tr><td>according <strong>to</strong></td><td>according — (missing)</td></tr>
+          <tr><td>aimed <strong>at</strong></td><td>aimed <em>to</em></td></tr>
+          <tr><td>consistent <strong>with</strong></td><td>consistent <em>to</em></td></tr>
+          <tr><td>depend <strong>on</strong></td><td>depend <em>in</em></td></tr>
+          <tr><td>comply <strong>with</strong></td><td>comply — (missing)</td></tr>
+          <tr><td>participate <strong>in</strong></td><td>participate <em>at</em></td></tr>
+          <tr><td>interested <strong>in</strong></td><td>interested <em>about</em></td></tr>
+        </table>`
+      },
+      {
+        heading: "Skill 57 — Missing Preposition",
+        body: `<p>Some verbs or expressions require a preposition before a noun or gerund that is sometimes omitted:</p>
+        <div class="formula-box">wait for · plan on (+ -ing) · consist of · result in · approve of
+by means of · close to · in spite of · because of</div>`
+      }
+    ],
+    patterns: [
+      {
+        title: "Wrong Preposition Patterns",
+        pairs: [
+          { wrong: "The results are consistent TO previous findings.", right: "The results are consistent WITH previous findings.", note: "Consistent with — fixed collocation." },
+          { wrong: "Mars is covered FOR craters.", right: "Mars is covered WITH craters.", note: "Covered with — the standard expression." },
+          { wrong: "The policy is aimed TO reduce emissions.", right: "The policy is aimed AT reducing emissions.", note: "Aimed at + gerund." }
+        ]
+      },
+      {
+        title: "Missing Preposition Patterns",
+        pairs: [
+          { wrong: "According legend, the city was founded…", right: "According TO legend, the city was founded…", note: "According to — preposition to is required." },
+          { wrong: "He plans attending the conference.", right: "He plans ON attending the conference.", note: "Plan on + gerund, or plan to + infinitive." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "unit7",
+    num: 7,
+    title: "Usage: make/do, like/alike, other/another",
+    skills: "Skills 58–60",
+    icon: "⑦",
+    theory: [
+      {
+        heading: "Skill 58 — Make vs Do",
+        body: `<table class="compare-table">
+          <tr><th>MAKE (create/produce)</th><th>DO (perform/complete)</th></tr>
+          <tr><td>make a decision</td><td>do homework</td></tr>
+          <tr><td>make a mistake</td><td>do the dishes</td></tr>
+          <tr><td>make progress</td><td>do business</td></tr>
+          <tr><td>make a profit</td><td>do research</td></tr>
+          <tr><td>make an effort</td><td>do a favor</td></tr>
+          <tr><td>make a difference</td><td>do an experiment</td></tr>
+        </table>
+        <div class="warning-box">⚠ <em>do a mistake</em> and <em>make homework</em> are classic TOEFL errors.</div>`
+      },
+      {
+        heading: "Skill 59 — Like / Alike / Unlike",
+        body: `<table class="compare-table">
+          <tr><th>Word</th><th>Function</th><th>Position</th><th>Example</th></tr>
+          <tr><td>like</td><td>adjective</td><td>before noun</td><td>in a <em>like</em> manner</td></tr>
+          <tr><td>alike</td><td>predicate adjective</td><td>after linking verb</td><td>they are <em>alike</em></td></tr>
+          <tr><td>like</td><td>preposition</td><td>+ object</td><td><em>Like</em> Tom, John is tall.</td></tr>
+          <tr><td>unlike</td><td>preposition</td><td>+ object</td><td><em>Unlike</em> Tom, John is short.</td></tr>
+        </table>
+        <div class="warning-box">⚠ <em>Alike</em> cannot precede a noun. <em>Like</em> cannot follow a linking verb directly (use <em>alike</em>).</div>`
+      },
+      {
+        heading: "Skill 60 — Other / Another / Others",
+        body: `<table class="compare-table">
+          <tr><th>Form</th><th>Definite?</th><th>Singular/Plural</th><th>Function</th><th>Example</th></tr>
+          <tr><td>another</td><td>Indefinite</td><td>Singular</td><td>Adj or Pro</td><td>I need <em>another</em> pen.</td></tr>
+          <tr><td>other</td><td>Either</td><td>Plural</td><td>Adjective only</td><td><em>other</em> students</td></tr>
+          <tr><td>others</td><td>Indefinite</td><td>Plural</td><td>Pronoun only</td><td>The <em>others</em> agreed.</td></tr>
+          <tr><td>the other</td><td>Definite</td><td>Singular</td><td>Adj or Pro</td><td><em>the other</em> option</td></tr>
+          <tr><td>the others</td><td>Definite</td><td>Plural</td><td>Adj or Pro</td><td><em>the others</em> left.</td></tr>
+        </table>
+        <div class="warning-box">⚠ <em>another alternatives</em> = wrong (another is singular; alternatives is plural). Use <em>other alternatives</em>.<br>⚠ <em>others students</em> = wrong (others is a pronoun, not an adjective). Use <em>other students</em>.</div>`
+      }
+    ],
+    patterns: [
+      {
+        title: "Make/Do Patterns",
+        pairs: [
+          { wrong: "He did several mistakes in the report.", right: "He made several mistakes in the report.", note: "Make a mistake — standard collocation." },
+          { wrong: "She made all the dishes before the guests arrived.", right: "She did all the dishes before the guests arrived.", note: "Do the dishes — perform a chore." },
+          { wrong: "The company did a significant profit last quarter.", right: "The company made a significant profit last quarter.", note: "Make a profit — create/produce result." }
+        ]
+      },
+      {
+        title: "Like/Alike/Unlike & Other/Another Patterns",
+        pairs: [
+          { wrong: "Alike all mammals, dolphins breathe air.", right: "Like all mammals, dolphins breathe air.", note: "As a preposition, use like (not alike) before a noun object." },
+          { wrong: "The two plans are not at all like.", right: "The two plans are not at all alike.", note: "After linking verb are, use predicate adjective alike." },
+          { wrong: "She had to choose another alternatives.", right: "She had to choose other alternatives.", note: "Another is singular; alternatives is plural → use other." },
+          { wrong: "Others students finished early.", right: "Other students finished early.", note: "Others is a pronoun and cannot precede a noun; use other." }
+        ]
+      }
+    ]
+  }
+];
+
+// ════════════════════════════════════════════════════════════════════════════
+// EXERCISE QUESTIONS — Per Unit
+// ════════════════════════════════════════════════════════════════════════════
+const EXERCISES = {
+  unit1: [
+    { q: "The contracts signed by the company (A)has been (B)voided because (C)some stipulations (D)were not met.", ans:"A", exp:"Subject <b>contracts</b> is plural → <b>has been</b> should be <b>have been</b>. (Skill 20)", skill:"Skill 20" },
+    { q: "The board of directors from three subsidiaries (A)have (B)announced a (C)joint restructuring (D)plan.", ans:"A", exp:"Subject <b>board</b> is singular → <b>have</b> should be <b>has</b>. (Skill 20)", skill:"Skill 20" },
+    { q: "Most of the (A)evidence gathered (B)during the investigation (C)suggest that the (D)suspect was present.", ans:"C", exp:"<b>Most of the evidence</b> — evidence is uncountable (singular) → <b>suggest</b> should be <b>suggests</b>. (Skill 21)", skill:"Skill 21" },
+    { q: "Half of the (A)electricity consumed in (B)the region (C)come from (D)offshore wind farms.", ans:"C", exp:"Electricity is uncountable → <b>come</b> should be <b>comes</b>. (Skill 21)", skill:"Skill 21" },
+    { q: "Seldom in the history of television (A)has two new (B)comedies been so (C)successful in (D)one season.", ans:"A", exp:"After <b>Seldom</b> (inversion), the subject is <b>two comedies</b> (plural) → <b>has</b> should be <b>have</b>. (Skill 22)", skill:"Skill 22" },
+    { q: "In the parking lot south of the stadium (A)was the cars (B)that were about (C)to be (D)towed.", ans:"A", exp:"Place expression triggers inversion; subject <b>cars</b> (plural) → <b>was</b> should be <b>were</b>. (Skill 22)", skill:"Skill 22" },
+    { q: "Everybody participating in the fundraiser (A)are to (B)turn in (C)the tickets (D)by 8:00.", ans:"A", exp:"<b>Everybody</b> is always singular → <b>are</b> should be <b>is</b>. (Skill 23)", skill:"Skill 23" },
+    { q: "The company reiterated that nobody (A)have been (B)dismissed because (C)of the (D)incident.", ans:"A", exp:"<b>Nobody</b> is singular → <b>have been</b> should be <b>has been</b>. (Skill 23)", skill:"Skill 23" },
+    { q: "The impact of social media platforms on political (A)campaigns (B)have been (C)studied extensively (D)by researchers.", ans:"B", exp:"Subject <b>impact</b> (singular) → <b>have been</b> should be <b>has been</b>. (Skill 20)", skill:"Skill 20" },
+    { q: "Some of the (A)research on (B)climate change (C)indicate a (D)dramatic rise in sea levels.", ans:"C", exp:"Research is uncountable → <b>indicate</b> should be <b>indicates</b>. (Skill 21)", skill:"Skill 21" },
+    { q: "Never before (A)has so many countries (B)agreed to a (C)single climate (D)accord.", ans:"A", exp:"After inversion trigger <b>Never before</b>, subject is <b>so many countries</b> (plural) → <b>has</b> should be <b>have</b>. (Skill 22)", skill:"Skill 22" },
+    { q: "Each delegate attending the summit (A)have been (B)assigned a (C)personal (D)interpreter.", ans:"A", exp:"<b>Each</b> is always singular → <b>have been</b> should be <b>has been</b>. (Skill 23)", skill:"Skill 23" },
+  ],
+  unit2: [
+    { q: "The committee must review the proposal, approve the budget, and (A)to set (B)a (C)new (D)timeline.", ans:"A", exp:"Three parallel verbs after a modal: review, approve, and <b>set</b> — drop <b>to</b>. (Skill 24)", skill:"Skill 24" },
+    { q: "She is not only a (A)talented musician but also (B)an accomplished (C)software (D)engineer.", ans:"A", exp:"Sentence is correct — not only [noun phrase] but also [noun phrase]. No error.", skill:"Skill 24" },
+    { q: "The AI system can analyze data, generate reports, and (A)identifies (B)anomalies (C)in real (D)time.", ans:"A", exp:"Three base-form verbs after modal <b>can</b>: analyze, generate, and <b>identify</b> — not <b>identifies</b>. (Skill 24)", skill:"Skill 24" },
+    { q: "Neither the (A)revised proposal nor the original draft (B)were accepted (C)by the review (D)committee.", ans:"B", exp:"Neither…nor: verb agrees with closer subject <b>draft</b> (singular) → <b>were</b> should be <b>was</b>. (Skill 25)", skill:"Skill 25" },
+    { q: "Investing wisely, living frugally, and (A)to save (B)consistently are the keys (C)to financial (D)stability.", ans:"A", exp:"Three gerunds in subject: Investing, living, and <b>saving</b> — not <b>to save</b>. (Skill 24)", skill:"Skill 24" },
+    { q: "It is easier to prevent a problem than (A)correcting (B)it after (C)the (D)fact.", ans:"A", exp:"Parallel infinitives: easier to prevent…than <b>to correct</b> — not <b>correcting</b>. (Skill 27)", skill:"Skill 27" },
+    { q: "The professor was knowledgeable, approachable, and (A)communicated ideas (B)with great (C)clarity to (D)students.", ans:"A", exp:"Three adjectives needed: knowledgeable, approachable, and <b>clear</b> — not a verb phrase. (Skill 24)", skill:"Skill 24" },
+    { q: "Both raising (A)awareness and (B)to provide resources (C)are essential steps (D)in combating food insecurity.", ans:"B", exp:"Both…and requires parallel gerunds: Both raising and <b>providing</b> — not <b>to provide</b>. (Skill 25)", skill:"Skill 25" },
+  ],
+  unit3: [
+    { q: "The (A)criterias used to evaluate the bids were (B)clearly (C)outlined in the (D)tender document.", ans:"A", exp:"Criteria is already plural (singular: criterion) → <b>criterias</b> is incorrect. (Skill 28)", skill:"Skill 28" },
+    { q: "She needed (A)several informations before (B)she could complete (C)the immigration (D)form.", ans:"A", exp:"Information is uncountable and cannot be pluralized → use <b>some information</b>. (Skill 29)", skill:"Skill 29" },
+    { q: "The two (A)phenomenons observed in the (B)experiment require (C)further (D)investigation.", ans:"A", exp:"Plural of phenomenon is <b>phenomena</b>, not phenomenons. (Skill 28)", skill:"Skill 28" },
+    { q: "A large (A)amount of trees in the (B)rainforest are (C)lost each year due to (D)deforestation.", ans:"A", exp:"Trees are countable → use <b>a large number of</b>, not <b>amount of</b>. (Skill 29)", skill:"Skill 29" },
+    { q: "Multiple (A)medias have reported on (B)the ongoing trial, raising (C)questions about (D)fair coverage.", ans:"A", exp:"Media is already plural (singular: medium) → <b>medias</b> is incorrect. (Skill 28)", skill:"Skill 28" },
+    { q: "The company (A)announced that (B)they would (C)expand its (D)operations into Southeast Asia.", ans:"B", exp:"The company is singular → <b>they</b> should be <b>it</b> in formal writing. (Skill 30)", skill:"Skill 30" },
+    { q: "Neither the senator nor the (A)representatives changed (B)their position (C)on the (D)bill.", ans:"A", exp:"Sentence is correct — neither…nor: verb/pronoun agrees with closer noun <b>representatives</b> (plural) → their is correct.", skill:"Skill 30" },
+  ],
+  unit4: [
+    { q: "After the renovation, the laboratory smells (A)newly and feels (B)considerable (C)larger than (D)before.", ans:"B", exp:"Before adjective <b>larger</b>, use adverb: <b>considerably</b>, not adjective <b>considerable</b>. (Also: smells <b>new</b>, not <b>newly</b> — linking verb.) (Skill 32)", skill:"Skill 32" },
+    { q: "The design team (A)worked efficient to (B)meet the launch (C)deadline for the (D)new product.", ans:"A", exp:"<b>Worked</b> is an action verb → adverb needed: <b>efficiently</b>, not adjective <b>efficient</b>. (Skill 33)", skill:"Skill 33" },
+    { q: "The recovery from the surgery was (A)more quicker than (B)the doctors (C)had (D)anticipated.", ans:"A", exp:"Double comparative error: <b>more quicker</b> → just <b>quicker</b>. (Skill 35)", skill:"Skill 35" },
+    { q: "The economic forecast (A)looks bleakly (B)for emerging (C)markets this (D)quarter.", ans:"A", exp:"<b>Looks</b> is a linking verb → adjective needed: <b>bleak</b>, not adverb <b>bleakly</b>. (Skill 32)", skill:"Skill 32" },
+    { q: "That is the most unique design she has (A)ever submitted to (B)the (C)international (D)competition.", ans:"A", exp:"<b>Unique</b> is an absolute adjective; <b>most unique</b> is illogical — use simply <b>unique</b>. (Skill 35)", skill:"Skill 35" },
+    { q: "His analysis was (A)thorough and (B)presented the findings (C)clear to (D)all stakeholders.", ans:"C", exp:"<b>Presented</b> is an action verb → adverb needed: <b>clearly</b>, not adjective <b>clear</b>. (Skill 33)", skill:"Skill 33" },
+    { q: "She (A)felt badly about (B)missing the conference (C)call with (D)international partners.", ans:"A", exp:"<b>Felt</b> (expressing emotion) is linking → adjective needed: <b>bad</b>, not adverb <b>badly</b>. (Skill 32)", skill:"Skill 32" },
+    { q: "The situation (A)became worst after (B)the second round (C)of negotiations (D)collapsed.", ans:"A", exp:"Comparing two rounds → comparative <b>worse</b> is needed, not superlative <b>worst</b>. (Skill 34)", skill:"Skill 34" },
+  ],
+  unit5: [
+    { q: "The board (A)recommended that the (B)new policy (C)is implemented (D)immediately.", ans:"C", exp:"After <b>recommend + that</b>, use subjunctive base form: <b>be implemented</b>, not <b>is implemented</b>. (Skill 42)", skill:"Skill 42" },
+    { q: "By the time the (A)relief workers arrived, the flood waters (B)have already (C)receded from (D)the area.", ans:"B", exp:"Action completed before another past action → past perfect: <b>had already receded</b>. (Skill 43)", skill:"Skill 43" },
+    { q: "Sulfa drugs (A)had been used to treat (B)infections until penicillin (C)becomes (D)widely available.", ans:"C", exp:"Both events are in the past → <b>becomes</b> should be <b>became</b>. (Skill 44)", skill:"Skill 44" },
+    { q: "The analyst (A)can accurately (B)predicts market trends (C)using the (D)new algorithm.", ans:"B", exp:"After modal <b>can</b>, base form required: <b>predict</b>, not <b>predicts</b>. (Skill 41)", skill:"Skill 41" },
+    { q: "The engineering team (A)considered (B)to redesign the entire (C)production (D)line.", ans:"B", exp:"<b>Consider</b> requires a gerund: <b>considered redesigning</b>, not <b>to redesign</b>. (Skill 45)", skill:"Skill 45" },
+    { q: "The director (A)expects the crew (B)finishing the shoot (C)before the (D)deadline.", ans:"B", exp:"<b>Expect</b> requires infinitive: <b>expects the crew to finish</b>, not <b>finishing</b>. (Skill 45)", skill:"Skill 45" },
+    { q: "The committee decided (A)postponing the vote (B)until more data (C)became (D)available.", ans:"A", exp:"<b>Decide</b> requires infinitive: <b>decided to postpone</b>, not <b>postponing</b>. (Skill 45)", skill:"Skill 45" },
+    { q: "By 2030, renewable energy (A)will have replaced a (B)significant portion (C)of fossil fuels (D)worldwide.", ans:"A", exp:"Sentence is correct. Future perfect <b>will have replaced</b> is correct for an action completed before a future point.", skill:"Skill 43" },
+  ],
+  unit6: [
+    { q: "The results of the experiment are (A)consistent to (B)previous findings (C)in the (D)field.", ans:"A", exp:"The correct collocation is <b>consistent with</b>, not <b>consistent to</b>. (Skill 56)", skill:"Skill 56" },
+    { q: "(A)According legend, (B)Betsy Ross designed (C)and sewed the (D)first American flag.", ans:"A", exp:"<b>According to</b> — the preposition <b>to</b> is missing. (Skill 57)", skill:"Skill 57" },
+    { q: "Mars's two small moons are irregularly shaped and (A)covered (B)for craters formed by (C)ancient (D)meteor impacts.", ans:"B", exp:"The correct collocation is <b>covered with</b> craters, not <b>covered for</b>. (Skill 56)", skill:"Skill 56" },
+    { q: "The new regulations are (A)aimed to (B)reduce carbon emissions (C)by 40 percent (D)by 2035.", ans:"A", exp:"The correct collocation is <b>aimed at reducing</b> — aimed at + gerund. (Skill 56)", skill:"Skill 56" },
+    { q: "Many economists believe that the recovery (A)depends (B)in consumer (C)confidence and (D)government policy.", ans:"B", exp:"The correct preposition is <b>depends on</b>, not <b>depends in</b>. (Skill 56)", skill:"Skill 56" },
+    { q: "A marionette is controlled by (A)means (B)strings connected (C)to wooden (D)control bars.", ans:"B", exp:"<b>By means of strings</b> — preposition <b>of</b> is missing. (Skill 57)", skill:"Skill 57" },
+    { q: "He (A)plans (B)attending the international (C)conference on (D)renewable energy next spring.", ans:"B", exp:"<b>Plan on attending</b> (preposition <b>on</b> is missing) or <b>plans to attend</b>. (Skill 57)", skill:"Skill 57" },
+    { q: "Atomic nuclei are believed to be (A)composed (B)by protons and neutrons (C)in equal (D)numbers for lighter elements.", ans:"B", exp:"The correct collocation is <b>composed of</b>, not <b>composed by</b>. (Skill 56)", skill:"Skill 56" },
+  ],
+  unit7: [
+    { q: "The buffalo and the bison are (A)like except for the size and (B)shape (C)of the (D)head and shoulders.", ans:"A", exp:"After linking verb <b>are</b>, use predicate adjective <b>alike</b>, not <b>like</b>. (Skill 59)", skill:"Skill 59" },
+    { q: "Only about 3 percent of oil wells actually (A)do (B)a (C)profit every (D)year.", ans:"A", exp:"The idiom is <b>make a profit</b>, not <b>do a profit</b>. (Skill 58)", skill:"Skill 58" },
+    { q: "(A)Alike all other (B)mammals, dolphins have (C)lungs and (D)breathe air.", ans:"A", exp:"As a preposition followed by a noun phrase, use <b>Like</b>, not <b>Alike</b>. (Skill 59)", skill:"Skill 59" },
+    { q: "Pittsburgh has reduced its smog and (A)others cities can (B)do (C)the same (D)thing.", ans:"A", exp:"<b>Others</b> is a pronoun and cannot precede a noun → use <b>other</b> cities. (Skill 60)", skill:"Skill 60" },
+    { q: "Because the plan is no longer feasible, the manager had to (A)choose (B)another (C)alternatives for the (D)project.", ans:"B", exp:"<b>Another</b> is singular; <b>alternatives</b> is plural → use <b>other alternatives</b>. (Skill 60)", skill:"Skill 60" },
+    { q: "Up to World War I, almost all important research in physics had been (A)made in (B)universities, with only (C)university funds (D)for support.", ans:"A", exp:"The idiom is <b>do research</b> (perform/conduct), not <b>make research</b>. (Skill 58)", skill:"Skill 58" },
+    { q: "Particles with (A)unlike charges (B)attract each other, while particles with (C)alike charges (D)repel each other.", ans:"C", exp:"<b>Alike</b> is a predicate adjective and cannot precede a noun → use <b>like</b> charges. (Skill 59)", skill:"Skill 59" },
+    { q: "One (A)another surprising method of forest conservation is (B)controlled cutting (C)of (D)trees.", ans:"A", exp:"<b>One another</b> is a reciprocal pronoun (meaning 'each other') — incorrect here. Use <b>Another</b>. (Skill 60)", skill:"Skill 60" },
+  ],
+  simulation: [
+    { q: "The number of electric vehicles (A)registered in the country (B)have increased (C)dramatically over the past (D)five years.", ans:"B", exp:"<b>The number of</b> takes a singular verb → <b>have</b> should be <b>has</b>. (Skill 20)", skill:"Skill 20" },
+    { q: "Each of the policy recommendations (A)submitted by the (B)advisory panel (C)have been carefully (D)reviewed.", ans:"C", exp:"<b>Each</b> is singular → <b>have been</b> should be <b>has been</b>. (Skill 23)", skill:"Skill 23" },
+    { q: "The archaeologists (A)who discovered the ruins (B)mapped the site, (C)catalogued the artifacts, and (D)were writing detailed reports.", ans:"D", exp:"Parallel past tenses: mapped, catalogued, and <b>wrote</b> — not <b>were writing</b>. (Skill 24)", skill:"Skill 24" },
+    { q: "Most of the (A)evidence gathered during the investigation (B)suggest that the (C)suspect was (D)present at the scene.", ans:"B", exp:"Most of the evidence — evidence (uncountable) → <b>suggest</b> should be <b>suggests</b>. (Skill 21)", skill:"Skill 21" },
+    { q: "The new smartphone model (A)looks impressively (B)and feels (C)more durable than (D)its predecessor.", ans:"A", exp:"<b>Looks</b> is a linking verb → adjective needed: <b>impressive</b>, not <b>impressively</b>. (Skill 32)", skill:"Skill 32" },
+    { q: "Atomic nuclei are believed (A)to be (B)composed by protons and (C)neutrons in equal (D)numbers for the lighter elements.", ans:"B", exp:"Correct collocation: <b>composed of</b>, not <b>composed by</b>. (Skill 56)", skill:"Skill 56" },
+    { q: "(A)Both raising awareness and (B)to provide resources (C)are essential steps in (D)combating food insecurity.", ans:"B", exp:"Both…and requires parallel gerunds: <b>providing</b>, not <b>to provide</b>. (Skill 25)", skill:"Skill 25" },
+    { q: "Unlike the (A)conventional red fire engines used in many (B)countries, the new emergency vehicles in this (C)city (D)are yellow.", ans:"A", exp:"Sentence is correct. Unlike + noun phrase + main clause — no error.", skill:"Skill 59" },
+    { q: "The board of directors from (A)three separate subsidiaries (B)have announced a (C)joint (D)restructuring plan.", ans:"B", exp:"Subject <b>board</b> (singular) → <b>have</b> should be <b>has</b>. (Skill 20)", skill:"Skill 20" },
+    { q: "She (A)insisted that every (B)employee (C)reviews the updated compliance (D)guidelines before Friday.", ans:"C", exp:"Insist + that + subjunctive: <b>reviews</b> should be <b>review</b> (base form). (Skill 42)", skill:"Skill 42" },
+    { q: "Half of the (A)renewable electricity generated in the (B)region (C)come from (D)offshore wind farms.", ans:"C", exp:"Half of the electricity (uncountable) → <b>come</b> should be <b>comes</b>. (Skill 21)", skill:"Skill 21" },
+    { q: "The documentary suggests that deforestation, (A)overfishing, and (B)to pollute rivers are (C)the main (D)threats to biodiversity.", ans:"B", exp:"Parallel gerunds required: <b>polluting</b> rivers, not <b>to pollute</b>. (Skill 24)", skill:"Skill 24" },
+    { q: "There (A)was several unanswered (B)questions at the end (C)of the (D)press conference.", ans:"A", exp:"There + subject <b>questions</b> (plural) → <b>was</b> should be <b>were</b>. (Skill 22)", skill:"Skill 22" },
+    { q: "Sulfa drugs (A)had been used to treat bacterial infections until penicillin (B)becomes (C)widely (D)available.", ans:"B", exp:"Tense inconsistency — both events are past: <b>becomes</b> should be <b>became</b>. (Skill 44)", skill:"Skill 44" },
+    { q: "All of the (A)informations needed for the (B)application can be (C)found on the (D)official website.", ans:"A", exp:"Information is uncountable → <b>informations</b> should be <b>information</b>. (Skill 29)", skill:"Skill 29" },
+    { q: "The CEO, (A)together with her senior management team, (B)are preparing to announce (C)the company's (D)quarterly results.", ans:"B", exp:"Together with does not compound the subject; CEO (singular) → <b>are</b> should be <b>is</b>. (Skill 20)", skill:"Skill 20" },
+    { q: "Because the plan made yesterday is (A)no longer feasible, the manager had to choose (B)another (C)alternatives for (D)the project.", ans:"B", exp:"Another is singular; <b>alternatives</b> is plural → use <b>other alternatives</b>. (Skill 60)", skill:"Skill 60" },
+    { q: "A marionette is (A)controlled by (B)means strings (C)connected to (D)wooden control bars.", ans:"B", exp:"<b>By means of strings</b> — preposition <b>of</b> is missing after means. (Skill 57)", skill:"Skill 57" },
+    { q: "Everyone in the (A)affected communities (B)have been offered (C)temporary shelter by the local (D)authority.", ans:"B", exp:"Everyone (singular) → <b>have been</b> should be <b>has been</b>. (Skill 23)", skill:"Skill 23" },
+    { q: "Color blindness (A)may exist at birth or may (B)occur later in life as a (C)result for disease (D)or injury.", ans:"C", exp:"Correct collocation: <b>result of</b>, not <b>result for</b>. (Skill 56)", skill:"Skill 56" },
+    { q: "The occurrence of edema (A)indicate (B)the presence of a (C)serious underlying (D)medical condition.", ans:"A", exp:"Subject <b>occurrence</b> (singular) → <b>indicate</b> should be <b>indicates</b>. (Skill 20)", skill:"Skill 20" },
+    { q: "In 1958, (A)a largest recorded wave, (B)with a height of 500 meters, (C)occurred in (D)Lituya Bay, Alaska.", ans:"A", exp:"Superlative requires definite article: <b>the largest</b>, not <b>a largest</b>. (Skill 35)", skill:"Skill 35" },
+    { q: "Exercise in swimming pools is (A)particularly helpful because of the (B)buoyant effect (C)water on (D)the body.", ans:"C", exp:"<b>Buoyant effect of water</b> — preposition <b>of</b> is missing. (Skill 57)", skill:"Skill 57" },
+    { q: "(A)According legend, (B)Betsy Ross designed (C)and sewed the (D)first American flag.", ans:"A", exp:"<b>According to</b> legend — preposition <b>to</b> is missing. (Skill 57)", skill:"Skill 57" },
+    { q: "The two policy frameworks proposed by the committee are not at all (A)like; one emphasizes (B)regulation while the (C)other prioritizes (D)incentives.", ans:"A", exp:"After linking verb <b>are</b>, use predicate adjective <b>alike</b>, not <b>like</b>. (Skill 59)", skill:"Skill 59" },
+    { q: "The professor suggested that each (A)student (B)reviews the assigned chapters (C)carefully before (D)the seminar.", ans:"B", exp:"Suggest + that + subjunctive: <b>reviews</b> should be base form <b>review</b>. (Skill 42)", skill:"Skill 42" },
+    { q: "The engineering team (A)considered to (B)redesign the entire (C)production line to (D)reduce costs.", ans:"A", exp:"Consider + gerund: <b>considered redesigning</b>, not <b>to redesign</b>. (Skill 45)", skill:"Skill 45" },
+    { q: "Neither the (A)revised proposal nor (B)the original draft (C)were accepted by (D)the review committee.", ans:"C", exp:"Neither…nor: verb agrees with closer subject <b>draft</b> (singular) → <b>were</b> should be <b>was</b>. (Skill 25)", skill:"Skill 25" },
+    { q: "Up to World War I, almost all important research in physics had been (A)made in universities, with only (B)university funds (C)for (D)support.", ans:"A", exp:"Research is conducted/done, not made: <b>made</b> should be <b>done</b>. (Skill 58)", skill:"Skill 58" },
+    { q: "The recovery from the surgery was (A)more quicker than (B)the doctors had (C)anticipated, (D)which surprised everyone.", ans:"A", exp:"Double comparative: <b>more quicker</b> → just <b>quicker</b>. (Skill 35)", skill:"Skill 35" },
+    { q: "Not until the full audit was completed (A)was the extent of the (B)financial irregularities (C)become clear (D)to the board.", ans:"C", exp:"After inversion, <b>become</b> should be <b>became</b> (simple past). (Skill 22)", skill:"Skill 22" },
+    { q: "Because the main road is under construction, drivers should seek (A)another (B)routes to (C)the airport (D)instead.", ans:"A", exp:"Another (singular) + routes (plural) → use <b>other routes</b>. (Skill 60)", skill:"Skill 60" },
+    { q: "The (A)criterias used to evaluate the applications (B)were not (C)clearly communicated to (D)the applicants.", ans:"A", exp:"Criteria is already plural (singular: criterion) → <b>criterias</b> is incorrect. (Skill 28)", skill:"Skill 28" },
+    { q: "Seldom (A)do Antarctic icebergs (B)move far enough north to (C)disturb South Pacific (D)shipping lanes.", ans:"A", exp:"Sentence is correct — Seldom triggers inversion correctly; subject icebergs (plural) → do. No error.", skill:"Skill 22" },
+    { q: "She needed (A)several informations before (B)she could complete (C)the (D)application form.", ans:"A", exp:"Information is uncountable → <b>several informations</b> should be <b>some information</b>. (Skill 29)", skill:"Skill 29" },
+    { q: "The director expected the (A)crew (B)finishing the shoot before (C)the (D)deadline.", ans:"B", exp:"Expect + infinitive: <b>expected the crew to finish</b>, not <b>finishing</b>. (Skill 45)", skill:"Skill 45" },
+    { q: "Particles with (A)unlike charges attract each other, while particles with (B)alike charges (C)repel (D)each other.", ans:"B", exp:"<b>Alike</b> cannot precede a noun → use <b>like</b> charges. (Skill 59)", skill:"Skill 59" },
+    { q: "The analyst can accurately (A)predicts market (B)trends using (C)the new (D)algorithm.", ans:"A", exp:"After modal <b>can</b>, base form required: <b>predict</b>, not <b>predicts</b>. (Skill 41)", skill:"Skill 41" },
+    { q: "A large (A)amount of researchers have concluded (B)that the effects of (C)microplastics extend (D)beyond marine environments.", ans:"A", exp:"Researchers are countable → <b>a large number of researchers</b>, not <b>amount of</b>. (Skill 29)", skill:"Skill 29" },
+    { q: "The development of permanent teeth, (A)alike that of deciduous teeth, (B)begins before (C)birth according to (D)dental records.", ans:"A", exp:"As a preposition, use <b>like</b> (not <b>alike</b>) before a noun phrase. (Skill 59)", skill:"Skill 59" },
+  ]
+};
+
+// ════════════════════════════════════════════════════════════════════════════
+//  APP STATE
+// ════════════════════════════════════════════════════════════════════════════
+let state = {
+  user: null,
+  scores: {},      // { unit1: {correct, total, pct}, … }
+  exState: null,   // current exercise session
+};
+
+// ════════════════════════════════════════════════════════════════════════════
+//  UTILITIES
+// ════════════════════════════════════════════════════════════════════════════
+function showLoading(v) {
+  document.getElementById('loadingOverlay').classList.toggle('visible', v);
+}
+function toast(msg, type='info', dur=3500) {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span style="font-size:16px">${type==='success'?'✓':type==='error'?'✕':'ℹ'}</span>${msg}`;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => el.remove(), dur);
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  LOGIN
+// ════════════════════════════════════════════════════════════════════════════
+function doLogin() {
+  const name  = document.getElementById('inputName').value.trim();
+  const npm   = document.getElementById('inputNPM').value.trim();
+  const cls   = document.getElementById('inputClass').value;
+  const errEl = document.getElementById('loginError');
+  errEl.textContent = '';
+  if (!name)  { errEl.textContent = 'Please enter your full name.'; return; }
+  if (!npm)   { errEl.textContent = 'Please enter your NPM / Student ID.'; return; }
+  if (!cls)   { errEl.textContent = 'Please select your class.'; return; }
+  state.user = { name, npm, class: cls, loginTime: new Date().toISOString() };
+  document.getElementById('loginScreen').classList.remove('active');
+  document.getElementById('mainScreen').classList.add('active');
+  document.getElementById('sidebarName').textContent = name;
+  document.getElementById('sidebarMeta').textContent = `NPM: ${npm} · Class ${cls}`;
+  document.getElementById('dashName').textContent = name.split(' ')[0];
+  buildUnitsGrid();
+  buildUnitPages();
+  buildSimulationPage();
+  updateProgressUI();
+  showPage('dashboard');
+}
+function doLogout() {
+  if (!confirm('Logout? Your scores are already synced.')) return;
+  state = { user: null, scores: {}, exState: null };
+  document.getElementById('mainScreen').classList.remove('active');
+  document.getElementById('loginScreen').classList.add('active');
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════════════════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`page-${id}`).classList.add('active');
+  const nav = document.getElementById(`nav-${id}`);
+  if (nav) nav.classList.add('active');
+  if (id === 'progress') buildProgressTable();
+  if (id === 'dashboard') updateDashboard();
+  document.getElementById('contentArea').scrollTop = 0;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  BUILD UNITS GRID (dashboard)
+// ════════════════════════════════════════════════════════════════════════════
+function buildUnitsGrid() {
+  const grid = document.getElementById('unitsGrid');
+  grid.innerHTML = '';
+  const allUnits = [...UNITS, {id:'simulation',num:'★',title:'Final Simulation Test',skills:'All Skills 20–60',icon:'◉'}];
+  allUnits.forEach(u => {
+    const sc = state.scores[u.id];
+    const pct = sc ? sc.pct : 0;
+    const done = sc ? '✅' : '○';
+    const card = document.createElement('div');
+    card.className = 'unit-card';
+    card.onclick = () => showPage(u.id);
+    card.innerHTML = `
+      <div class="unit-card-header">
+        <span class="unit-num">${u.icon}</span>
+        <span class="unit-status">${done}</span>
+      </div>
+      <div class="unit-title">${u.title}</div>
+      <div class="unit-skills">${u.skills}</div>
+      <div class="unit-progress-wrap">
+        <div class="unit-progress-bar"><div class="unit-progress-fill" style="width:${pct}%"></div></div>
+        <div class="unit-progress-pct">${pct ? pct+'%' : '—'}</div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  UPDATE DASHBOARD STATS
+// ════════════════════════════════════════════════════════════════════════════
+function updateDashboard() {
+  const keys = [...UNITS.map(u=>u.id), 'simulation'];
+  let total = 0, completed = 0, sum = 0;
+  keys.forEach(k => {
+    const s = state.scores[k];
+    if (s) { total += s.correct; completed++; sum += s.pct; }
+  });
+  document.getElementById('dashTotalScore').textContent = total;
+  document.getElementById('dashCompleted').innerHTML = `${completed}<span style="font-size:18px;color:var(--ink3)">/${keys.length}</span>`;
+  document.getElementById('dashAvgScore').textContent = completed ? Math.round(sum/completed)+'%' : '—';
+  buildUnitsGrid();
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  UPDATE SIDEBAR PROGRESS
+// ════════════════════════════════════════════════════════════════════════════
+function updateProgressUI() {
+  const keys = [...UNITS.map(u=>u.id), 'simulation'];
+  let done = 0;
+  keys.forEach(k => { if (state.scores[k]) done++; });
+  const pct = Math.round(done/keys.length*100);
+  document.getElementById('sidebarProgressPct').textContent = pct+'%';
+  document.getElementById('sidebarProgressFill').style.width = pct+'%';
+  UNITS.forEach(u => {
+    const sc = state.scores[u.id];
+    const el = document.getElementById(`nscore-${u.id}`);
+    if (el && sc) el.textContent = sc.pct+'%';
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  PROGRESS TABLE
+// ════════════════════════════════════════════════════════════════════════════
+function buildProgressTable() {
+  const tbody = document.getElementById('progressTableBody');
+  tbody.innerHTML = '';
+  const allUnits = [...UNITS, {id:'simulation',title:'Final Simulation Test',skills:'All Skills 20–60'}];
+  allUnits.forEach(u => {
+    const sc = state.scores[u.id];
+    const pct = sc ? sc.pct : null;
+    const pillClass = !pct ? '' : pct>=80?'high':pct>=60?'mid':'low';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${u.id.replace('unit','Unit ').replace('simulation','Simulation')}</td>
+      <td>${u.title}</td>
+      <td>${sc ? sc.correct : '—'}</td>
+      <td>${sc ? sc.total : '—'}</td>
+      <td>${pct !== null ? `<span class="score-pill ${pillClass}">${pct}%</span>` : '—'}</td>
+      <td>${sc ? '✅ Done' : '○ Not started'}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  BUILD UNIT LESSON PAGES
+// ════════════════════════════════════════════════════════════════════════════
+function buildUnitPages() {
+  UNITS.forEach(u => {
+    const el = document.getElementById(`page-${u.id}`);
+    el.innerHTML = `
+      <div class="page-header">
+        <h1>${u.icon} ${u.title}</h1>
+        <p>${u.skills}</p>
+      </div>
+      <div class="lesson-tabs">
+        <button class="lesson-tab active" onclick="switchTab('${u.id}','theory',this)">📖 Theory</button>
+        <button class="lesson-tab" onclick="switchTab('${u.id}','patterns',this)">🔍 Patterns</button>
+        <button class="lesson-tab" onclick="switchTab('${u.id}','exercise',this)">✏️ Exercise</button>
+      </div>
+      <div id="tab-${u.id}-theory">${buildTheory(u)}</div>
+      <div id="tab-${u.id}-patterns" style="display:none">${buildPatterns(u)}</div>
+      <div id="tab-${u.id}-exercise" style="display:none"></div>
+    `;
+  });
+}
+
+function switchTab(unitId, tab, btn) {
+  ['theory','patterns','exercise'].forEach(t => {
+    document.getElementById(`tab-${unitId}-${t}`).style.display = 'none';
+  });
+  document.getElementById(`tab-${unitId}-${tab}`).style.display = 'block';
+  document.querySelectorAll(`#page-${unitId} .lesson-tab`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (tab === 'exercise') {
+    const exContainer = document.getElementById(`tab-${unitId}-exercise`);
+    if (!exContainer.innerHTML.trim()) {
+      startExercise(unitId, exContainer);
+    }
+  }
+}
+
+function buildTheory(u) {
+  return u.theory.map(t => `
+    <div class="theory-block">
+      <h2>${t.heading}</h2>
+      ${t.body}
+    </div>`).join('');
+}
+
+function buildPatterns(u) {
+  return u.patterns.map(p => `
+    <div class="pattern-block">
+      <h3>${p.title}</h3>
+      ${p.pairs.map(pair => `
+        <div class="example-pair">
+          <div class="example-wrong">
+            <div class="example-label">✗ Incorrect</div>
+            ${pair.wrong}
+          </div>
+          <div class="example-right">
+            <div class="example-label">✓ Correct</div>
+            ${pair.right}
+          </div>
+        </div>
+        <div class="example-note">💡 ${pair.note}</div>
+      `).join('')}
+    </div>`).join('');
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  BUILD SIMULATION PAGE
+// ════════════════════════════════════════════════════════════════════════════
+function buildSimulationPage() {
+  const el = document.getElementById('page-simulation');
+  el.innerHTML = `
+    <div class="page-header">
+      <h1>◉ Final Simulation Test</h1>
+      <p>All Skills 20–60 · 40 questions · Mixed format</p>
+    </div>
+    <div class="lesson-tabs">
+      <button class="lesson-tab active" onclick="switchSimTab('info',this)">ℹ️ Instructions</button>
+      <button class="lesson-tab" onclick="switchSimTab('exercise',this)">✏️ Take Test</button>
+    </div>
+    <div id="sim-info">
+      <div class="theory-block">
+        <h2>Simulation Test Instructions</h2>
+        <p>This 40-question test covers all Written Expression Skills (20–60). It replicates actual TOEFL format.</p>
+        <div class="rule-box">
+          <strong>Format:</strong> Each question presents one sentence with four underlined portions (A, B, C, D). Choose the letter of the portion that is NOT correct.
+        </div>
+        <div class="tip-box">
+          💡 <strong>Strategy:</strong> (1) Scan the four choices first. (2) If no error is obvious, read the full sentence. (3) Move quickly — aim for 1 minute per question.
+        </div>
+        <p>Click the <strong>"Take Test"</strong> tab above to begin. Your score will be automatically recorded.</p>
+      </div>
+    </div>
+    <div id="sim-exercise" style="display:none"></div>
+  `;
+}
+
+function switchSimTab(tab, btn) {
+  document.getElementById('sim-info').style.display = tab==='info' ? 'block' : 'none';
+  document.getElementById('sim-exercise').style.display = tab==='exercise' ? 'block' : 'none';
+  document.querySelectorAll('#page-simulation .lesson-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (tab === 'exercise') {
+    const c = document.getElementById('sim-exercise');
+    if (!c.innerHTML.trim()) startExercise('simulation', c);
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  EXERCISE ENGINE
+// ════════════════════════════════════════════════════════════════════════════
+function startExercise(unitId, container) {
+  const questions = EXERCISES[unitId];
+  const session = {
+    unitId,
+    questions,
+    current: 0,
+    answers: [],  // {correct: bool}
+    done: false
+  };
+  state.exState = session;
+  renderExercise(container, session);
+}
+
+function renderExercise(container, session) {
+  if (session.done) { renderResults(container, session); return; }
+  const q = session.questions[session.current];
+  const total = session.questions.length;
+  const n = session.current + 1;
+  const circumference = 2 * Math.PI * 22;
+  const offset = circumference - (n / total) * circumference;
+
+  // Parse question sentence — underline (A),(B),(C),(D) spans
+  const parsedQ = q.q
+    .replace(/\(A\)(.*?)(?=\s*\(B\)|\s*$)/g, '<span class="q-underlined"><span class="q-part">(A) $1</span></span>')
+    .replace(/\(B\)(.*?)(?=\s*\(C\)|\s*$)/g, '<span class="q-underlined"><span class="q-part">(B) $1</span></span>')
+    .replace(/\(C\)(.*?)(?=\s*\(D\)|\s*$)/g, '<span class="q-underlined"><span class="q-part">(C) $1</span></span>')
+    .replace(/\(D\)(.*?)$/g, '<span class="q-underlined"><span class="q-part">(D) $1</span></span>');
+
+  const unitInfo = UNITS.find(u=>u.id===session.unitId);
+  const unitLabel = unitInfo ? unitInfo.skills : 'Simulation';
+
+  container.innerHTML = `
+    <div class="exercise-header">
+      <div class="ex-meta">
+        <div class="ex-title">${unitInfo ? unitInfo.title : 'Final Simulation Test'}</div>
+        <div class="ex-subtitle">${unitLabel} · Identify the error</div>
+      </div>
+      <div class="ex-progress-wrap">
+        <div class="ex-counter">${n}/${total}</div>
+        <div class="ex-progress-circle">
+          <svg width="56" height="56" viewBox="0 0 56 56">
+            <circle class="track" cx="28" cy="28" r="22" fill="none" stroke-width="4"/>
+            <circle class="fill" cx="28" cy="28" r="22" fill="none" stroke-width="4"
+              stroke-dasharray="${circumference}"
+              stroke-dashoffset="${offset}"/>
+          </svg>
+          <div class="label">${Math.round(n/total*100)}%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="qCard">
+      <div class="question-body">
+        <div class="question-num">
+          Question ${n}
+          <span class="question-type-tag">${q.skill}</span>
+        </div>
+        <p class="question-sentence">${parsedQ}</p>
+      </div>
+      <div class="choices-grid" id="choicesGrid">
+        ${['A','B','C','D'].map(l => `
+          <button class="choice-btn" id="choice${l}" onclick="selectAnswer('${l}','${q.ans}','${session.unitId}')">
+            <span class="choice-letter">${l}</span>
+            <span>Choice (${l})</span>
+          </button>`).join('')}
+      </div>
+      <div class="explanation-panel" id="explanationPanel">
+        <div class="explanation-inner">
+          <div class="exp-header">
+            <span class="exp-icon" id="expIcon"></span>
+            <span class="exp-verdict" id="expVerdict"></span>
+          </div>
+          <div class="exp-text" id="expText"></div>
+          <div class="exp-skill" id="expSkill"></div>
+        </div>
+      </div>
+      <div class="next-btn-wrap">
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()" disabled>
+          ${n < total ? 'Next Question →' : 'See Results →'}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function selectAnswer(chosen, correct, unitId) {
+  // Disable all buttons
+  const grid = document.getElementById('choicesGrid');
+  grid.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+
+  const isCorrect = chosen === correct;
+  state.exState.answers.push({ correct: isCorrect });
+
+  // Visual feedback on choices
+  ['A','B','C','D'].forEach(l => {
+    const btn = document.getElementById(`choice${l}`);
+    if (l === correct) btn.classList.add('correct');
+    else if (l === chosen && !isCorrect) btn.classList.add('wrong');
+    else if (l !== chosen && l !== correct) btn.classList.add('missed');
+  });
+
+  // Show explanation
+  const panel = document.getElementById('explanationPanel');
+  const q = state.exState.questions[state.exState.current];
+  panel.className = `explanation-panel ${isCorrect ? 'correct-panel' : 'wrong-panel'} visible`;
+  document.getElementById('expIcon').textContent = isCorrect ? '🎉' : '❌';
+  document.getElementById('expVerdict').textContent = isCorrect ? 'Correct!' : `Incorrect — The answer is (${correct})`;
+  document.getElementById('expText').innerHTML = q.exp;
+  document.getElementById('expSkill').textContent = q.skill;
+
+  // Enable next
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion() {
+  const session = state.exState;
+  session.current++;
+  if (session.current >= session.questions.length) {
+    session.done = true;
+  }
+  const container = document.getElementById(`tab-${session.unitId}-exercise`) ||
+                    document.getElementById('sim-exercise');
+  renderExercise(container, session);
+}
+
+function renderResults(container, session) {
+  const correct = session.answers.filter(a=>a.correct).length;
+  const total = session.questions.length;
+  const pct = Math.round(correct/total*100);
+  const grade = pct>=90?'Excellent!':pct>=80?'Very Good':pct>=70?'Good':pct>=60?'Satisfactory':'Needs More Practice';
+  const gradeColor = pct>=80?'var(--green)':pct>=60?'var(--gold)':'var(--red)';
+
+  // Save score
+  state.scores[session.unitId] = { correct, total, pct };
+  updateProgressUI();
+  updateDashboard();
+
+  // Sync to Google Sheets
+  syncToSheets(session.unitId, correct, total, pct);
+
+  container.innerHTML = `
+    <div class="results-card">
+      <div style="font-size:48px">🏆</div>
+      <div class="results-score"><span>${pct}</span>%</div>
+      <div class="results-grade" style="color:${gradeColor}">${grade}</div>
+      <div class="results-summary">${correct} correct out of ${total} questions</div>
+      <div class="results-breakdown">
+        <div class="rb-item"><div class="rb-num correct">${correct}</div><div class="rb-label">Correct</div></div>
+        <div class="rb-item"><div class="rb-num wrong">${total-correct}</div><div class="rb-label">Incorrect</div></div>
+        <div class="rb-item"><div class="rb-num pct">${pct}%</div><div class="rb-label">Score</div></div>
+      </div>
+      <div class="results-btns">
+        <button class="results-btn primary" onclick="retryExercise('${session.unitId}')">🔄 Retry</button>
+        <button class="results-btn secondary" onclick="showPage('progress')">📊 View Progress</button>
+        <button class="results-btn secondary" onclick="showPage('dashboard')">🏠 Dashboard</button>
+      </div>
+    </div>
+  `;
+}
+
+function retryExercise(unitId) {
+  const container = document.getElementById(`tab-${unitId}-exercise`) ||
+                    document.getElementById('sim-exercise');
+  container.innerHTML = '';
+  startExercise(unitId, container);
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  GOOGLE SHEETS SYNC
+// ════════════════════════════════════════════════════════════════════════════
+async function syncToSheets(unitId, correct, total, pct) {
+  if (!state.user) return;
+  if (APPS_SCRIPT_URL === "YOUR_APPS_SCRIPT_WEBAPP_URL_HERE") {
+    console.warn("Apps Script URL not configured. Set APPS_SCRIPT_URL in the script.");
+    return;
+  }
+  const unitInfo = UNITS.find(u=>u.id===unitId);
+  const payload = {
+    name:     state.user.name,
+    npm:      state.user.npm,
+    class:    state.user.class,
+    unitId:   unitId,
+    unitName: unitInfo ? unitInfo.title : 'Final Simulation',
+    correct,
+    total,
+    pct,
+    timestamp: new Date().toISOString()
+  };
+  try {
+    showLoading(true);
+    const resp = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    toast(`Score synced to Google Sheets ✓`, 'success');
+  } catch(e) {
+    toast(`Could not sync score: ${e.message}`, 'error');
+  } finally {
+    showLoading(false);
+  }
+}
+</script>
+</body>
+</html>
