@@ -250,6 +250,65 @@
       font-style: italic;
     }
 
+
+    .toast-message {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%);
+      background: var(--purple-dark);
+      color: #ffffff;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.22);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, bottom 0.25s ease;
+      z-index: 9999;
+      max-width: calc(100% - 32px);
+      text-align: center;
+    }
+
+    .toast-message.show {
+      opacity: 1;
+      bottom: 38px;
+    }
+
+    .integrity-notice {
+      position: fixed;
+      right: 18px;
+      top: 18px;
+      width: min(420px, calc(100% - 36px));
+      background: #fff7ed;
+      color: #7c2d12;
+      border: 1px solid #fed7aa;
+      border-left: 5px solid #f97316;
+      border-radius: 14px;
+      padding: 14px 16px;
+      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+      z-index: 9998;
+      display: none;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .integrity-notice.show { display: block; }
+
+    .underlined-choice {
+      text-decoration: underline;
+      text-decoration-thickness: 1.5px;
+      text-underline-offset: 3px;
+      font-weight: 600;
+    }
+
+    .choice-label {
+      color: var(--purple-dark);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
     @media (max-width: 640px) {
       .top-header h1 { font-size: 22px; }
       .container { margin: 14px auto; padding: 0 12px 28px; }
@@ -276,12 +335,12 @@
 
       <div class="input-group">
         <label class="input-label" for="nama">Nama</label>
-        <input type="text" id="nama" placeholder="Contoh: Namaku Bento" autocomplete="name" required>
+        <input type="text" id="nama" placeholder="Contoh: Hanun Asyifa" autocomplete="name" required>
       </div>
 
       <div class="input-group">
         <label class="input-label" for="npm">NPM</label>
-        <input type="text" id="npm" placeholder="Contoh: 0123456789" inputmode="numeric" required>
+        <input type="text" id="npm" placeholder="Contoh: 065123456" inputmode="numeric" required>
       </div>
 
       <div class="input-group">
@@ -324,6 +383,9 @@
     </section>
   </main>
 
+  <div id="toast-message" class="toast-message" role="status" aria-live="polite"></div>
+  <div id="integrity-notice" class="integrity-notice" role="alert" aria-live="assertive"></div>
+
   <script>
     
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx6d6et3gbMleirr5v3b3--bHlcwoF_Kp0d9vPnVDTb75t7FfMaXDUPQBgLG3-0Vaj3/exec";
@@ -339,6 +401,7 @@
     let completionStatus = "COMPLETED";
     let lastViolationAt = 0;
     let audioLastPlayedTime = 0;
+    let securityPausedUntil = 0;
 
     const answers = {
       listening: {},
@@ -426,31 +489,31 @@
                 { q: "13. The leaves of the white mulberry provide food for silkworms, ________ silk fabrics are woven.", o: ["(A) whose cocoons", "(B) from cocoons", "(C) whose cocoons are from", "(D) from whose cocoons"] },
                 { q: "14. Not only ________ generate energy, but it also produces fuel for other fission reactors.", o: ["(A) a nuclear breeder reactor", "(B) it is a nuclear breeder reactor", "(C) does a nuclear breeder reactor", "(D) is a nuclear breeder reactor"] },
                 { q: "15. D. W. Griffith pioneered many of the stylistic features and filmmaking techniques ________ as the Hollywood standard.", o: ["(A) that established", "(B) that became established", "(C) what established", "(D) what became established"] },
-                { q: "16. Mosquitoes will accepts (A) the malaria (B) parasite at only one (C) stage of the parasite’s complex (D) life cycle.", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "17. The counterpart (A) of (B) a negative electrons (C) is the positive (D) proton.", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "18. The ankle joint occur (A) where the lower (B) ends of the tibia and fibula slot neatly (C) around (D) the talus.", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "19. In the United States and Canada, motor vehicle (A) laws affect (B) the operate (C) of motorcycles as well as (D) automobiles.", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "20. The neocortex is (A), in evolutionary terms (B), most (C) recent layer (D) of the brain.", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "21. There are (A) more than eighty-four million specimens (B) in the National Museum of Natural History’s collection (C) of biological, geological, archaeological, and anthropology (D) treasures.", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "22. After (A) George Washington married widow (B) Martha Custis, the couple came (C) to resides (D) at Mount Vernon.", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "23. At this stage in their (A) development, rubberized (B) asphalt can hardly (C) be classified as (D) cutting edge.", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "24. Rhesus monkeys exhibit (A) patterns of shy (B) similar to (C) those (D) in humans.", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "25. In space, with no (A) gravity for muscles to work against (B), the body (C) becomes weakly (D).", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "26. Fort Jefferson, in the Dry Tortugas off (A) the southern tip (B) of Florida, can be reach (C) only by (D) boat or plane.", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "27. A (A) zoom lens produces (B) an inverted (C) real image, either on the film in a camera and (D) on the light-sensitive tube of a television camera.", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "28. Supersonic (A) flight is flight that (B) is faster (C) the speed of sound (D).", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "29. The Betataken House Ruins at Navajo National Monument is (A) among the largest (B) and most elaborate (C) cliff dwellings in the country (D).", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "30. It is a common (A) observation that liquids will soak (B) through some materials but not (C) through other (D).", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "31. The number of wild horses (A) on Assateague are (B) increasing lately, resulting (C) in overgrazed (D) marsh and dune grasses.", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "32. The newsreels of Hearst Metrotone News, which formed part of every (A) moviegoer’s experience in the era before television (B), offer an (C) unique record of the events (D) of the 1930s.", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "33. Unlikely (A) gas sport (B) balloons, hot air balloons do not have (C) nets (D).", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "34. Born (A) in Massachusetts in 1852, Albert Fairbanks has begun (B) making (C) banjos in Boston in the late (D) 1870s.", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "35. Dwight David Eisenhower, military officer (A) and thirty-fourth president of the United States, lived (B) in the White House and of least (C) thirty-seven other (D) residences.", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "36. Methane in wetlands comes (A) from (B) soil bacteria that consumes (C) organic plant matter (D).", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "37. Alois Alzheimer made the first observers (A) of the telltale signs (B) of the disease that today bears (C) his name (D).", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "38. Edward MacDowell remembers (A) as the composer (B) of such perennial (C) favorites (D) as “To a Wild Rose” and “To a Water Lily.”", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "39. Animism is the belief (A) that objects and natural phenomena (B) such as rivers, rocks, and wind are live (C) and have feelings (D).", o: ["(A)","(B)","(C)","(D)"] },
-                { q: "40. Newtonian physics accounts (A) for (B) the observing (C) orbits (D) of the planets and the moons.", o: ["(A)","(B)","(C)","(D)"] }
+                { qHtml: `16. Mosquitoes <span class="underlined-choice">will accepts <span class="choice-label">(A)</span></span> <span class="underlined-choice">the malaria <span class="choice-label">(B)</span></span> parasite at <span class="underlined-choice">only one <span class="choice-label">(C)</span></span> stage of the parasite’s complex <span class="underlined-choice">life cycle <span class="choice-label">(D)</span></span>.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `17. The <span class="underlined-choice">counterpart <span class="choice-label">(A)</span></span> <span class="underlined-choice">of <span class="choice-label">(B)</span></span> a negative <span class="underlined-choice">electrons <span class="choice-label">(C)</span></span> is the <span class="underlined-choice">positive <span class="choice-label">(D)</span></span> proton.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `18. The ankle joint <span class="underlined-choice">occur <span class="choice-label">(A)</span></span> where the <span class="underlined-choice">lower <span class="choice-label">(B)</span></span> ends of the tibia and fibula slot <span class="underlined-choice">neatly <span class="choice-label">(C)</span></span> <span class="underlined-choice">around <span class="choice-label">(D)</span></span> the talus.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `19. In the United States and Canada, motor <span class="underlined-choice">vehicle <span class="choice-label">(A)</span></span> laws <span class="underlined-choice">affect <span class="choice-label">(B)</span></span> the <span class="underlined-choice">operate <span class="choice-label">(C)</span></span> of motorcycles as <span class="underlined-choice">well as <span class="choice-label">(D)</span></span> automobiles.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `20. The neocortex <span class="underlined-choice">is <span class="choice-label">(A)</span></span>, in evolutionary <span class="underlined-choice">terms <span class="choice-label">(B)</span></span>, <span class="underlined-choice">most <span class="choice-label">(C)</span></span> recent <span class="underlined-choice">layer <span class="choice-label">(D)</span></span> of the brain.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `21. <span class="underlined-choice">There are <span class="choice-label">(A)</span></span> more than eighty-four million <span class="underlined-choice">specimens <span class="choice-label">(B)</span></span> in the National Museum of Natural History’s <span class="underlined-choice">collection <span class="choice-label">(C)</span></span> of biological, geological, archaeological, and <span class="underlined-choice">anthropology <span class="choice-label">(D)</span></span> treasures.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `22. <span class="underlined-choice">After <span class="choice-label">(A)</span></span> George Washington married <span class="underlined-choice">widow <span class="choice-label">(B)</span></span> Martha Custis, the couple <span class="underlined-choice">came <span class="choice-label">(C)</span></span> to <span class="underlined-choice">resides <span class="choice-label">(D)</span></span> at Mount Vernon.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `23. <span class="underlined-choice">At this <span class="choice-label">(A)</span></span> stage in their development, <span class="underlined-choice">rubberized <span class="choice-label">(B)</span></span> asphalt can <span class="underlined-choice">hardly <span class="choice-label">(C)</span></span> be classified <span class="underlined-choice">as <span class="choice-label">(D)</span></span> cutting edge.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `24. Rhesus monkeys <span class="underlined-choice">exhibit <span class="choice-label">(A)</span></span> patterns of <span class="underlined-choice">shy <span class="choice-label">(B)</span></span> <span class="underlined-choice">similar to <span class="choice-label">(C)</span></span> <span class="underlined-choice">those <span class="choice-label">(D)</span></span> in humans.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `25. In space, with <span class="underlined-choice">no <span class="choice-label">(A)</span></span> gravity for muscles to <span class="underlined-choice">work against <span class="choice-label">(B)</span></span>, the <span class="underlined-choice">body <span class="choice-label">(C)</span></span> becomes <span class="underlined-choice">weakly <span class="choice-label">(D)</span></span>.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `26. Fort Jefferson, in the Dry Tortugas <span class="underlined-choice">off <span class="choice-label">(A)</span></span> the southern <span class="underlined-choice">tip <span class="choice-label">(B)</span></span> of Florida, can be <span class="underlined-choice">reach <span class="choice-label">(C)</span></span> only <span class="underlined-choice">by <span class="choice-label">(D)</span></span> boat or plane.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `27. <span class="underlined-choice">A <span class="choice-label">(A)</span></span> zoom lens <span class="underlined-choice">produces <span class="choice-label">(B)</span></span> an <span class="underlined-choice">inverted <span class="choice-label">(C)</span></span> real image, either on the film in a camera <span class="underlined-choice">and <span class="choice-label">(D)</span></span> on the light-sensitive tube of a television camera.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `28. <span class="underlined-choice">Supersonic <span class="choice-label">(A)</span></span> flight is flight <span class="underlined-choice">that <span class="choice-label">(B)</span></span> is <span class="underlined-choice">faster <span class="choice-label">(C)</span></span> the speed of <span class="underlined-choice">sound <span class="choice-label">(D)</span></span>.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `29. The Betataken House Ruins at Navajo National Monument <span class="underlined-choice">is <span class="choice-label">(A)</span></span> among the <span class="underlined-choice">largest <span class="choice-label">(B)</span></span> and most <span class="underlined-choice">elaborate <span class="choice-label">(C)</span></span> cliff dwellings in the <span class="underlined-choice">country <span class="choice-label">(D)</span></span>.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `30. It is a <span class="underlined-choice">common <span class="choice-label">(A)</span></span> observation that liquids will <span class="underlined-choice">soak <span class="choice-label">(B)</span></span> through some materials <span class="underlined-choice">but not <span class="choice-label">(C)</span></span> through <span class="underlined-choice">other <span class="choice-label">(D)</span></span>.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `31. The number of wild <span class="underlined-choice">horses <span class="choice-label">(A)</span></span> on Assateague <span class="underlined-choice">are <span class="choice-label">(B)</span></span> increasing lately, <span class="underlined-choice">resulting <span class="choice-label">(C)</span></span> in <span class="underlined-choice">overgrazed <span class="choice-label">(D)</span></span> marsh and dune grasses.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `32. The newsreels of Hearst Metrotone News, which formed part of <span class="underlined-choice">every <span class="choice-label">(A)</span></span> moviegoer’s experience in the era before <span class="underlined-choice">television <span class="choice-label">(B)</span></span>, offer <span class="underlined-choice">an <span class="choice-label">(C)</span></span> unique record of the <span class="underlined-choice">events <span class="choice-label">(D)</span></span> of the 1930s.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `33. <span class="underlined-choice">Unlikely <span class="choice-label">(A)</span></span> gas <span class="underlined-choice">sport <span class="choice-label">(B)</span></span> balloons, hot air balloons <span class="underlined-choice">do not have <span class="choice-label">(C)</span></span> <span class="underlined-choice">nets <span class="choice-label">(D)</span></span>.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `34. <span class="underlined-choice">Born <span class="choice-label">(A)</span></span> in Massachusetts in 1852, Albert Fairbanks <span class="underlined-choice">has begun <span class="choice-label">(B)</span></span> <span class="underlined-choice">making <span class="choice-label">(C)</span></span> banjos in Boston in the <span class="underlined-choice">late <span class="choice-label">(D)</span></span> 1870s.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `35. Dwight David Eisenhower, military <span class="underlined-choice">officer <span class="choice-label">(A)</span></span> and thirty-fourth president of the United States, <span class="underlined-choice">lived <span class="choice-label">(B)</span></span> in the White House and <span class="underlined-choice">of least <span class="choice-label">(C)</span></span> thirty-seven <span class="underlined-choice">other <span class="choice-label">(D)</span></span> residences.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `36. Methane in wetlands <span class="underlined-choice">comes <span class="choice-label">(A)</span></span> <span class="underlined-choice">from <span class="choice-label">(B)</span></span> soil bacteria that <span class="underlined-choice">consumes <span class="choice-label">(C)</span></span> organic plant <span class="underlined-choice">matter <span class="choice-label">(D)</span></span>.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `37. Alois Alzheimer made the first <span class="underlined-choice">observers <span class="choice-label">(A)</span></span> of the telltale <span class="underlined-choice">signs <span class="choice-label">(B)</span></span> of the disease that today <span class="underlined-choice">bears <span class="choice-label">(C)</span></span> his <span class="underlined-choice">name <span class="choice-label">(D)</span></span>.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `38. Edward MacDowell <span class="underlined-choice">remembers <span class="choice-label">(A)</span></span> as the <span class="underlined-choice">composer <span class="choice-label">(B)</span></span> of such <span class="underlined-choice">perennial <span class="choice-label">(C)</span></span> <span class="underlined-choice">favorites <span class="choice-label">(D)</span></span> as “To a Wild Rose” and “To a Water Lily.”`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `39. Animism is the <span class="underlined-choice">belief <span class="choice-label">(A)</span></span> that objects and <span class="underlined-choice">natural phenomena <span class="choice-label">(B)</span></span> such as rivers, rocks, and wind are <span class="underlined-choice">live <span class="choice-label">(C)</span></span> and have <span class="underlined-choice">feelings <span class="choice-label">(D)</span></span>.`, o: ["(A)","(B)","(C)","(D)"] },
+                { qHtml: `40. Newtonian physics <span class="underlined-choice">accounts <span class="choice-label">(A)</span></span> <span class="underlined-choice">for <span class="choice-label">(B)</span></span> the <span class="underlined-choice">observing <span class="choice-label">(C)</span></span> <span class="underlined-choice">orbits <span class="choice-label">(D)</span></span> of the planets and the moons.`, o: ["(A)","(B)","(C)","(D)"] }
             ]
         },
         {
@@ -535,12 +598,12 @@
       const email = document.getElementById("email").value.trim();
 
       if (!nama || !npm || !kelas || !email) {
-        alert("Mohon lengkapi semua data diri terlebih dahulu.");
+        showToast("Mohon lengkapi semua data diri terlebih dahulu.");
         return;
       }
 
       if (!isValidEmail(email)) {
-        alert("Format email belum valid. Mohon periksa kembali email Anda.");
+        showToast("Format email belum valid. Mohon periksa kembali email Anda.");
         return;
       }
 
@@ -586,7 +649,11 @@
 
         if (qObj.passage) html += `<div class="passage">${qObj.passage}</div>`;
 
-        const questionText = qObj.q ? `<strong>${qObj.q}</strong>` : `<strong>Question ${i + 1}</strong>`;
+        const questionText = qObj.qHtml
+          ? qObj.qHtml
+          : qObj.q
+            ? `<strong>${qObj.q}</strong>`
+            : `<strong>Question ${i + 1}</strong>`;
         html += `<div class="question-block"><p>${questionText}</p>`;
 
         qObj.o.forEach((opt, oi) => {
@@ -632,7 +699,7 @@
         btn.innerText = "⌛ Audio Sedang Diputar";
         if (msg) msg.innerText = "Audio sedang berjalan. Durasi terkunci dan tidak dapat diulang.";
       }).catch(function(error) {
-        alert("Gagal memutar audio. Periksa koneksi internet atau coba gunakan browser Chrome/Safari terbaru.");
+        showToast("Gagal memutar audio. Periksa koneksi internet atau coba gunakan browser Chrome/Safari terbaru.");
         console.error(error);
       });
 
@@ -677,17 +744,20 @@
 
       const blank = countBlankCurrentSection();
       if (blank > 0) {
-        const proceed = confirm(`Masih ada ${blank} soal yang belum dijawab pada section ini. Lanjutkan?`);
-        if (!proceed) return;
+        showToast(`Masih ada ${blank} soal yang belum dijawab. Lengkapi jawaban sebelum lanjut.`);
+        return;
       }
 
       collectCurrentSectionAnswers();
 
       if (currentSectionIdx < examData.length - 1) {
+        stopListeningAudio();
+        pauseSecurity(1200);
         currentSectionIdx++;
-        alert("Jawaban section ini sudah tersimpan. Silakan lanjut ke bagian berikutnya.");
         renderSection();
+        showToast("Jawaban section ini telah tersimpan. Silakan lanjut ke bagian berikutnya.");
       } else {
+        stopListeningAudio();
         submitFinalData("COMPLETED");
       }
     }
@@ -707,7 +777,7 @@
       }
 
       if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE") {
-        alert("Web App URL Apps Script belum dipasang di HTML. Mohon hubungi admin.");
+        showToast("Web App URL Apps Script belum dipasang di HTML. Mohon hubungi admin.");
         isSubmitting = false;
         isFinished = false;
         return;
@@ -738,7 +808,7 @@
       } catch (error) {
         isSubmitting = false;
         isFinished = false;
-        alert("Submission failed. Please check your internet connection and try again.");
+        showToast("Submission failed. Please check your internet connection and try again.");
         console.error(error);
       }
     }
@@ -752,7 +822,7 @@
         <main class="container">
           <section class="card" style="text-align:center;">
             <h2>Your answers have been submitted.</h2>
-            <p>Your evaluation report will be sent to your registered email after the scheduled processing period.</p>
+            <p>Your evaluation report will be sent to your registered email after the review period.</p>
             <p style="color:#6b7280;">Please keep your result private.</p>
           </section>
         </main>
@@ -809,7 +879,53 @@
     }
 
     function isExamActive() {
-      return !isFinished && !isSubmitting && !isLocked && !document.getElementById("exam-page").classList.contains("hidden");
+      return !isFinished && !isSubmitting && !isLocked && !isSecurityPaused() && !document.getElementById("exam-page").classList.contains("hidden");
+    }
+
+    function pauseSecurity(ms) {
+      securityPausedUntil = Date.now() + (ms || 1000);
+    }
+
+    function isSecurityPaused() {
+      return Date.now() < securityPausedUntil;
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast-message");
+      if (!toast) return;
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(function() {
+        toast.classList.remove("show");
+      }, 3200);
+    }
+
+    function showIntegrityNotice(message) {
+      const notice = document.getElementById("integrity-notice");
+      if (!notice) {
+        showToast(message);
+        return;
+      }
+      notice.textContent = message;
+      notice.classList.add("show");
+      clearTimeout(showIntegrityNotice._timer);
+      showIntegrityNotice._timer = setTimeout(function() {
+        notice.classList.remove("show");
+      }, 6500);
+    }
+
+    function stopListeningAudio() {
+      const audio = document.getElementById("listeningAudio");
+      if (!audio) return;
+      try {
+        audio.pause();
+        audio.currentTime = 0;
+        audio.removeAttribute("src");
+        audio.load();
+      } catch (e) {
+        console.warn("Unable to stop audio safely:", e);
+      }
     }
 
     function recordViolation(type, detail) {
@@ -830,9 +946,9 @@
 
       const count = violationLog.length;
       if (count < MAX_VIOLATIONS) {
-        alert(`⚠️ PERINGATAN ${count}/${MAX_VIOLATIONS}: ${detail}. Aktivitas ini tercatat oleh sistem.`);
+        showIntegrityNotice(`⚠️ PERINGATAN ${count}/${MAX_VIOLATIONS}: ${detail}. Aktivitas ini tercatat oleh sistem.`);
       } else {
-        alert("❌ Batas maksimal pelanggaran telah tercapai. Ujian akan dikunci dan jawaban yang sudah tersedia akan dikirim ke sistem.");
+        showIntegrityNotice("❌ Batas maksimal pelanggaran telah tercapai. Ujian dikunci dan jawaban yang sudah tersedia akan dikirim ke sistem.");
         handleMaximumViolation();
       }
     }
