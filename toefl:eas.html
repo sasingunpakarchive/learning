@@ -3,400 +3,358 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TOEFL Online Test</title>
+  <title>TOEFL Online Test - PEEC</title>
   <style>
     :root {
-      --purple-900: #3b0764;
-      --purple-800: #4c1d95;
-      --purple-700: #6d28d9;
-      --purple-100: #f3e8ff;
-      --purple-50: #faf5ff;
-      --white: #ffffff;
-      --gray-900: #1f2937;
-      --gray-700: #374151;
-      --gray-500: #6b7280;
-      --gray-300: #d1d5db;
-      --gray-200: #e5e7eb;
-      --gray-100: #f3f4f6;
-      --red-50: #fef2f2;
-      --red-600: #dc2626;
-      --green-50: #f0fdf4;
-      --green-700: #15803d;
-      --shadow: 0 12px 35px rgba(76, 29, 149, 0.12);
+      --purple: #6d28d9;
+      --purple-dark: #4c1d95;
+      --purple-soft: #ede9fe;
+      --purple-border: #c4b5fd;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --bg: #ffffff;
+      --soft-bg: #f8fafc;
+      --border: #e5e7eb;
+      --danger: #dc2626;
+      --warning: #d97706;
+      --success: #15803d;
     }
 
     * { box-sizing: border-box; }
 
-    html { scroll-behavior: smooth; }
-
     body {
       margin: 0;
-      background: linear-gradient(180deg, var(--purple-50), #ffffff 240px);
-      color: var(--gray-900);
-      font-family: Arial, "Segoe UI", sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #ffffff;
+      color: var(--text);
       line-height: 1.6;
     }
 
     .top-header {
-      background: linear-gradient(135deg, var(--purple-900), var(--purple-700));
-      color: white;
-      padding: 22px 18px;
+      background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+      color: #ffffff;
+      padding: 24px 18px;
       text-align: center;
     }
 
     .top-header h1 {
       margin: 0;
-      font-size: clamp(22px, 4vw, 34px);
-      letter-spacing: 0.2px;
+      font-size: 28px;
+      letter-spacing: 0.3px;
     }
 
     .top-header p {
       margin: 8px 0 0;
-      opacity: 0.92;
       font-size: 14px;
+      opacity: 0.95;
     }
 
     .container {
-      width: min(980px, calc(100% - 24px));
-      margin: 22px auto 40px;
-      background: var(--white);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      border: 1px solid var(--gray-200);
+      width: 100%;
+      max-width: 960px;
+      margin: 24px auto;
+      padding: 0 16px 40px;
     }
 
-    .content-pad { padding: clamp(18px, 4vw, 36px); }
+    .card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      padding: 28px;
+    }
 
     .hidden { display: none !important; }
 
     h2 {
-      margin: 0 0 18px;
-      color: var(--purple-900);
-      font-size: clamp(20px, 3vw, 28px);
-    }
-
-    h3 {
-      color: var(--purple-800);
-      margin-top: 30px;
-    }
-
-    .note {
-      background: var(--purple-50);
-      border: 1px solid var(--purple-100);
-      border-left: 5px solid var(--purple-700);
-      padding: 14px 16px;
-      border-radius: 12px;
-      color: var(--gray-700);
-      margin-bottom: 20px;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
+      color: var(--purple-dark);
+      margin-top: 0;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--purple-border);
     }
 
     .input-group { margin-bottom: 16px; }
 
-    label.field-label {
+    label.input-label {
       display: block;
       font-weight: 700;
-      color: var(--gray-700);
-      margin-bottom: 7px;
+      margin-bottom: 6px;
+      color: var(--text);
     }
 
-    input[type="text"],
-    input[type="email"],
-    select {
+    input[type="text"], input[type="email"], select {
       width: 100%;
       padding: 13px 14px;
-      border: 1.5px solid var(--gray-300);
+      border: 1.5px solid var(--border);
       border-radius: 12px;
       font-size: 16px;
-      background: white;
-      color: var(--gray-900);
+      background: #ffffff;
       outline: none;
     }
 
     input:focus, select:focus {
-      border-color: var(--purple-700);
-      box-shadow: 0 0 0 4px rgba(109, 40, 217, 0.12);
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.12);
     }
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      padding: 14px 18px;
-      border: 0;
+    .note {
+      background: var(--purple-soft);
+      border: 1px solid var(--purple-border);
+      color: var(--purple-dark);
       border-radius: 14px;
-      background: var(--purple-700);
-      color: white;
-      font-weight: 800;
+      padding: 14px;
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 14px 20px;
       font-size: 16px;
+      font-weight: 700;
       cursor: pointer;
-      transition: transform 0.15s, background 0.15s, opacity 0.15s;
+      background: var(--purple);
+      color: #ffffff;
+      transition: 0.2s ease;
     }
 
-    .btn:hover { background: var(--purple-800); transform: translateY(-1px); }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-    .btn-secondary {
-      background: var(--gray-100);
-      color: var(--gray-900);
-      border: 1px solid var(--gray-300);
-    }
-    .btn-secondary:hover { background: var(--gray-200); }
+    button:hover { background: var(--purple-dark); }
+    button:disabled { background: #9ca3af; cursor: not-allowed; }
+    .full-btn { width: 100%; }
 
     .status-bar {
       position: sticky;
       top: 0;
       z-index: 20;
-      background: rgba(255,255,255,0.96);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--gray-200);
+      background: rgba(255, 255, 255, 0.98);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-      padding: 12px clamp(18px, 4vw, 36px);
-      color: var(--gray-700);
+      margin-bottom: 18px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
       font-size: 14px;
     }
 
-    .status-left, .status-right {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .status-right { text-align: right; }
-
-    .pill {
+    .status-pill {
       display: inline-block;
-      padding: 4px 9px;
+      padding: 5px 10px;
       border-radius: 999px;
-      background: var(--purple-100);
-      color: var(--purple-900);
+      background: var(--purple-soft);
+      color: var(--purple-dark);
       font-weight: 700;
-      font-size: 12px;
+      white-space: nowrap;
     }
 
     .instruction {
-      background: var(--purple-50);
-      border: 1px solid var(--purple-100);
-      border-left: 5px solid var(--purple-700);
+      background: var(--soft-bg);
+      border-left: 5px solid var(--purple);
+      border-radius: 12px;
       padding: 16px;
-      border-radius: 14px;
-      margin-bottom: 22px;
-      color: var(--gray-700);
+      color: #374151;
+      margin-bottom: 18px;
     }
 
     .audio-box {
       background: #ffffff;
-      border: 2px solid var(--purple-100);
-      padding: 24px;
-      border-radius: 16px;
+      border: 2px solid var(--purple-border);
+      border-radius: 18px;
+      padding: 22px;
       text-align: center;
       margin-bottom: 24px;
     }
 
+    .audio-icon { font-size: 34px; margin-bottom: 8px; }
+    .audio-msg { color: var(--danger); font-size: 13px; font-weight: 700; }
+
+    .passage {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-left: 5px solid #f59e0b;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 28px 0 18px;
+      max-height: 420px;
+      overflow-y: auto;
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
     .question-block {
-      margin-bottom: 20px;
-      padding: 18px;
-      border: 1px solid var(--gray-200);
-      border-radius: 16px;
-      background: white;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
     }
 
     .question-block p { margin-top: 0; }
 
     .option-label {
       display: block;
-      margin: 9px 0;
-      padding: 12px 12px;
-      border: 1px solid var(--gray-200);
-      border-radius: 12px;
+      padding: 11px 12px;
+      margin: 8px 0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
       cursor: pointer;
-      transition: 0.15s;
+      background: #ffffff;
     }
 
-    .option-label:hover {
-      background: var(--purple-50);
-      border-color: var(--purple-100);
-    }
-
+    .option-label:hover { background: var(--purple-soft); }
     .option-label input { margin-right: 8px; }
 
-    .passage {
-      background: #fffdf7;
-      padding: 20px;
-      border-left: 5px solid #d97706;
-      border-radius: 14px;
-      margin: 28px 0 16px;
-      font-size: 15px;
-      max-height: 420px;
-      overflow-y: auto;
-      border: 1px solid #fde68a;
-      line-height: 1.8;
+    .button-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
     }
 
-    .notice {
-      position: fixed;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%);
-      width: min(720px, calc(100% - 24px));
-      padding: 14px 16px;
-      border-radius: 14px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.16);
-      z-index: 9999;
-      background: var(--purple-900);
-      color: white;
+    .secondary-btn {
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid var(--border);
+    }
+
+    .secondary-btn:hover { background: #e5e7eb; }
+
+    .warning-box {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin: 14px 0;
       font-weight: 700;
     }
 
-    .notice.warning { background: #92400e; }
-    .notice.danger { background: var(--red-600); }
-    .notice.success { background: var(--green-700); }
-
     .locked-box {
-      background: var(--red-50);
+      background: #fef2f2;
       border: 1px solid #fecaca;
       color: #991b1b;
-      padding: 18px;
       border-radius: 14px;
-      margin-top: 18px;
+      padding: 18px;
+      margin-top: 20px;
+      text-align: center;
       font-weight: 700;
     }
 
     .footer-credit {
       text-align: center;
-      color: var(--gray-500);
-      font-size: 12px;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 20px;
       font-style: italic;
-      padding-top: 20px;
     }
 
-    @media (max-width: 720px) {
-      .form-grid { grid-template-columns: 1fr; }
-      .status-bar {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-      .status-right { text-align: left; }
-      .question-block { padding: 14px; }
-      .content-pad { padding: 18px; }
+    @media (max-width: 640px) {
+      .top-header h1 { font-size: 22px; }
+      .container { margin: 14px auto; padding: 0 12px 28px; }
+      .card { padding: 18px; border-radius: 14px; }
+      .status-bar { flex-direction: column; align-items: flex-start; }
+      .button-row { flex-direction: column; }
+      button { width: 100%; }
+      .passage { max-height: 360px; }
     }
   </style>
 </head>
 <body>
   <header class="top-header">
-    <h1>TOEFL Online Test</h1>
-    <p>Secure test interface for Listening, Structure, and Reading sections</p>
+    <h1>PEEC TOEFL Online Test</h1>
+    <p>Read each instruction carefully and complete the test independently.</p>
   </header>
 
   <main class="container">
-    <section id="login-page" class="content-pad">
-      <h2>Participant Login</h2>
+    <section id="login-page" class="card">
+      <h2>Student Login</h2>
       <div class="note">
-        Silakan isi identitas dengan benar. Sistem akan mencatat aktivitas yang berpotensi melanggar integritas ujian, seperti berpindah tab, keluar dari halaman ujian, atau mencoba copy/paste.
+        Silakan isi identitas dengan benar. Kelas dipilih melalui dropdown. Sistem akan mencatat aktivitas yang berpotensi melanggar integritas ujian.
       </div>
 
-      <div class="form-grid">
-        <div class="input-group">
-          <label class="field-label" for="name">Nama</label>
-          <input type="text" id="name" placeholder="Contoh: Hanun Asyifa" autocomplete="name" required>
-        </div>
-
-        <div class="input-group">
-          <label class="field-label" for="npm">NPM</label>
-          <input type="text" id="npm" placeholder="Contoh: 065123456" inputmode="numeric" required>
-        </div>
-
-        <div class="input-group">
-          <label class="field-label" for="className">Kelas</label>
-          <select id="className" required>
-            <option value="">Pilih kelas</option>
-            <option value="2C BDI">2C BDI</option>
-            <option value="4D BDI">4D BDI</option>
-            <option value="4E BDI">4E BDI</option>
-            <option value="4I Manajemen">4I Manajemen</option>
-            <option value="4K Manajemen">4K Manajemen</option>
-            <option value="Guest">Guest</option>
-          </select>
-        </div>
-
-        <div class="input-group">
-          <label class="field-label" for="email">Email</label>
-          <input type="email" id="email" placeholder="Contoh: nama.mahasiswa@email.com" autocomplete="email" required>
-        </div>
+      <div class="input-group">
+        <label class="input-label" for="nama">Nama</label>
+        <input type="text" id="nama" placeholder="Contoh: Namaku Bento" autocomplete="name" required>
       </div>
 
-      <button class="btn" type="button" onclick="startExam()">Mulai Ujian</button>
+      <div class="input-group">
+        <label class="input-label" for="npm">NPM</label>
+        <input type="text" id="npm" placeholder="Contoh: 0123456789" inputmode="numeric" required>
+      </div>
 
+      <div class="input-group">
+        <label class="input-label" for="kelas">Kelas</label>
+        <select id="kelas" required>
+          <option value="">Pilih kelas</option>
+          <option value="2C BDI">2C BDI</option>
+          <option value="4D BDI">4D BDI</option>
+          <option value="4E BDI">4E BDI</option>
+          <option value="4I Manajemen">4I Manajemen</option>
+          <option value="4K Manajemen">4K Manajemen</option>
+          <option value="Guest">Guest</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="email">Email</label>
+        <input type="email" id="email" placeholder="Contoh: nama.mahasiswa@email.com" autocomplete="email" required>
+      </div>
+
+      <button class="full-btn" type="button" onclick="startExam()">Mulai Ujian</button>
       <p class="footer-credit">Developed by Padel M. Rallie Rivaldy, M.Hum.</p>
     </section>
 
     <section id="exam-page" class="hidden">
       <div class="status-bar">
-        <div class="status-left">
-          <strong id="display-info"></strong>
-          <span id="section-progress"></span>
-        </div>
-        <div class="status-right">
-          <span class="pill" id="violation-status">Integrity status: CLEAR</span>
-          <span id="submission-status"></span>
-        </div>
+        <span id="display-info"></span>
+        <span class="status-pill" id="violation-display">Integrity Warning: 0/3</span>
       </div>
 
-      <div class="content-pad">
+      <div class="card">
         <h2 id="section-title">Section Title</h2>
+        <div id="section-progress" class="note"></div>
         <div id="exam-content"></div>
-
-        <div id="locked-message" class="locked-box hidden">
-          Batas pelanggaran telah tercapai. Ujian dikunci dan data jawaban yang tersedia akan dikirim ke sistem. Silakan hubungi pengawas/admin.
+        <div id="lock-message" class="hidden locked-box"></div>
+        <div class="button-row">
+          <button id="next-btn" type="button" onclick="submitSection()">Submit & Lanjut</button>
         </div>
-
-        <button class="btn" id="next-btn" type="button" onclick="submitSection()">Submit & Lanjut</button>
       </div>
     </section>
   </main>
 
-  <div id="notice" class="notice hidden"></div>
+  <script>
+    
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx6d6et3gbMleirr5v3b3--bHlcwoF_Kp0d9vPnVDTb75t7FfMaXDUPQBgLG3-0Vaj3/exec";
 
-<script>
-  /**
-   * CONFIGURATION
-   * Kunci jawaban dan scoring tidak ada di HTML.
-   */
-  const MAX_VIOLATIONS = 3;
-  const AUTO_SUBMIT_ON_MAX_VIOLATION = false;
-  const SECTION_PREFIXES = ["L", "S", "R"];
+    const MAX_VIOLATIONS = 3;
+    const AUTO_SUBMIT_ON_MAX_VIOLATION = false;
 
-  let currentSectionIdx = 0;
-  let userData = {};
-  let allAnswers = {
-    listening: {},
-    structure: {},
-    reading: {}
-  };
-  let violationLog = [];
-  let violationStatus = "CLEAR";
-  let isFinished = false;
-  let isLocked = false;
-  let lastViolationAt = 0;
-  let noticeTimer = null;
+    let currentSectionIdx = 0;
+    let userData = {};
+    let isFinished = false;
+    let isSubmitting = false;
+    let isLocked = false;
+    let completionStatus = "COMPLETED";
+    let lastViolationAt = 0;
+    let audioLastPlayedTime = 0;
 
-  const examData = [
+    const answers = {
+      listening: {},
+      structure: {},
+      reading: {}
+    };
+
+    const violationLog = [];
+
+    const examData = [
         {
             title: "SECTION 1 — LISTENING COMPREHENSION",
             // URL AUDIO DIMASUKKAN DI SINI
             audioUrl: "https://sasingunpakarchive.github.io/learning/Audio%20EAS%202026.mp3",
-            instr: `<b>Time — approximately 35 minutes<br>(including the reading of the directions for each part)</b><br><br>In this section of the test, you will have an opportunity to demonstrate your ability to understand conversations and talks in English. Answer all the questions on the basis of what is stated or implied by the speakers you hear.`,            questions: [
+            instr: `<b>Time — approximately 35 minutes<br>(including the reading of the directions for each part)</b><br><br>In this section of the test, you will have an opportunity to demonstrate your ability to understand conversations and talks in English. Answer all the questions on the basis of what is stated or implied by the speakers you hear.`,
+            questions: [
                 { o: ["(A) Carla does not live very far away.", "(B) What Carla said was unjust.", "(C) He does not fear what anyone says.", "(D) Carla is fairly rude to others."] },
                 { o: ["(A) She thinks it is an improvement.", "(B) The fir trees in it are better.", "(C) It resembles the last one.", "(D) It is the best the man has ever done."] },
                 { o: ["(A) He graduated last in his class.", "(B) He is the last person in his family to graduate.", "(C) He does not believe he can improve gradually.", "(D) He has finally finished his studies."] },
@@ -451,7 +409,8 @@
         },
         {
             title: "SECTION 2 — STRUCTURE AND WRITTEN EXPRESSION",
-            instr: `<b>Time — 25 minutes</b><br>This section is designed to measure your ability to recognize language that is appropriate for standard written English.`,            questions: [
+            instr: `<b>Time — 25 minutes</b><br>This section is designed to measure your ability to recognize language that is appropriate for standard written English.`,
+            questions: [
                 { q: "1. ________, the outermost layer of skin, is about as thick as a sheet of paper over most of the skin.", o: ["(A) It is the epidermis", "(B) In the epidermis", "(C) The epidermis", "(D) The epidermis is"] },
                 { q: "2. Sam Spade in The Maltese Falcon and Rick Blaine in Casablanca ________ two of Humphrey Bogart’s more famous roles.", o: ["(A) they are two", "(B) two of them are", "(C) two of them", "(D) are two"] },
                 { q: "3. The compound microscope has not one ________ two lenses.", o: ["(A) and also", "(B) but", "(C) and there are", "(D) but there are"] },
@@ -496,7 +455,8 @@
         },
         {
             title: "SECTION 3 — READING COMPREHENSION",
-            instr: "Read the passages and choose the best answer for each question based on the text provided.",            questions: [
+            instr: "Read the passages and choose the best answer for each question based on the text provided.",
+            questions: [
                 { passage: `<b>Questions 1–10</b><br><br>The hippopotamus is the third largest land animal, smaller only than the elephant and the rhinoceros. Its name comes from two Greek words which mean “river horse.” The long name of this animal is often shortened to the easier-to-handle term “hippo.”<br><br>The hippo has a natural affinity for the water. It does not float on top of the water; instead, it can easily walk along the bottom of a body of water. The hippo commonly remains underwater for three to five minutes and has been known to stay under for up to half an hour before coming up for air.<br><br>In spite of its name, the hippo has relatively little in common with the horse and instead has a number of interesting similarities in common with the whale. When a hippo comes up after a stay at the bottom of a lake or river, it releases air through a blowhole, just like a whale. In addition, the hippo resembles the whale in that they both have thick layers of blubber for protection and they are almost completely hairless.`, 
                   q: "1. The topic of this passage is", o: ["(A) the largest land animals", "(B) the derivations of animal names", "(C) the characteristics of the hippo", "(D) the relation between the hippo and the whale"] },
                 { q: "2. It can be inferred from the passage that the rhinoceros is", o: ["(A) smaller than the hippo", "(B) equal in size to the elephant", "(C) a hybrid of the hippo and the elephant", "(D) one of the two largest types of land animals"] },
@@ -556,344 +516,352 @@
         }
     ];
 
-  function startExam() {
-    const name = document.getElementById("name").value.trim();
-    const npm = document.getElementById("npm").value.trim();
-    const className = document.getElementById("className").value;
-    const email = document.getElementById("email").value.trim();
+    function getSectionKey(index) {
+      if (index === 0) return "listening";
+      if (index === 1) return "structure";
+      return "reading";
+    }
 
-    if (!name) return showNotice("Nama wajib diisi.", "warning");
-    if (!npm) return showNotice("NPM wajib diisi.", "warning");
-    if (!className) return showNotice("Kelas wajib dipilih.", "warning");
-    if (!isValidEmail(email)) return showNotice("Email wajib diisi dengan format yang valid.", "warning");
+    function getQuestionPrefix(index) {
+      if (index === 0) return "L";
+      if (index === 1) return "S";
+      return "R";
+    }
 
-    userData = { name, npm, className, email };
+    function startExam() {
+      const nama = document.getElementById("nama").value.trim();
+      const npm = document.getElementById("npm").value.trim();
+      const kelas = document.getElementById("kelas").value;
+      const email = document.getElementById("email").value.trim();
 
-    document.getElementById("display-info").innerText = `${name} | ${npm} | ${className}`;
-    document.getElementById("login-page").classList.add("hidden");
-    document.getElementById("exam-page").classList.remove("hidden");
+      if (!nama || !npm || !kelas || !email) {
+        alert("Mohon lengkapi semua data diri terlebih dahulu.");
+        return;
+      }
 
-    setupSecurityOnce();
-    renderSection();
-  }
+      if (!isValidEmail(email)) {
+        alert("Format email belum valid. Mohon periksa kembali email Anda.");
+        return;
+      }
 
-  function renderSection() {
-    const sec = examData[currentSectionIdx];
-    const prefix = SECTION_PREFIXES[currentSectionIdx];
+      userData = { nama, npm, kelas, email };
+      document.getElementById("display-info").innerText = `${nama} | ${npm} | ${kelas}`;
+      document.getElementById("login-page").classList.add("hidden");
+      document.getElementById("exam-page").classList.remove("hidden");
 
-    document.getElementById("section-title").innerText = sec.title;
-    document.getElementById("section-progress").innerText = `Section ${currentSectionIdx + 1} of ${examData.length}`;
-    document.getElementById("next-btn").innerText = currentSectionIdx === examData.length - 1 ? "Submit Final Exam" : "Submit & Lanjut";
+      setupSecurity();
+      renderSection();
+    }
 
-    let html = `<div class="instruction">${sec.instr}</div>`;
+    function renderSection() {
+      const sec = examData[currentSectionIdx];
+      const sectionKey = getSectionKey(currentSectionIdx);
+      const prefix = getQuestionPrefix(currentSectionIdx);
 
-    if (sec.audioUrl) {
-      html += `
-        <div class="audio-box">
-          <div style="font-size: 38px; margin-bottom: 8px;">🎧</div>
-          <strong style="font-size: 18px; color: var(--purple-900);">Listening Section</strong><br>
+      document.getElementById("section-title").innerText = sec.title;
+      document.getElementById("section-progress").innerText = `Section ${currentSectionIdx + 1} of ${examData.length}`;
 
-          <audio id="listeningAudio" preload="metadata">
-            <source src="${sec.audioUrl}" type="audio/mpeg">
-          </audio>
+      let html = `<div class="instruction">${sec.instr}</div>`;
 
-          <div style="margin-top: 16px;">
-            <button type="button" id="btnPlay" class="btn" onclick="startSecurePlay()" style="max-width: 280px;">
-              ▶️ Putar Audio
-            </button>
+      if (sec.audioUrl) {
+        html += `
+          <div class="audio-box">
+            <div class="audio-icon">🎧</div>
+            <strong>Listening Section</strong><br>
+            <audio id="listeningAudio" preload="metadata">
+              <source src="${sec.audioUrl}" type="audio/mpeg">
+              Your browser does not support audio playback.
+            </audio>
+            <div style="margin-top: 15px;">
+              <button type="button" id="btnPlay" onclick="startSecurePlay()">▶️ Putar Audio</button>
+            </div>
+            <p id="audio-msg" class="audio-msg">*Audio hanya dapat diputar 1x. Jangan merefresh halaman.</p>
           </div>
+        `;
+      }
 
-          <p id="audio-msg" style="font-size: 13px; color: #b91c1c; margin-top: 12px; font-weight: 700;">
-            *Audio hanya dapat diputar 1x. Jangan merefresh halaman.
-          </p>
-        </div>
+      sec.questions.forEach((qObj, i) => {
+        const questionId = prefix + (i + 1);
+        const savedAnswer = answers[sectionKey][questionId] || "";
+
+        if (qObj.passage) html += `<div class="passage">${qObj.passage}</div>`;
+
+        const questionText = qObj.q ? `<strong>${qObj.q}</strong>` : `<strong>Question ${i + 1}</strong>`;
+        html += `<div class="question-block"><p>${questionText}</p>`;
+
+        qObj.o.forEach((opt, oi) => {
+          const val = String.fromCharCode(65 + oi);
+          const checked = savedAnswer === val ? "checked" : "";
+          html += `
+            <label class="option-label">
+              <input type="radio" name="${questionId}" value="${val}" ${checked}> ${opt}
+            </label>
+          `;
+        });
+
+        html += `</div>`;
+      });
+
+      document.getElementById("exam-content").innerHTML = html;
+      document.getElementById("next-btn").innerText = currentSectionIdx === examData.length - 1 ? "Submit Final" : "Submit & Lanjut";
+      window.scrollTo(0, 0);
+    }
+
+    function startSecurePlay() {
+      const audio = document.getElementById("listeningAudio");
+      const btn = document.getElementById("btnPlay");
+      const msg = document.getElementById("audio-msg");
+
+      if (!audio || !btn) return;
+
+      audio.load();
+
+      audio.onseeking = function() {
+        if (audio.currentTime > audioLastPlayedTime + 1) {
+          recordViolation("AUDIO_SEEK_ATTEMPT", "the participant attempted to seek or skip the listening audio");
+          audio.currentTime = audioLastPlayedTime;
+        }
+      };
+
+      audio.ontimeupdate = function() {
+        if (!audio.seeking) audioLastPlayedTime = audio.currentTime;
+      };
+
+      audio.play().then(function() {
+        btn.disabled = true;
+        btn.innerText = "⌛ Audio Sedang Diputar";
+        if (msg) msg.innerText = "Audio sedang berjalan. Durasi terkunci dan tidak dapat diulang.";
+      }).catch(function(error) {
+        alert("Gagal memutar audio. Periksa koneksi internet atau coba gunakan browser Chrome/Safari terbaru.");
+        console.error(error);
+      });
+
+      audio.onended = function() {
+        btn.innerText = "✅ Selesai";
+        if (msg) {
+          msg.style.color = "#15803d";
+          msg.innerText = "Audio telah selesai. Silakan lanjut menjawab.";
+        }
+        audio.removeAttribute("src");
+        audio.load();
+      };
+    }
+
+    function collectCurrentSectionAnswers() {
+      const sectionKey = getSectionKey(currentSectionIdx);
+      const prefix = getQuestionPrefix(currentSectionIdx);
+      const questions = examData[currentSectionIdx].questions;
+
+      questions.forEach(function(_, i) {
+        const questionId = prefix + (i + 1);
+        const selected = document.querySelector(`input[name="${questionId}"]:checked`);
+        answers[sectionKey][questionId] = selected ? selected.value : "";
+      });
+    }
+
+    function countBlankCurrentSection() {
+      const prefix = getQuestionPrefix(currentSectionIdx);
+      const total = examData[currentSectionIdx].questions.length;
+      let blank = 0;
+
+      for (let i = 1; i <= total; i++) {
+        const selected = document.querySelector(`input[name="${prefix + i}"]:checked`);
+        if (!selected) blank++;
+      }
+
+      return blank;
+    }
+
+    function submitSection() {
+      if (isLocked || isSubmitting) return;
+
+      const blank = countBlankCurrentSection();
+      if (blank > 0) {
+        const proceed = confirm(`Masih ada ${blank} soal yang belum dijawab pada section ini. Lanjutkan?`);
+        if (!proceed) return;
+      }
+
+      collectCurrentSectionAnswers();
+
+      if (currentSectionIdx < examData.length - 1) {
+        currentSectionIdx++;
+        alert("Jawaban section ini sudah tersimpan. Silakan lanjut ke bagian berikutnya.");
+        renderSection();
+      } else {
+        submitFinalData("COMPLETED");
+      }
+    }
+
+    async function submitFinalData(status) {
+      if (isSubmitting) return;
+      isSubmitting = true;
+      isFinished = true;
+      completionStatus = status || completionStatus || "COMPLETED";
+
+      try {
+        if (!isLocked && currentSectionIdx >= 0 && currentSectionIdx < examData.length) {
+          collectCurrentSectionAnswers();
+        }
+      } catch (e) {
+        console.warn("Unable to collect current section answers:", e);
+      }
+
+      if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE") {
+        alert("Web App URL Apps Script belum dipasang di HTML. Mohon hubungi admin.");
+        isSubmitting = false;
+        isFinished = false;
+        return;
+      }
+
+      const payload = {
+        nama: userData.nama,
+        npm: userData.npm,
+        kelas: userData.kelas,
+        email: userData.email,
+        testDate: new Date().toISOString(),
+        answers: answers,
+        violations: violationLog,
+        completionStatus: completionStatus
+      };
+
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        showSubmittedMessage();
+      } catch (error) {
+        isSubmitting = false;
+        isFinished = false;
+        alert("Submission failed. Please check your internet connection and try again.");
+        console.error(error);
+      }
+    }
+
+    function showSubmittedMessage() {
+      document.body.innerHTML = `
+        <header class="top-header">
+          <h1>Exam Submitted Successfully</h1>
+          <p>Thank you for completing the TOEFL Online Test.</p>
+        </header>
+        <main class="container">
+          <section class="card" style="text-align:center;">
+            <h2>Your answers have been submitted.</h2>
+            <p>Your evaluation report will be sent to your registered email after the scheduled processing period.</p>
+            <p style="color:#6b7280;">Please keep your result private.</p>
+          </section>
+        </main>
       `;
     }
 
-    sec.questions.forEach((qObj, i) => {
-      const questionId = prefix + (i + 1);
-
-      if (qObj.passage) html += `<div class="passage">${qObj.passage}</div>`;
-
-      const questionText = qObj.q
-        ? `<strong>${qObj.q}</strong>`
-        : `<strong>Question ${i + 1}</strong>`;
-
-      html += `<div class="question-block"><p>${questionText}</p>`;
-
-      qObj.o.forEach((opt, oi) => {
-        const val = String.fromCharCode(65 + oi);
-        const checked = getSectionAnswers()[questionId] === val ? "checked" : "";
-        html += `
-          <label class="option-label">
-            <input type="radio" name="${questionId}" value="${val}" ${checked}>
-            ${opt}
-          </label>
-        `;
+    function setupSecurity() {
+      document.addEventListener("visibilitychange", function() {
+        if (document.hidden && isExamActive()) {
+          recordViolation("PAGE_HIDDEN_OR_TAB_SWITCH", "the test page was hidden or the participant switched tabs/applications");
+        }
       });
 
-      html += `</div>`;
-    });
-
-    document.getElementById("exam-content").innerHTML = html;
-    window.scrollTo(0, 0);
-  }
-
-  function getSectionKey() {
-    if (currentSectionIdx === 0) return "listening";
-    if (currentSectionIdx === 1) return "structure";
-    return "reading";
-  }
-
-  function getSectionAnswers() {
-    return allAnswers[getSectionKey()];
-  }
-
-  function collectCurrentSectionAnswers() {
-    const sec = examData[currentSectionIdx];
-    const prefix = SECTION_PREFIXES[currentSectionIdx];
-    const answers = {};
-
-    sec.questions.forEach((qObj, i) => {
-      const questionId = prefix + (i + 1);
-      const selected = document.querySelector(`input[name="${questionId}"]:checked`);
-      answers[questionId] = selected ? selected.value : "";
-    });
-
-    allAnswers[getSectionKey()] = answers;
-    return answers;
-  }
-
-  function submitSection() {
-    if (isFinished || isLocked) return;
-
-    const answers = collectCurrentSectionAnswers();
-    const unanswered = Object.keys(answers).filter(key => !answers[key]).length;
-
-    if (unanswered > 0) {
-      const proceed = confirm(`Masih ada ${unanswered} soal yang belum dijawab pada section ini. Tetap lanjut?`);
-      if (!proceed) return;
-    }
-
-    if (currentSectionIdx < examData.length - 1) {
-      currentSectionIdx++;
-      showNotice("Jawaban section tersimpan. Silakan lanjut ke bagian berikutnya.", "success");
-      renderSection();
-    } else {
-      submitFinalData("COMPLETED");
-    }
-  }
-
-  function submitFinalData(completionStatus) {
-    if (isFinished) return;
-    isFinished = true;
-
-    if (!isLocked) collectCurrentSectionAnswers();
-
-    const payload = {
-      nama: userData.name,
-      npm: userData.npm,
-      kelas: userData.className,
-      email: userData.email,
-      testDate: new Date().toISOString(),
-      answers: allAnswers,
-      violations: violationLog,
-      completionStatus: completionStatus || "COMPLETED",
-      clientInfo: {
-        userAgent: navigator.userAgent,
-        platform: navigator.platform || "",
-        language: navigator.language || "",
-        screen: window.screen ? `${window.screen.width}x${window.screen.height}` : ""
-      }
-    };
-
-    setSubmittingState(true);
-
-    google.script.run
-      .withSuccessHandler(function(response) {
-        setSubmittingState(false);
-        showCompletionMessage();
-      })
-      .withFailureHandler(function(error) {
-        isFinished = false;
-        setSubmittingState(false);
-        showNotice("Submission failed: " + (error.message || error), "danger");
-      })
-      .submitExam(payload);
-  }
-
-  function showCompletionMessage() {
-    document.getElementById("exam-content").innerHTML = `
-      <div class="note">
-        <h3>Ujian berhasil dikirim</h3>
-        <p>Your exam has been submitted successfully. Your evaluation report will be sent to your registered email after the scheduled processing period.</p>
-      </div>
-    `;
-    document.getElementById("next-btn").classList.add("hidden");
-    document.getElementById("locked-message").classList.add("hidden");
-    showNotice("Ujian berhasil dikirim.", "success");
-  }
-
-  function setSubmittingState(isSubmitting) {
-    const btn = document.getElementById("next-btn");
-    const status = document.getElementById("submission-status");
-    btn.disabled = isSubmitting;
-    status.innerText = isSubmitting ? "Submitting..." : "";
-  }
-
-  function startSecurePlay() {
-    const audio = document.getElementById("listeningAudio");
-    const btn = document.getElementById("btnPlay");
-    const msg = document.getElementById("audio-msg");
-
-    if (!audio || !btn) return;
-
-    let lastPlayedTime = 0;
-    audio.load();
-
-    audio.onseeking = function() {
-      try {
-        if (audio.currentTime > lastPlayedTime + 1) {
-          audio.currentTime = lastPlayedTime;
-          recordViolation("AUDIO_SEEK_ATTEMPT", "The participant attempted to skip or seek the listening audio.");
+      window.addEventListener("blur", function() {
+        if (isExamActive()) {
+          recordViolation("WINDOW_FOCUS_LOST", "the test window lost focus");
         }
-      } catch (e) {}
-    };
+      });
 
-    audio.ontimeupdate = function() {
-      if (!audio.seeking) lastPlayedTime = audio.currentTime;
-    };
+      document.addEventListener("copy", function(e) {
+        if (isExamActive()) {
+          e.preventDefault();
+          recordViolation("COPY_ATTEMPT", "the participant attempted to copy content from the test page");
+        }
+      });
 
-    audio.play().then(function() {
-      btn.disabled = true;
-      btn.innerHTML = "⌛ Audio Sedang Diputar...";
-      msg.innerText = "⚠️ Audio sedang berjalan. Durasi terkunci dan tidak dapat diulang.";
-      audio.oncontextmenu = function(e) { e.preventDefault(); };
-    }).catch(function(err) {
-      showNotice("Gagal memutar audio. Periksa koneksi internet atau izin browser.", "danger");
-      console.error(err);
-    });
+      document.addEventListener("paste", function(e) {
+        if (isExamActive()) {
+          e.preventDefault();
+          recordViolation("PASTE_ATTEMPT", "the participant attempted to paste content into the test page");
+        }
+      });
 
-    audio.onended = function() {
-      btn.innerHTML = "✅ Selesai";
-      msg.style.color = "#15803d";
-      msg.innerText = "Audio telah selesai. Silakan lanjut menjawab.";
-      audio.removeAttribute("src");
-      audio.load();
-    };
-  }
+      document.addEventListener("contextmenu", function(e) {
+        if (isExamActive()) {
+          e.preventDefault();
+          recordViolation("RIGHT_CLICK_ATTEMPT", "the participant attempted to open the context menu/right click menu");
+        }
+      });
 
-  function setupSecurityOnce() {
-    if (window.__securitySetupDone) return;
-    window.__securitySetupDone = true;
+      document.addEventListener("fullscreenchange", function() {
+        if (isExamActive() && document.fullscreenElement === null) {
+          recordViolation("FULLSCREEN_EXIT", "the participant exited fullscreen mode");
+        }
+      });
 
-    document.addEventListener("visibilitychange", function() {
-      if (document.hidden) {
-        recordViolation("PAGE_HIDDEN_OR_TAB_SWITCH", "The test page was hidden or the participant may have switched tabs/apps.");
-      }
-    });
-
-    window.addEventListener("blur", function() {
-      recordViolation("WINDOW_FOCUS_LOST", "The browser window lost focus during the test session.");
-    });
-
-    document.addEventListener("copy", function(e) {
-      e.preventDefault();
-      recordViolation("COPY_ATTEMPT", "The participant attempted to copy content from the test page.");
-    });
-
-    document.addEventListener("paste", function(e) {
-      e.preventDefault();
-      recordViolation("PASTE_ATTEMPT", "The participant attempted to paste content into the test page.");
-    });
-
-    document.addEventListener("contextmenu", function(e) {
-      e.preventDefault();
-      recordViolation("RIGHT_CLICK_ATTEMPT", "The participant attempted to open the context menu/right click.");
-    });
-
-    document.addEventListener("fullscreenchange", function() {
-      if (!document.fullscreenElement && !isFinished) {
-        recordViolation("FULLSCREEN_EXIT", "The participant exited fullscreen mode.");
-      }
-    });
-
-    window.addEventListener("beforeunload", function(e) {
-      if (!isFinished) {
-        recordViolation("PAGE_LEAVE_ATTEMPT", "The participant attempted to leave or refresh the test page.");
-        e.preventDefault();
-        e.returnValue = "";
-      }
-    });
-  }
-
-  function recordViolation(type, detail) {
-    if (isFinished || isLocked) return;
-
-    const now = Date.now();
-
-    // Prevent duplicate event storms, especially on mobile browsers.
-    if (now - lastViolationAt < 2500) return;
-    lastViolationAt = now;
-
-    const entry = {
-      type: type,
-      detail: detail,
-      time: new Date().toISOString()
-    };
-
-    violationLog.push(entry);
-    const count = violationLog.length;
-
-    if (count >= MAX_VIOLATIONS) {
-      violationStatus = AUTO_SUBMIT_ON_MAX_VIOLATION ? "AUTO_SUBMITTED" : "LOCKED";
-      updateViolationStatus();
-
-      showNotice("Batas pelanggaran tercapai. Ujian akan dikunci dan data jawaban yang tersedia dikirim ke sistem.", "danger");
-
-      isLocked = true;
-      collectCurrentSectionAnswers();
-      disableExamInputs();
-
-      if (AUTO_SUBMIT_ON_MAX_VIOLATION) {
-        submitFinalData("AUTO_SUBMITTED");
-      } else {
-        document.getElementById("locked-message").classList.remove("hidden");
-        submitFinalData("LOCKED");
-      }
-      return;
+      window.addEventListener("beforeunload", function(e) {
+        if (isExamActive() && !isSubmitting) {
+          recordViolation("PAGE_LEAVE_ATTEMPT", "the participant attempted to leave or refresh the test page");
+          e.preventDefault();
+          e.returnValue = "";
+        }
+      });
     }
 
-    violationStatus = "WARNING";
-    updateViolationStatus();
-    showNotice(`Peringatan ${count}/${MAX_VIOLATIONS}: Jangan meninggalkan halaman ujian atau melakukan aktivitas terlarang.`, "warning");
-  }
+    function isExamActive() {
+      return !isFinished && !isSubmitting && !isLocked && !document.getElementById("exam-page").classList.contains("hidden");
+    }
 
-  function updateViolationStatus() {
-    document.getElementById("violation-status").innerText = "Integrity status: " + violationStatus;
-  }
+    function recordViolation(type, detail) {
+      const now = Date.now();
+      if (now - lastViolationAt < 1800) return;
+      lastViolationAt = now;
 
-  function disableExamInputs() {
-    document.querySelectorAll("input, button, select").forEach(function(el) {
-      if (el.id !== "notice") el.disabled = true;
-    });
-  }
+      if (violationLog.length >= MAX_VIOLATIONS) return;
 
-  function showNotice(message, type) {
-    const notice = document.getElementById("notice");
-    notice.className = "notice " + (type || "");
-    notice.innerText = message;
-    notice.classList.remove("hidden");
+      violationLog.push({
+        type: type,
+        detail: detail,
+        time: new Date().toISOString(),
+        section: examData[currentSectionIdx] ? examData[currentSectionIdx].title : "Unknown Section"
+      });
 
-    clearTimeout(noticeTimer);
-    noticeTimer = setTimeout(function() {
-      notice.classList.add("hidden");
-    }, 5500);
-  }
+      updateViolationDisplay();
 
-  function isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || "").trim());
-  }
-</script>
+      const count = violationLog.length;
+      if (count < MAX_VIOLATIONS) {
+        alert(`⚠️ PERINGATAN ${count}/${MAX_VIOLATIONS}: ${detail}. Aktivitas ini tercatat oleh sistem.`);
+      } else {
+        alert("❌ Batas maksimal pelanggaran telah tercapai. Ujian akan dikunci dan jawaban yang sudah tersedia akan dikirim ke sistem.");
+        handleMaximumViolation();
+      }
+    }
+
+    function updateViolationDisplay() {
+      const el = document.getElementById("violation-display");
+      if (el) el.innerText = `Integrity Warning: ${violationLog.length}/${MAX_VIOLATIONS}`;
+    }
+
+    function handleMaximumViolation() {
+      isLocked = true;
+      completionStatus = AUTO_SUBMIT_ON_MAX_VIOLATION ? "AUTO_SUBMITTED" : "LOCKED";
+
+      const lockMessage = document.getElementById("lock-message");
+      const nextBtn = document.getElementById("next-btn");
+
+      if (lockMessage) {
+        lockMessage.classList.remove("hidden");
+        lockMessage.innerText = "Ujian dikunci karena batas maksimal pelanggaran telah tercapai. Jawaban yang sudah tersedia akan dikirim ke sistem.";
+      }
+
+      if (nextBtn) nextBtn.disabled = true;
+
+      submitFinalData(completionStatus);
+    }
+
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || "").trim());
+    }
+  </script>
 </body>
 </html>
