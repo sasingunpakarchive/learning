@@ -213,7 +213,7 @@
     <section id="exam-page" class="hidden">
       <div class="status-bar">
         <span id="display-info" class="student-info"></span>
-        <span id="timer-display">30:00</span>
+        <span id="timer-display">35:00</span>
       </div>
 
       <div class="card">
@@ -234,19 +234,15 @@
   </main>
 
   <script>
-    /************************************************************
-     * CONFIGURATION
-     ************************************************************/
-
-    // TODO: Ganti dengan Web App URL Apps Script versi /exec.
+    
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwnqPcxGnupvUkDCXDUNMEAmvt8yEaZSSBJFkS75ORyc_THF7WG5DjfjyD4AFYl0C8R/exec";
 
     const LISTENING_AUDIO_URL = "https://sasingunpakarchive.github.io/learning/Audio%20EAS%202026.mp3";
-    const SECTION_DURATION_SECONDS = 30 * 60;
+    const SECTION_DURATION_SECONDS = 35 * 60;
     const MAX_VIOLATIONS = 3;
     const AUTO_SUBMIT_ON_MAX_VIOLATION = false;
+    const SECURITY_GRACE_MS = 5000; 
 
-    // Soal ada di HTML. Kunci jawaban TIDAK ada di HTML.
     const LISTENING_QUESTIONS = [
                 { o: ["(A) Carla does not live very far away.", "(B) What Carla said was unjust.", "(C) He does not fear what anyone says.", "(D) Carla is fairly rude to others."] },
                 { o: ["(A) She thinks it is an improvement.", "(B) The fir trees in it are better.", "(C) It resembles the last one.", "(D) It is the best the man has ever done."] },
@@ -300,9 +296,6 @@
                 { o: ["(A) At two o’clock", "(B) At four o’clock", "(C) At six o’clock", "(D) At eight o’clock"] }
             ];
 
-    /************************************************************
-     * STATE
-     ************************************************************/
 
     let userData = {};
     let answers = { listening: {} };
@@ -319,10 +312,10 @@
     let audioProtectionInitialized = false;
     let lastAllowedAudioTime = 0;
     let audioStarted = false;
+    let sectionEndTime = null;
+    let timeUpHandled = false;
+    const pendingViolationTimers = {};
 
-    /************************************************************
-     * HELPERS
-     ************************************************************/
 
     function pauseSecurity(ms = 1200) { securityPausedUntil = Date.now() + ms; }
     function isSecurityPaused() { return Date.now() < securityPausedUntil || isFinished || isSubmitting || examLocked; }
@@ -359,9 +352,6 @@
         .replaceAll("'", "&#039;");
     }
 
-    /************************************************************
-     * LOGIN
-     ************************************************************/
 
     function startExam() {
       const nama = document.getElementById("nama").value.trim();
@@ -384,16 +374,13 @@
       setTimeout(function () { autoStartListeningAudio(); }, 800);
     }
 
-    /************************************************************
-     * RENDER
-     ************************************************************/
 
     function renderListeningSection() {
       document.getElementById("section-title").textContent = "SECTION 1 — LISTENING COMPREHENSION";
 
       let html = `
         <div class="instruction">
-          <strong>Time — 30 minutes</strong><br><br>
+          <strong>Time — 35 minutes</strong><br><br>
           In this section, you will demonstrate your ability to understand conversations and talks in English.
           Answer all questions based on what is stated or implied by the speakers you hear.
         </div>
@@ -434,10 +421,7 @@
       `;
     }
 
-    /************************************************************
-     * ANSWERS
-     ************************************************************/
-
+ 
     function saveSingleAnswer(questionId, value) { answers.listening[questionId] = value; }
 
     function collectAllAnswersFromDom() {
@@ -448,33 +432,56 @@
       });
     }
 
-    /************************************************************
-     * TIMER
-     ************************************************************/
 
     function startSectionTimer() {
       stopSectionTimer();
+
+      timeUpHandled = false;
       sectionTimeRemaining = SECTION_DURATION_SECONDS;
       sectionStartedAt = new Date().toISOString();
-      updateTimerDisplay();
+      sectionEndTime = Date.now() + (SECTION_DURATION_SECONDS * 1000);
+
+      updateTimerFromClock();
+
       sectionTimer = setInterval(function () {
-        sectionTimeRemaining--;
-        updateTimerDisplay();
-        if (sectionTimeRemaining <= 0) { stopSectionTimer(); handleSectionTimeUp(); }
+        updateTimerFromClock();
       }, 1000);
     }
 
-    function stopSectionTimer() { if (sectionTimer) { clearInterval(sectionTimer); sectionTimer = null; } }
+    function stopSectionTimer() {
+      if (sectionTimer) {
+        clearInterval(sectionTimer);
+        sectionTimer = null;
+      }
+    }
+
+    function updateTimerFromClock() {
+      if (!sectionEndTime || timeUpHandled || isFinished || isSubmitting) return;
+
+      const remainingMs = sectionEndTime - Date.now();
+      sectionTimeRemaining = Math.max(0, Math.ceil(remainingMs / 1000));
+
+      updateTimerDisplay();
+
+      if (sectionTimeRemaining <= 0) {
+        handleSectionTimeUp();
+      }
+    }
 
     function updateTimerDisplay() {
       const timerDisplay = document.getElementById("timer-display");
       if (!timerDisplay) return;
-      const minutes = Math.floor(Math.max(sectionTimeRemaining, 0) / 60);
-      const seconds = Math.max(sectionTimeRemaining, 0) % 60;
-      timerDisplay.textContent = String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
+
+      const safeRemaining = Math.max(sectionTimeRemaining, 0);
+      const minutes = Math.floor(safeRemaining / 60);
+      const seconds = safeRemaining % 60;
+
+      timerDisplay.textContent =
+        String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
+
       timerDisplay.classList.remove("warning", "danger");
-      if (sectionTimeRemaining <= 60) timerDisplay.classList.add("danger");
-      else if (sectionTimeRemaining <= 5 * 60) timerDisplay.classList.add("warning");
+      if (safeRemaining <= 60) timerDisplay.classList.add("danger");
+      else if (safeRemaining <= 5 * 60) timerDisplay.classList.add("warning");
     }
 
     function logSectionTime(reason) {
@@ -490,14 +497,20 @@
     }
 
     function handleSectionTimeUp() {
-      showToast("Time is up. Your Listening answers are being submitted.");
+      if (timeUpHandled || isSubmitting || isFinished) return;
+
+      timeUpHandled = true;
+      stopSectionTimer();
+
+      showToast("Time is up. Your Listening answers are being submitted automatically.");
+
       logSectionTime("TIME_UP");
-      submitFinalData("TIME_UP");
+
+      setTimeout(function () {
+        submitFinalData("TIME_UP");
+      }, 300);
     }
 
-    /************************************************************
-     * AUDIO
-     ************************************************************/
 
     function autoStartListeningAudio() {
       const audio = document.getElementById("listeningAudio");
@@ -556,44 +569,131 @@
       lastAllowedAudioTime = 0;
     }
 
-    /************************************************************
-     * VIOLATION DETECTION
-     ************************************************************/
 
     function registerViolation(type, detail) {
       if (isSecurityPaused()) return;
       if (isFinished || examLocked) return;
-      violationLog.push({ type: type, detail: detail, time: new Date().toISOString() });
+
+      violationLog.push({
+        type: type,
+        detail: detail,
+        time: new Date().toISOString()
+      });
+
       const count = violationLog.length;
+
       if (count < MAX_VIOLATIONS) {
         showToast(`Peringatan ${count}/${MAX_VIOLATIONS}: aktivitas berpotensi melanggar aturan ujian tercatat.`);
       } else {
         completionStatus = "LOCKED";
         examLocked = true;
-        showToast("Batas pelanggaran tercapai. Ujian dikunci.");
-        if (AUTO_SUBMIT_ON_MAX_VIOLATION) submitFinalData("AUTO_SUBMITTED");
-        else submitFinalData("LOCKED");
+        showToast("Batas pelanggaran tercapai. Ujian dikunci dan jawaban akan dikirim.");
+
+        if (AUTO_SUBMIT_ON_MAX_VIOLATION) {
+          submitFinalData("AUTO_SUBMITTED");
+        } else {
+          submitFinalData("LOCKED");
+        }
+      }
+    }
+
+    function startDelayedViolation(category, type, detail, stillInvalidCheck) {
+      if (isSecurityPaused() || isFinished || examLocked) return;
+      if (pendingViolationTimers[category]) return;
+
+      pendingViolationTimers[category] = setTimeout(function () {
+        pendingViolationTimers[category] = null;
+
+        if (isSecurityPaused() || isFinished || examLocked) return;
+
+        const stillInvalid = typeof stillInvalidCheck === "function" ? stillInvalidCheck() : true;
+        if (stillInvalid) {
+          registerViolation(type, detail);
+        }
+      }, SECURITY_GRACE_MS);
+    }
+
+    function cancelDelayedViolation(category) {
+      if (pendingViolationTimers[category]) {
+        clearTimeout(pendingViolationTimers[category]);
+        pendingViolationTimers[category] = null;
       }
     }
 
     document.addEventListener("visibilitychange", function() {
-      if (document.hidden && !isSecurityPaused()) {
-        registerViolation("PAGE_HIDDEN_OR_TAB_SWITCH", "the test page was hidden or the participant switched tabs");
+      if (document.hidden) {
+        startDelayedViolation(
+          "PAGE_HIDDEN_OR_TAB_SWITCH",
+          "PAGE_HIDDEN_OR_TAB_SWITCH",
+          "the test page was hidden or the participant switched tabs for more than 5 seconds",
+          function () { return document.hidden; }
+        );
+      } else {
+        cancelDelayedViolation("PAGE_HIDDEN_OR_TAB_SWITCH");
+        updateTimerFromClock();
       }
     });
 
     window.addEventListener("blur", function() {
-      setTimeout(function() {
-        if (!isSecurityPaused() && document.visibilityState === "visible") {
-          registerViolation("WINDOW_FOCUS_LOST", "the test window lost focus");
-        }
-      }, 250);
+      startDelayedViolation(
+        "WINDOW_FOCUS_LOST",
+        "WINDOW_FOCUS_LOST",
+        "the test window lost focus for more than 5 seconds",
+        function () { return document.visibilityState === "visible" && !document.hasFocus(); }
+      );
     });
 
-    document.addEventListener("copy", function(e) { e.preventDefault(); if (!isSecurityPaused()) registerViolation("COPY_ATTEMPT", "a copy attempt was detected"); });
-    document.addEventListener("paste", function(e) { e.preventDefault(); if (!isSecurityPaused()) registerViolation("PASTE_ATTEMPT", "a paste attempt was detected"); });
-    document.addEventListener("contextmenu", function(e) { e.preventDefault(); if (!isSecurityPaused()) registerViolation("RIGHT_CLICK_ATTEMPT", "a right click/context menu attempt was detected"); });
-    document.addEventListener("fullscreenchange", function() { if (!document.fullscreenElement && !isSecurityPaused()) registerViolation("FULLSCREEN_EXIT", "the participant exited fullscreen mode"); });
+    window.addEventListener("focus", function() {
+      cancelDelayedViolation("WINDOW_FOCUS_LOST");
+      updateTimerFromClock();
+    });
+
+    document.addEventListener("copy", function(e) {
+      e.preventDefault();
+      startDelayedViolation(
+        "COPY_ATTEMPT",
+        "COPY_ATTEMPT",
+        "a copy attempt was detected and confirmed after the security grace period",
+        function () { return true; }
+      );
+      showToast("Copy is disabled during the test.");
+    });
+
+    document.addEventListener("paste", function(e) {
+      e.preventDefault();
+      startDelayedViolation(
+        "PASTE_ATTEMPT",
+        "PASTE_ATTEMPT",
+        "a paste attempt was detected and confirmed after the security grace period",
+        function () { return true; }
+      );
+      showToast("Paste is disabled during the test.");
+    });
+
+    document.addEventListener("contextmenu", function(e) {
+      e.preventDefault();
+      startDelayedViolation(
+        "RIGHT_CLICK_ATTEMPT",
+        "RIGHT_CLICK_ATTEMPT",
+        "a right click/context menu attempt was detected and confirmed after the security grace period",
+        function () { return true; }
+      );
+      showToast("Right click is disabled during the test.");
+    });
+
+    document.addEventListener("fullscreenchange", function() {
+      
+      if (!document.fullscreenElement && !isSecurityPaused()) {
+        startDelayedViolation(
+          "FULLSCREEN_EXIT",
+          "FULLSCREEN_EXIT",
+          "the participant exited fullscreen mode for more than 5 seconds",
+          function () { return !document.fullscreenElement; }
+        );
+      } else {
+        cancelDelayedViolation("FULLSCREEN_EXIT");
+      }
+    });
 
     window.addEventListener("beforeunload", function(e) {
       if (!isFinished && !isSubmitting) {
@@ -603,9 +703,6 @@
       }
     });
 
-    /************************************************************
-     * SUBMIT
-     ************************************************************/
 
     async function submitFinalData(reason) {
       if (isSubmitting) return;
@@ -616,7 +713,7 @@
       stopSectionTimer();
       stopListeningAudio();
 
-      completionStatus = reason === "LOCKED" ? "LOCKED" : reason === "AUTO_SUBMITTED" ? "AUTO_SUBMITTED" : "COMPLETED";
+      completionStatus = reason === "LOCKED" ? "LOCKED" : reason === "AUTO_SUBMITTED" ? "AUTO_SUBMITTED" : reason === "TIME_UP" ? "TIME_UP" : "COMPLETED";
 
       const payload = {
         nama: userData.nama,
