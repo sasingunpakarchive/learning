@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TOEFL Listening Test</title>
+  <style>
+    :root {
+      --purple: #5b2a86;
+      --purple-dark: #3f1d63;
+      --purple-soft: #f5efff;
+      --border: #e7e2ef;
+      --text: #2d2d2d;
+      --muted: #6b6572;
+      --danger: #c0392b;
+      --warning: #d98a00;
+      --success: #1f8a4c;
+      --white: #ffffff;
+      --bg: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+      color: white;
+      padding: 28px 18px;
+      text-align: center;
+    }
+
+    header h1 { margin: 0; font-size: clamp(24px, 4vw, 36px); letter-spacing: 0.3px; }
+    header p { margin: 8px 0 0; opacity: 0.92; font-size: 14px; }
+
+    .page { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(91, 42, 134, 0.08);
+      padding: clamp(20px, 4vw, 34px);
+      margin-top: 20px;
+    }
+
+    .hidden { display: none !important; }
+
+    h2 { color: var(--purple-dark); margin-top: 0; line-height: 1.3; }
+    .subtle { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    label { font-weight: 700; color: #33243f; font-size: 14px; }
+
+    input, select {
+      width: 100%; border: 1.5px solid var(--border); border-radius: 12px;
+      padding: 12px 13px; font-size: 15px; outline: none; background: #fff;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(91, 42, 134, 0.12);
+    }
+
+    .btn {
+      border: none; border-radius: 12px; background: var(--purple); color: white;
+      padding: 13px 18px; font-weight: 800; cursor: pointer; font-size: 15px;
+      transition: 0.2s ease;
+    }
+
+    .btn:hover { background: var(--purple-dark); }
+    .btn:disabled { opacity: 0.65; cursor: not-allowed; }
+    .btn-wide { width: 100%; margin-top: 18px; }
+
+    .status-bar {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      background: rgba(255,255,255,0.96); border: 1px solid var(--border);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06); border-radius: 16px;
+      padding: 12px 14px; margin-bottom: 18px; backdrop-filter: blur(8px);
+    }
+
+    .student-info { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+
+    #timer-display {
+      flex: 0 0 auto; background: var(--purple); color: white; padding: 8px 14px;
+      border-radius: 999px; font-weight: 900; letter-spacing: 0.5px;
+      min-width: 78px; text-align: center;
+    }
+
+    #timer-display.warning { background: var(--warning); }
+    #timer-display.danger { background: var(--danger); }
+
+    .instruction {
+      background: var(--purple-soft); border-left: 5px solid var(--purple);
+      padding: 16px; border-radius: 12px; color: #3f3150; margin-bottom: 18px;
+    }
+
+    .audio-box {
+      background: #faf7ff; border: 1px solid #d9c7f2; padding: 20px;
+      border-radius: 16px; text-align: center; margin-bottom: 24px;
+    }
+
+    .audio-icon { font-size: 32px; margin-bottom: 6px; }
+    .audio-box p { margin: 10px auto 0; max-width: 680px; font-size: 13px; color: var(--muted); }
+    .audio-controls { margin-top: 14px; }
+    #btnPlayAudio { width: auto; min-width: 180px; }
+
+    .question-block {
+      border: 1px solid var(--border); border-radius: 16px; padding: 16px;
+      margin-bottom: 16px; background: #fff;
+    }
+
+    .question-title { margin: 0 0 12px; color: #2f2340; font-weight: 800; }
+
+    .option-label {
+      display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px;
+      margin: 8px 0; border: 1px solid #eee7f7; border-radius: 12px;
+      cursor: pointer; font-weight: 500; color: #302b35; transition: 0.15s ease;
+    }
+
+    .option-label:hover { background: var(--purple-soft); border-color: #d6bee8; }
+    .option-label input { width: auto; margin-top: 4px; }
+
+    .toast-message {
+      position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+      background: var(--purple); color: white; padding: 12px 18px; border-radius: 999px;
+      font-size: 14px; font-weight: 700; box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+      opacity: 0; pointer-events: none; transition: opacity 0.25s ease, bottom 0.25s ease;
+      z-index: 9999; max-width: min(92vw, 720px); text-align: center;
+    }
+
+    .toast-message.show { opacity: 1; bottom: 36px; }
+
+    .warning-panel {
+      background: #fff8e8; border: 1px solid #f1d28a; color: #6b4b00;
+      padding: 14px; border-radius: 14px; margin: 16px 0; font-size: 14px;
+    }
+
+    .danger-panel {
+      background: #fff1f0; border: 1px solid #f1a4a0; color: #7b1e18;
+      padding: 14px; border-radius: 14px; margin: 16px 0; font-size: 14px;
+    }
+
+    .success-panel {
+      background: #eefaf2; border: 1px solid #aadfbd; color: #155b32;
+      padding: 20px; border-radius: 16px; margin-top: 20px;
+    }
+
+    .footer-note { text-align: center; margin-top: 22px; color: #9a91a3; font-size: 12px; font-style: italic; }
+
+    @media (max-width: 720px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .status-bar { align-items: flex-start; flex-direction: column; }
+      #timer-display { align-self: flex-start; }
+      .card { border-radius: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PEEC TOEFL Listening Test</h1>
+    <p>Listening Comprehension Section</p>
+  </header>
+
+  <main class="page">
+    <section id="login-page" class="card">
+      <h2>Student Identity</h2>
+      <p class="subtle">Silakan isi data diri dengan benar. Hasil evaluasi akan dikirim ke email yang didaftarkan setelah periode pemrosesan.</p>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="nama">Nama</label>
+          <input type="text" id="nama" placeholder="Contoh: Hanun Asyifa" autocomplete="name" />
+        </div>
+
+        <div class="form-group">
+          <label for="npm">NPM</label>
+          <input type="text" id="npm" placeholder="Contoh: 065123456" inputmode="text" />
+        </div>
+
+        <div class="form-group">
+          <label for="kelas">Kelas</label>
+          <select id="kelas">
+            <option value="">Pilih kelas</option>
+            <option value="2C BDI">2C BDI</option>
+            <option value="4D BDI">4D BDI</option>
+            <option value="4E BDI">4E BDI</option>
+            <option value="4I Manajemen">4I Manajemen</option>
+            <option value="4K Manajemen">4K Manajemen</option>
+            <option value="Guest">Guest</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="Contoh: nama.mahasiswa@email.com" autocomplete="email" />
+        </div>
+      </div>
+
+      <div class="warning-panel">Sistem akan mencatat aktivitas yang berpotensi melanggar aturan ujian, seperti berpindah tab, copy/paste, klik kanan, atau meninggalkan halaman ujian.</div>
+      <button class="btn btn-wide" onclick="startExam()">Mulai Listening Test</button>
+      <p class="footer-note">Developed for TOEFL Listening Evaluation</p>
+    </section>
+
+    <section id="exam-page" class="hidden">
+      <div class="status-bar">
+        <span id="display-info" class="student-info"></span>
+        <span id="timer-display">30:00</span>
+      </div>
+
+      <div class="card">
+        <h2 id="section-title">Listening Comprehension</h2>
+        <div id="exam-content"></div>
+        <button id="submit-btn" class="btn btn-wide" onclick="submitFinalData()">Submit Listening Test</button>
+      </div>
+    </section>
+
+    <section id="finish-page" class="card hidden">
+      <div class="success-panel">
+        <h2>Exam Submitted Successfully</h2>
+        <p>Your answers have been submitted. Your TOEFL Listening Evaluation Report will be sent to your registered email after the scheduled processing period.</p>
+      </div>
+    </section>
+
+    <div id="toast-message" class="toast-message"></div>
+  </main>
+
+  <script>
+    /************************************************************
+     * CONFIGURATION
+     ************************************************************/
+
+    // TODO: Ganti dengan Web App URL Apps Script versi /exec.
+    const APPS_SCRIPT_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+    const LISTENING_AUDIO_URL = "https://sasingunpakarchive.github.io/learning/Audio%20EAS%202026.mp3";
+    const SECTION_DURATION_SECONDS = 30 * 60;
+    const MAX_VIOLATIONS = 3;
+    const AUTO_SUBMIT_ON_MAX_VIOLATION = false;
+
+    // Soal ada di HTML. Kunci jawaban TIDAK ada di HTML.
+    const LISTENING_QUESTIONS = [
+                { o: ["(A) Carla does not live very far away.", "(B) What Carla said was unjust.", "(C) He does not fear what anyone says.", "(D) Carla is fairly rude to others."] },
+                { o: ["(A) She thinks it is an improvement.", "(B) The fir trees in it are better.", "(C) It resembles the last one.", "(D) It is the best the man has ever done."] },
+                { o: ["(A) He graduated last in his class.", "(B) He is the last person in his family to graduate.", "(C) He does not believe he can improve gradually.", "(D) He has finally finished his studies."] },
+                { o: ["(A) He is surprised there were five dresses.", "(B) It was an unexpectedly inexpensive dress.", "(C) He would like to know what color dress it was.", "(D) The dress was not cheap."] },
+                { o: ["(A) Leave the car somewhere else.", "(B) Ignore the parking tickets.", "(C) Add more money to the meter.", "(D) Pay the parking attendant."] },
+                { o: ["(A) He does not like to hold too many books at one time.", "(B) There is no bookstore in his neighborhood.", "(C) It is not possible to obtain the book yet.", "(D) He needs to talk to someone at the bookstore."] },
+                { o: ["(A) It was incomplete.", "(B) It finished on time.", "(C) It was about honor.", "(D) It was too long."] },
+                { o: ["(A) She needs to use the man’s notes.", "(B) Yesterday’s physics class was quite boring.", "(C) She took some very good notes in physics class.", "(D) She would like to lend the man her notes."] },
+                { o: ["(A) It is her birthday today.", "(B) She is looking for a birthday gift.", "(C) She wants to go shopping with her dad.", "(D) She wants a new wallet for herself."] },
+                { o: ["(A) He prefers cold water.", "(B) His toes are too big.", "(C) The pool felt quite refreshing.", "(D) He did not go for a swim."] },
+                { o: ["(A) She just left her sister’s house.", "(B) Her sister is not at home.", "(C) She is not exactly sure where her sweater is.", "(D) She does not know where her sister lives."] },
+                { o: ["(A) She does not have time to complete additional reports.", "(B) She cannot finish the reports that she is already working on.", "(C) She is scared of having responsibility for the reports.", "(D) It is not time for the accounting reports to be compiled."] },
+                { o: ["(A) He has had enough exercise.", "(B) He is going to give himself a reward for the hard work.", "(C) He is going to stay on for quite some time.", "(D) He would like to give the woman an exercise machine as a gift."] },
+                { o: ["(A) He cannot see the huge waves.", "(B) The waves are not coming in.", "(C) He would like the woman to repeat what she said.", "(D) He agrees with the woman."] },
+                { o: ["(A) The exam was postponed.", "(B) The man should have studied harder.", "(C) Night is the best time to study for exams.", "(D) She is completely prepared for the exam."] },
+                { o: ["(A) Students who want to change schedules should form a line.", "(B) It is only possible to make four changes in the schedule.", "(C) It is necessary to submit the form quickly.", "(D) Problems occur when people do not wait their turn."] },
+                { o: ["(A) In a mine", "(B) In a jewelry store", "(C) In a clothing store", "(D) In a bank"] },
+                { o: ["(A) A visit to the woman’s family", "(B) The telephone bill", "(C) The cost of a new telephone", "(D) How far away the woman’s family lives"] },
+                { o: ["(A) She has not met her new boss yet.", "(B) She has a good opinion of her boss.", "(C) Her boss has asked her about her impressions of the company.", "(D) Her boss has been putting a lot of pressure on her."] },
+                { o: ["(A) The recital starts in three hours.", "(B) He intends to recite three different poems.", "(C) He received a citation on the third of the month.", "(D) He thinks the performance begins at three."] },
+                { o: ["(A) Choose a new dentist.", "(B) Cure the pain himself.", "(C) Make an appointment with his dentist.", "(D) Ask his dentist about the right way to brush."] },
+                { o: ["(A) It is almost five o’clock.", "(B) The man does not really need the stamps.", "(C) It is a long way to the post office.", "(D) It would be better to go after five o’clock."] },
+                { o: ["(A) The article was placed on reserve.", "(B) The woman must ask the professor for a copy.", "(C) The woman should look through a number of journals in the library.", "(D) He has reservations about the information in the article."] },
+                { o: ["(A) He needs to take a nap.", "(B) He hopes the woman will help him calm down.", "(C) The woman just woke him up.", "(D) He is extremely relaxed."] },
+                { o: ["(A) She does not think the news report is false.", "(B) She has never before reported on the news.", "(C) She never watches the news on television.", "(D) She shares the man’s opinion about the report."] },
+                { o: ["(A) Management will offer pay raises on Friday.", "(B) The policy has not yet been decided.", "(C) The manager is full of hot air.", "(D) The plane has not yet landed."] },
+                { o: ["(A) He does not believe that it is really snowing.", "(B) The snow had been predicted.", "(C) The exact amount of snow is unclear.", "(D) He expected the woman to go out in the snow."] },
+                { o: ["(A) She is going to take the test over again.", "(B) She thinks she did a good job on the exam.", "(C) She has not yet taken the literature exam.", "(D) She is unhappy with how she did."] },
+                { o: ["(A) The door was unlocked.", "(B) It was better to wait outside.", "(C) He could not open the door.", "(D) He needed to take a walk."] },
+                { o: ["(A) He nailed the door shut.", "(B) He is heading home.", "(C) He hit himself in the head.", "(D) He is absolutely correct."] },
+                { o: ["(A) The haircut is unusually short.", "(B) This is Bob’s first haircut.", "(C) Bob does not know who gave him the haircut.", "(D) After the haircut, Bob’s hair still touches the floor."] },
+                { o: ["(A) It is just what he wanted.", "(B) He enjoys having the latest style.", "(C) He dislikes it immensely.", "(D) He thinks it will be cool in the summer."] },
+                { o: ["(A) A broken mirror", "(B) The hairstylist", "(C) The scissors used to cut his hair", "(D) Piles of his hair"] },
+                { o: ["(A) “You should become a hairstylist.”", "(B) “Please put it back on.”", "(C) “It’ll grow back.”", "(D) “It won’t grow fast enough.”"] },
+                { o: ["(A) Every evening", "(B) Every week", "(C) Every Sunday", "(D) Every month"] },
+                { o: ["(A) That she was eighty-five years old", "(B) That a storm was coming", "(C) That she was under a great deal of pressure", "(D) That she wanted to become a weather forecaster"] },
+                { o: ["(A) In her bones", "(B) In her ears", "(C) In her legs", "(D) In her head"] },
+                { o: ["(A) Call his great-grandmother less often.", "(B) Watch the weather forecasts with his great-grandmother.", "(C) Help his great-grandmother relieve some of her pressures.", "(D) Believe his great-grandmother’s predictions about the weather."] },
+                { o: ["(A) In a car", "(B) On a hike", "(C) On a tram", "(D) In a lecture hall"] },
+                { o: ["(A) It means they have big tears.", "(B) It means they like to swim.", "(C) It means they look like crocodiles.", "(D) It means they are pretending to be sad."] },
+                { o: ["(A) They are sad.", "(B) They are warming themselves.", "(C) They are getting rid of salt.", "(D) They regret their actions."] },
+                { o: ["(A) Taking photographs", "(B) Getting closer to the crocodiles", "(C) Exploring the water’s edge", "(D) Getting off the tram"] },
+                { o: ["(A) Water Sports", "(B) Physics", "(C) American History", "(D) Psychology"] },
+                { o: ["(A) To cut", "(B) To move fast", "(C) To steer a boat", "(D) To build a ship"] },
+                { o: ["(A) To bring tea from China", "(B) To transport gold to California", "(C) To trade with the British", "(D) To sail the American river system"] },
+                { o: ["(A) A reading assignment", "(B) A quiz on Friday", "(C) A research paper for the end of the semester", "(D) Some written homework"] },
+                { o: ["(A) Writers", "(B) Actors", "(C) Athletes", "(D) Musicians"] },
+                { o: ["(A) He or she would see butterflies.", "(B) He or she would break a leg.", "(C) He or she would have shaky knees.", "(D) He or she would stop breathing."] },
+                { o: ["(A) By staring at the audience", "(B) By breathing shallowly", "(C) By thinking about possible negative outcomes", "(D) By focusing on what needs to be done"] },
+                { o: ["(A) At two o’clock", "(B) At four o’clock", "(C) At six o’clock", "(D) At eight o’clock"] }
+            ];
+
+    /************************************************************
+     * STATE
+     ************************************************************/
+
+    let userData = {};
+    let answers = { listening: {} };
+    let violationLog = [];
+    let completionStatus = "COMPLETED";
+    let examLocked = false;
+    let isFinished = false;
+    let isSubmitting = false;
+    let securityPausedUntil = 0;
+    let sectionTimer = null;
+    let sectionTimeRemaining = SECTION_DURATION_SECONDS;
+    let sectionStartedAt = null;
+    let sectionTimeLogs = [];
+    let audioProtectionInitialized = false;
+    let lastAllowedAudioTime = 0;
+    let audioStarted = false;
+
+    /************************************************************
+     * HELPERS
+     ************************************************************/
+
+    function pauseSecurity(ms = 1200) { securityPausedUntil = Date.now() + ms; }
+    function isSecurityPaused() { return Date.now() < securityPausedUntil || isFinished || isSubmitting || examLocked; }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast-message");
+      if (!toast) return;
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(function () { toast.classList.remove("show"); }, 3000);
+    }
+
+    function showBlockingMessage(message) {
+      const examContent = document.getElementById("exam-content");
+      if (examContent) examContent.innerHTML = `<div class="danger-panel">${escapeHtml(message)}</div>`;
+      showToast(message);
+    }
+
+    function isAppsScriptUrlReady() {
+      return APPS_SCRIPT_URL &&
+        APPS_SCRIPT_URL.startsWith("https://script.google.com/macros/s/") &&
+        APPS_SCRIPT_URL.endsWith("/exec") &&
+        !APPS_SCRIPT_URL.includes("PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE");
+    }
+
+    function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || "").trim()); }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    /************************************************************
+     * LOGIN
+     ************************************************************/
+
+    function startExam() {
+      const nama = document.getElementById("nama").value.trim();
+      const npm = document.getElementById("npm").value.trim();
+      const kelas = document.getElementById("kelas").value.trim();
+      const email = document.getElementById("email").value.trim();
+
+      if (!nama || !npm || !kelas || !email) { showToast("Mohon lengkapi Nama, NPM, Kelas, dan Email."); return; }
+      if (!isValidEmail(email)) { showToast("Format email belum valid."); return; }
+      if (!isAppsScriptUrlReady()) { showToast("Web App URL Apps Script belum dipasang di HTML."); return; }
+
+      userData = { nama, npm, kelas, email };
+      document.getElementById("display-info").textContent = `${nama} | ${npm} | ${kelas}`;
+      document.getElementById("login-page").classList.add("hidden");
+      document.getElementById("exam-page").classList.remove("hidden");
+
+      pauseSecurity(2000);
+      renderListeningSection();
+      startSectionTimer();
+      setTimeout(function () { autoStartListeningAudio(); }, 800);
+    }
+
+    /************************************************************
+     * RENDER
+     ************************************************************/
+
+    function renderListeningSection() {
+      document.getElementById("section-title").textContent = "SECTION 1 — LISTENING COMPREHENSION";
+
+      let html = `
+        <div class="instruction">
+          <strong>Time — 30 minutes</strong><br><br>
+          In this section, you will demonstrate your ability to understand conversations and talks in English.
+          Answer all questions based on what is stated or implied by the speakers you hear.
+        </div>
+        ${renderAudioBox(LISTENING_AUDIO_URL)}
+      `;
+
+      LISTENING_QUESTIONS.forEach(function(q, index) {
+        const questionId = "L" + (index + 1);
+        const questionText = q.qHtml ? q.qHtml : q.q ? `<strong>${escapeHtml(q.q)}</strong>` : `<strong>Question ${index + 1}</strong>`;
+        html += `<div class="question-block">`;
+        html += `<p class="question-title">${questionText}</p>`;
+
+        q.o.forEach(function(optionText, optionIndex) {
+          const letter = String.fromCharCode(65 + optionIndex);
+          html += `
+            <label class="option-label">
+              <input type="radio" name="${questionId}" value="${letter}" onchange="saveSingleAnswer('${questionId}', '${letter}')">
+              <span>${escapeHtml(optionText)}</span>
+            </label>
+          `;
+        });
+        html += `</div>`;
+      });
+
+      document.getElementById("exam-content").innerHTML = html;
+      window.scrollTo(0, 0);
+    }
+
+    function renderAudioBox(audioUrl) {
+      return `
+        <div class="audio-box">
+          <div class="audio-icon">🎧</div>
+          <strong>Listening Section Audio</strong>
+          <audio id="listeningAudio" preload="auto"><source src="${escapeHtml(audioUrl)}" type="audio/mpeg"></audio>
+          <div class="audio-controls"><button type="button" class="btn" id="btnPlayAudio" onclick="manualStartListeningAudio()">▶️ Putar Audio</button></div>
+          <p id="audio-msg">Audio akan dicoba diputar otomatis saat Listening Section dimulai. Jika browser memblokir autoplay, klik tombol Putar Audio.</p>
+        </div>
+      `;
+    }
+
+    /************************************************************
+     * ANSWERS
+     ************************************************************/
+
+    function saveSingleAnswer(questionId, value) { answers.listening[questionId] = value; }
+
+    function collectAllAnswersFromDom() {
+      LISTENING_QUESTIONS.forEach(function(_, index) {
+        const questionId = "L" + (index + 1);
+        const selected = document.querySelector(`input[name="${questionId}"]:checked`);
+        answers.listening[questionId] = selected ? selected.value : (answers.listening[questionId] || "");
+      });
+    }
+
+    /************************************************************
+     * TIMER
+     ************************************************************/
+
+    function startSectionTimer() {
+      stopSectionTimer();
+      sectionTimeRemaining = SECTION_DURATION_SECONDS;
+      sectionStartedAt = new Date().toISOString();
+      updateTimerDisplay();
+      sectionTimer = setInterval(function () {
+        sectionTimeRemaining--;
+        updateTimerDisplay();
+        if (sectionTimeRemaining <= 0) { stopSectionTimer(); handleSectionTimeUp(); }
+      }, 1000);
+    }
+
+    function stopSectionTimer() { if (sectionTimer) { clearInterval(sectionTimer); sectionTimer = null; } }
+
+    function updateTimerDisplay() {
+      const timerDisplay = document.getElementById("timer-display");
+      if (!timerDisplay) return;
+      const minutes = Math.floor(Math.max(sectionTimeRemaining, 0) / 60);
+      const seconds = Math.max(sectionTimeRemaining, 0) % 60;
+      timerDisplay.textContent = String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
+      timerDisplay.classList.remove("warning", "danger");
+      if (sectionTimeRemaining <= 60) timerDisplay.classList.add("danger");
+      else if (sectionTimeRemaining <= 5 * 60) timerDisplay.classList.add("warning");
+    }
+
+    function logSectionTime(reason) {
+      const usedSeconds = SECTION_DURATION_SECONDS - Math.max(sectionTimeRemaining, 0);
+      sectionTimeLogs.push({
+        section: "listening",
+        startedAt: sectionStartedAt,
+        endedAt: new Date().toISOString(),
+        usedSeconds: usedSeconds,
+        remainingSeconds: Math.max(sectionTimeRemaining, 0),
+        reason: reason || "SUBMITTED"
+      });
+    }
+
+    function handleSectionTimeUp() {
+      showToast("Time is up. Your Listening answers are being submitted.");
+      logSectionTime("TIME_UP");
+      submitFinalData("TIME_UP");
+    }
+
+    /************************************************************
+     * AUDIO
+     ************************************************************/
+
+    function autoStartListeningAudio() {
+      const audio = document.getElementById("listeningAudio");
+      const btn = document.getElementById("btnPlayAudio");
+      const msg = document.getElementById("audio-msg");
+      if (!audio || audioStarted) return;
+      setupAudioProtection(audio);
+      audio.play().then(function () {
+        audioStarted = true;
+        if (btn) { btn.disabled = true; btn.textContent = "⌛ Audio sedang diputar"; }
+        if (msg) msg.textContent = "Audio sedang berjalan. Jangan refresh halaman atau meninggalkan ujian.";
+      }).catch(function () {
+        if (msg) msg.textContent = "Autoplay diblokir oleh browser. Silakan klik tombol Putar Audio untuk memulai.";
+        if (btn) { btn.disabled = false; btn.textContent = "▶️ Putar Audio"; }
+      });
+    }
+
+    function manualStartListeningAudio() {
+      const audio = document.getElementById("listeningAudio");
+      const btn = document.getElementById("btnPlayAudio");
+      const msg = document.getElementById("audio-msg");
+      if (!audio || audioStarted) return;
+      setupAudioProtection(audio);
+      audio.play().then(function () {
+        audioStarted = true;
+        if (btn) { btn.disabled = true; btn.textContent = "⌛ Audio sedang diputar"; }
+        if (msg) msg.textContent = "Audio sedang berjalan. Audio tidak dapat diputar ulang.";
+      }).catch(function () { if (msg) msg.textContent = "Audio gagal diputar. Periksa koneksi internet atau hubungi pengawas."; });
+    }
+
+    function setupAudioProtection(audio) {
+      if (!audio || audioProtectionInitialized) return;
+      audioProtectionInitialized = true;
+      lastAllowedAudioTime = 0;
+      audio.addEventListener("timeupdate", function () { if (!audio.seeking) lastAllowedAudioTime = audio.currentTime; });
+      audio.addEventListener("seeking", function () {
+        if (Math.abs(audio.currentTime - lastAllowedAudioTime) > 1.5) {
+          audio.currentTime = lastAllowedAudioTime;
+          registerViolation("AUDIO_SEEK_ATTEMPT", "an attempt to seek, replay, or skip the listening audio was detected");
+        }
+      });
+      audio.addEventListener("ended", function () {
+        const btn = document.getElementById("btnPlayAudio");
+        const msg = document.getElementById("audio-msg");
+        if (btn) { btn.disabled = true; btn.textContent = "✅ Audio selesai"; }
+        if (msg) msg.textContent = "Audio has finished. Please continue answering the questions.";
+        try { audio.removeAttribute("src"); audio.load(); } catch (e) {}
+      });
+    }
+
+    function stopListeningAudio() {
+      const audio = document.getElementById("listeningAudio");
+      if (!audio) return;
+      try { audio.pause(); audio.currentTime = 0; audio.removeAttribute("src"); audio.load(); } catch (e) { console.warn("Audio stop failed:", e); }
+      audioProtectionInitialized = false;
+      lastAllowedAudioTime = 0;
+    }
+
+    /************************************************************
+     * VIOLATION DETECTION
+     ************************************************************/
+
+    function registerViolation(type, detail) {
+      if (isSecurityPaused()) return;
+      if (isFinished || examLocked) return;
+      violationLog.push({ type: type, detail: detail, time: new Date().toISOString() });
+      const count = violationLog.length;
+      if (count < MAX_VIOLATIONS) {
+        showToast(`Peringatan ${count}/${MAX_VIOLATIONS}: aktivitas berpotensi melanggar aturan ujian tercatat.`);
+      } else {
+        completionStatus = "LOCKED";
+        examLocked = true;
+        showToast("Batas pelanggaran tercapai. Ujian dikunci.");
+        if (AUTO_SUBMIT_ON_MAX_VIOLATION) submitFinalData("AUTO_SUBMITTED");
+        else submitFinalData("LOCKED");
+      }
+    }
+
+    document.addEventListener("visibilitychange", function() {
+      if (document.hidden && !isSecurityPaused()) {
+        registerViolation("PAGE_HIDDEN_OR_TAB_SWITCH", "the test page was hidden or the participant switched tabs");
+      }
+    });
+
+    window.addEventListener("blur", function() {
+      setTimeout(function() {
+        if (!isSecurityPaused() && document.visibilityState === "visible") {
+          registerViolation("WINDOW_FOCUS_LOST", "the test window lost focus");
+        }
+      }, 250);
+    });
+
+    document.addEventListener("copy", function(e) { e.preventDefault(); if (!isSecurityPaused()) registerViolation("COPY_ATTEMPT", "a copy attempt was detected"); });
+    document.addEventListener("paste", function(e) { e.preventDefault(); if (!isSecurityPaused()) registerViolation("PASTE_ATTEMPT", "a paste attempt was detected"); });
+    document.addEventListener("contextmenu", function(e) { e.preventDefault(); if (!isSecurityPaused()) registerViolation("RIGHT_CLICK_ATTEMPT", "a right click/context menu attempt was detected"); });
+    document.addEventListener("fullscreenchange", function() { if (!document.fullscreenElement && !isSecurityPaused()) registerViolation("FULLSCREEN_EXIT", "the participant exited fullscreen mode"); });
+
+    window.addEventListener("beforeunload", function(e) {
+      if (!isFinished && !isSubmitting) {
+        registerViolation("PAGE_LEAVE_ATTEMPT", "the participant attempted to leave or refresh the test page");
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    });
+
+    /************************************************************
+     * SUBMIT
+     ************************************************************/
+
+    async function submitFinalData(reason) {
+      if (isSubmitting) return;
+      isSubmitting = true;
+      isFinished = true;
+      collectAllAnswersFromDom();
+      if (!sectionTimeLogs.length) logSectionTime(reason || "SUBMITTED");
+      stopSectionTimer();
+      stopListeningAudio();
+
+      completionStatus = reason === "LOCKED" ? "LOCKED" : reason === "AUTO_SUBMITTED" ? "AUTO_SUBMITTED" : "COMPLETED";
+
+      const payload = {
+        nama: userData.nama,
+        npm: userData.npm,
+        kelas: userData.kelas,
+        email: userData.email,
+        testDate: new Date().toISOString(),
+        testType: "LISTENING_ONLY",
+        answers: { listening: answers.listening },
+        violations: violationLog,
+        completionStatus: completionStatus,
+        sectionTimeLogs: sectionTimeLogs
+      };
+
+      const submitBtn = document.getElementById("submit-btn");
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Submitting..."; }
+
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+        document.getElementById("exam-page").classList.add("hidden");
+        document.getElementById("finish-page").classList.remove("hidden");
+        window.scrollTo(0, 0);
+      } catch (error) {
+        console.error(error);
+        isSubmitting = false;
+        isFinished = false;
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = "Submit Listening Test"; }
+        showToast("Submission failed. Please check your internet connection and try again.");
+      }
+    }
+  </script>
+</body>
+</html>
