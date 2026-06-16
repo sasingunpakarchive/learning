@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TOEFL PEEC</title>
+
   <style>
     :root {
       --purple: #6d28d9;
@@ -82,7 +83,9 @@
       color: var(--text);
     }
 
-    input[type="text"], input[type="email"], select {
+    input[type="text"],
+    input[type="email"],
+    select {
       width: 100%;
       padding: 13px 14px;
       border: 1.5px solid var(--border);
@@ -92,7 +95,8 @@
       outline: none;
     }
 
-    input:focus, select:focus {
+    input:focus,
+    select:focus {
       border-color: var(--purple);
       box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.12);
     }
@@ -138,6 +142,7 @@
       margin-bottom: 18px;
       box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
       font-size: 14px;
+      flex-wrap: wrap;
     }
 
     .status-pill {
@@ -148,6 +153,25 @@
       color: var(--purple-dark);
       font-weight: 700;
       white-space: nowrap;
+    }
+
+    #timer-display {
+      background: #ede9fe;
+      color: #4c1d95;
+      font-weight: 900;
+      min-width: 92px;
+      text-align: center;
+      letter-spacing: 0.4px;
+    }
+
+    #timer-display.warning {
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    #timer-display.danger {
+      background: #fef2f2;
+      color: #991b1b;
     }
 
     .instruction {
@@ -169,7 +193,12 @@
     }
 
     .audio-icon { font-size: 34px; margin-bottom: 8px; }
-    .audio-msg { color: var(--danger); font-size: 13px; font-weight: 700; }
+
+    .audio-msg {
+      color: var(--danger);
+      font-size: 13px;
+      font-weight: 700;
+    }
 
     .passage {
       background: #fffbeb;
@@ -242,6 +271,26 @@
       font-weight: 700;
     }
 
+    .master-unlock-panel {
+      margin-top: 16px;
+      padding: 16px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 14px;
+      color: #7c2d12;
+      text-align: left;
+      font-weight: 500;
+    }
+
+    .master-unlock-panel input {
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    .master-unlock-panel button {
+      width: auto;
+    }
+
     .footer-credit {
       text-align: center;
       font-size: 11px;
@@ -249,7 +298,6 @@
       margin-top: 20px;
       font-style: italic;
     }
-
 
     .toast-message {
       position: fixed;
@@ -317,9 +365,11 @@
       .button-row { flex-direction: column; }
       button { width: 100%; }
       .passage { max-height: 360px; }
+      .master-unlock-panel button { width: 100%; }
     }
   </style>
 </head>
+
 <body>
   <header class="top-header">
     <h1>PEEC TOEFL Test</h1>
@@ -329,8 +379,10 @@
   <main class="container">
     <section id="login-page" class="card">
       <h2>Student Login</h2>
+
       <div class="note">
-        Silakan isi identitas dengan benar. Kelas dipilih melalui dropdown. Sistem akan mencatat aktivitas yang berpotensi melanggar integritas ujian.
+        Silakan isi identitas dengan benar. Kelas dipilih melalui dropdown.
+        Sistem akan mencatat aktivitas yang berpotensi melanggar integritas ujian.
       </div>
 
       <div class="input-group">
@@ -361,13 +413,14 @@
         <input type="email" id="email" placeholder="Contoh: nama.mahasiswa@email.com" autocomplete="email" required>
       </div>
 
-      <button class="full-btn" type="button" onclick="startExam()">Mulai Ujian</button>
-      <p class="footer-credit">Developed by Padel M. Rallie Rivaldy, M.Hum.</p>
+      <button id="start-btn" class="full-btn" type="button" onclick="startExam()">Mulai Ujian</button>
+      <p class="footer-credit">Facilitated by Padel M. Rallie Rivaldy, M.Hum.</p>
     </section>
 
     <section id="exam-page" class="hidden">
       <div class="status-bar">
         <span id="display-info"></span>
+        <span class="status-pill" id="timer-display">00:00</span>
         <span class="status-pill" id="violation-display">Integrity Warning: 0/3</span>
       </div>
 
@@ -376,8 +429,9 @@
         <div id="section-progress" class="note"></div>
         <div id="exam-content"></div>
         <div id="lock-message" class="hidden locked-box"></div>
+
         <div class="button-row">
-          <button id="next-btn" type="button" onclick="submitSection()">Submit & Lanjut</button>
+          <button id="next-btn" class="exam-control" type="button" onclick="submitSection()">Submit & Lanjut</button>
         </div>
       </div>
     </section>
@@ -387,11 +441,25 @@
   <div id="integrity-notice" class="integrity-notice" role="alert" aria-live="assertive"></div>
 
   <script>
-    
+    /************************************************************
+     * CONFIGURATION
+     ************************************************************/
+
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx6d6et3gbMleirr5v3b3--bHlcwoF_Kp0d9vPnVDTb75t7FfMaXDUPQBgLG3-0Vaj3/exec";
 
     const MAX_VIOLATIONS = 3;
-    const AUTO_SUBMIT_ON_MAX_VIOLATION = false;
+    const SECURITY_GRACE_MS = 5000;
+    const VIOLATION_COOLDOWN_MS = 8000;
+
+    const SECTION_DURATIONS = {
+      listening: 35 * 60,
+      structure: 30 * 60,
+      reading: 55 * 60
+    };
+
+    /************************************************************
+     * STATE
+     ************************************************************/
 
     let currentSectionIdx = 0;
     let userData = {};
@@ -399,9 +467,22 @@
     let isSubmitting = false;
     let isLocked = false;
     let completionStatus = "COMPLETED";
-    let lastViolationAt = 0;
-    let audioLastPlayedTime = 0;
+
     let securityPausedUntil = 0;
+    let securityInitialized = false;
+
+    let sectionTimer = null;
+    let sectionEndTime = null;
+    let sectionStartedAt = null;
+    let sectionTimeRemaining = 0;
+    let timeUpHandled = false;
+    let sectionTimeLogs = [];
+
+    let pendingViolations = {};
+    let violationCooldown = {};
+
+    let audioLastPlayedTime = 0;
+    let audioStarted = false;
 
     const answers = {
       listening: {},
@@ -411,173 +492,186 @@
 
     const violationLog = [];
 
+    /************************************************************
+     * EXAM DATA
+     ************************************************************/
+
     const examData = [
-        {
-            title: "SECTION 1 — LISTENING COMPREHENSION",
-            // URL AUDIO DIMASUKKAN DI SINI
-            audioUrl: "https://sasingunpakarchive.github.io/learning/Audio%20EAS%202026.mp3",
-            instr: `<b>Time — approximately 35 minutes<br>(including the reading of the directions for each part)</b><br><br>In this section of the test, you will have an opportunity to demonstrate your ability to understand conversations and talks in English. Answer all the questions on the basis of what is stated or implied by the speakers you hear.`,
-            questions: [
-                { o: ["(A) Carla does not live very far away.", "(B) What Carla said was unjust.", "(C) He does not fear what anyone says.", "(D) Carla is fairly rude to others."] },
-                { o: ["(A) She thinks it is an improvement.", "(B) The fir trees in it are better.", "(C) It resembles the last one.", "(D) It is the best the man has ever done."] },
-                { o: ["(A) He graduated last in his class.", "(B) He is the last person in his family to graduate.", "(C) He does not believe he can improve gradually.", "(D) He has finally finished his studies."] },
-                { o: ["(A) He is surprised there were five dresses.", "(B) It was an unexpectedly inexpensive dress.", "(C) He would like to know what color dress it was.", "(D) The dress was not cheap."] },
-                { o: ["(A) Leave the car somewhere else.", "(B) Ignore the parking tickets.", "(C) Add more money to the meter.", "(D) Pay the parking attendant."] },
-                { o: ["(A) He does not like to hold too many books at one time.", "(B) There is no bookstore in his neighborhood.", "(C) It is not possible to obtain the book yet.", "(D) He needs to talk to someone at the bookstore."] },
-                { o: ["(A) It was incomplete.", "(B) It finished on time.", "(C) It was about honor.", "(D) It was too long."] },
-                { o: ["(A) She needs to use the man’s notes.", "(B) Yesterday’s physics class was quite boring.", "(C) She took some very good notes in physics class.", "(D) She would like to lend the man her notes."] },
-                { o: ["(A) It is her birthday today.", "(B) She is looking for a birthday gift.", "(C) She wants to go shopping with her dad.", "(D) She wants a new wallet for herself."] },
-                { o: ["(A) He prefers cold water.", "(B) His toes are too big.", "(C) The pool felt quite refreshing.", "(D) He did not go for a swim."] },
-                { o: ["(A) She just left her sister’s house.", "(B) Her sister is not at home.", "(C) She is not exactly sure where her sweater is.", "(D) She does not know where her sister lives."] },
-                { o: ["(A) She does not have time to complete additional reports.", "(B) She cannot finish the reports that she is already working on.", "(C) She is scared of having responsibility for the reports.", "(D) It is not time for the accounting reports to be compiled."] },
-                { o: ["(A) He has had enough exercise.", "(B) He is going to give himself a reward for the hard work.", "(C) He is going to stay on for quite some time.", "(D) He would like to give the woman an exercise machine as a gift."] },
-                { o: ["(A) He cannot see the huge waves.", "(B) The waves are not coming in.", "(C) He would like the woman to repeat what she said.", "(D) He agrees with the woman."] },
-                { o: ["(A) The exam was postponed.", "(B) The man should have studied harder.", "(C) Night is the best time to study for exams.", "(D) She is completely prepared for the exam."] },
-                { o: ["(A) Students who want to change schedules should form a line.", "(B) It is only possible to make four changes in the schedule.", "(C) It is necessary to submit the form quickly.", "(D) Problems occur when people do not wait their turn."] },
-                { o: ["(A) In a mine", "(B) In a jewelry store", "(C) In a clothing store", "(D) In a bank"] },
-                { o: ["(A) A visit to the woman’s family", "(B) The telephone bill", "(C) The cost of a new telephone", "(D) How far away the woman’s family lives"] },
-                { o: ["(A) She has not met her new boss yet.", "(B) She has a good opinion of her boss.", "(C) Her boss has asked her about her impressions of the company.", "(D) Her boss has been putting a lot of pressure on her."] },
-                { o: ["(A) The recital starts in three hours.", "(B) He intends to recite three different poems.", "(C) He received a citation on the third of the month.", "(D) He thinks the performance begins at three."] },
-                { o: ["(A) Choose a new dentist.", "(B) Cure the pain himself.", "(C) Make an appointment with his dentist.", "(D) Ask his dentist about the right way to brush."] },
-                { o: ["(A) It is almost five o’clock.", "(B) The man does not really need the stamps.", "(C) It is a long way to the post office.", "(D) It would be better to go after five o’clock."] },
-                { o: ["(A) The article was placed on reserve.", "(B) The woman must ask the professor for a copy.", "(C) The woman should look through a number of journals in the library.", "(D) He has reservations about the information in the article."] },
-                { o: ["(A) He needs to take a nap.", "(B) He hopes the woman will help him calm down.", "(C) The woman just woke him up.", "(D) He is extremely relaxed."] },
-                { o: ["(A) She does not think the news report is false.", "(B) She has never before reported on the news.", "(C) She never watches the news on television.", "(D) She shares the man’s opinion about the report."] },
-                { o: ["(A) Management will offer pay raises on Friday.", "(B) The policy has not yet been decided.", "(C) The manager is full of hot air.", "(D) The plane has not yet landed."] },
-                { o: ["(A) He does not believe that it is really snowing.", "(B) The snow had been predicted.", "(C) The exact amount of snow is unclear.", "(D) He expected the woman to go out in the snow."] },
-                { o: ["(A) She is going to take the test over again.", "(B) She thinks she did a good job on the exam.", "(C) She has not yet taken the literature exam.", "(D) She is unhappy with how she did."] },
-                { o: ["(A) The door was unlocked.", "(B) It was better to wait outside.", "(C) He could not open the door.", "(D) He needed to take a walk."] },
-                { o: ["(A) He nailed the door shut.", "(B) He is heading home.", "(C) He hit himself in the head.", "(D) He is absolutely correct."] },
-                { o: ["(A) The haircut is unusually short.", "(B) This is Bob’s first haircut.", "(C) Bob does not know who gave him the haircut.", "(D) After the haircut, Bob’s hair still touches the floor."] },
-                { o: ["(A) It is just what he wanted.", "(B) He enjoys having the latest style.", "(C) He dislikes it immensely.", "(D) He thinks it will be cool in the summer."] },
-                { o: ["(A) A broken mirror", "(B) The hairstylist", "(C) The scissors used to cut his hair", "(D) Piles of his hair"] },
-                { o: ["(A) “You should become a hairstylist.”", "(B) “Please put it back on.”", "(C) “It’ll grow back.”", "(D) “It won’t grow fast enough.”"] },
-                { o: ["(A) Every evening", "(B) Every week", "(C) Every Sunday", "(D) Every month"] },
-                { o: ["(A) That she was eighty-five years old", "(B) That a storm was coming", "(C) That she was under a great deal of pressure", "(D) That she wanted to become a weather forecaster"] },
-                { o: ["(A) In her bones", "(B) In her ears", "(C) In her legs", "(D) In her head"] },
-                { o: ["(A) Call his great-grandmother less often.", "(B) Watch the weather forecasts with his great-grandmother.", "(C) Help his great-grandmother relieve some of her pressures.", "(D) Believe his great-grandmother’s predictions about the weather."] },
-                { o: ["(A) In a car", "(B) On a hike", "(C) On a tram", "(D) In a lecture hall"] },
-                { o: ["(A) It means they have big tears.", "(B) It means they like to swim.", "(C) It means they look like crocodiles.", "(D) It means they are pretending to be sad."] },
-                { o: ["(A) They are sad.", "(B) They are warming themselves.", "(C) They are getting rid of salt.", "(D) They regret their actions."] },
-                { o: ["(A) Taking photographs", "(B) Getting closer to the crocodiles", "(C) Exploring the water’s edge", "(D) Getting off the tram"] },
-                { o: ["(A) Water Sports", "(B) Physics", "(C) American History", "(D) Psychology"] },
-                { o: ["(A) To cut", "(B) To move fast", "(C) To steer a boat", "(D) To build a ship"] },
-                { o: ["(A) To bring tea from China", "(B) To transport gold to California", "(C) To trade with the British", "(D) To sail the American river system"] },
-                { o: ["(A) A reading assignment", "(B) A quiz on Friday", "(C) A research paper for the end of the semester", "(D) Some written homework"] },
-                { o: ["(A) Writers", "(B) Actors", "(C) Athletes", "(D) Musicians"] },
-                { o: ["(A) He or she would see butterflies.", "(B) He or she would break a leg.", "(C) He or she would have shaky knees.", "(D) He or she would stop breathing."] },
-                { o: ["(A) By staring at the audience", "(B) By breathing shallowly", "(C) By thinking about possible negative outcomes", "(D) By focusing on what needs to be done"] },
-                { o: ["(A) At two o’clock", "(B) At four o’clock", "(C) At six o’clock", "(D) At eight o’clock"] }
-            ]
-        },
-        {
-            title: "SECTION 2 — STRUCTURE AND WRITTEN EXPRESSION",
-            instr: `<b>Time — 25 minutes</b><br>This section is designed to measure your ability to recognize language that is appropriate for standard written English.`,
-            questions: [
-                { q: "1. ________, the outermost layer of skin, is about as thick as a sheet of paper over most of the skin.", o: ["(A) It is the epidermis", "(B) In the epidermis", "(C) The epidermis", "(D) The epidermis is"] },
-                { q: "2. Sam Spade in The Maltese Falcon and Rick Blaine in Casablanca ________ two of Humphrey Bogart’s more famous roles.", o: ["(A) they are two", "(B) two of them are", "(C) two of them", "(D) are two"] },
-                { q: "3. The compound microscope has not one ________ two lenses.", o: ["(A) and also", "(B) but", "(C) and there are", "(D) but there are"] },
-                { q: "4. During the Precambrian period, the Earth’s crust formed, and life ________ in the seas.", o: ["(A) first appeared", "(B) first to appear", "(C) is first appearing", "(D) appearing"] },
-                { q: "5. The hard palate forms a partition ________ and nasal passages.", o: ["(A) the mouth", "(B) between the mouth", "(C) is between the mouth", "(D) it is between the mouth"] },
-                { q: "6. Conditions required for seed germination include abundant water, an adequate supply of oxygen, and ________.", o: ["(A) the temperatures must be appropriate", "(B) having appropriate temperatures", "(C) appropriate temperatures", "(D) appropriately temperate"] },
-                { q: "7. When fluid accumulates against the eardrum, a second more insidious type of ________.", o: ["(A) otitis media may develop", "(B) developing otitis media", "(C) the development of otitis media", "(D) to develop otitis media"] },
-                { q: "8. Some general theories of motivation ________ of central motives, from which other motives develop.", o: ["(A) identify a limited number", "(B) identification of a limited amount", "(C) identify a limited amount", "(D) identifying a limited number"] },
-                { q: "9. Before the Statue of Liberty arrived in the United States, newspapers invited the public to help determine where ________ placed after its arrival.", o: ["(A) should the statue be", "(B) the statue being", "(C) it should be the statue", "(D) the statue should be"] },
-                { q: "10. Hydroelectric power can be produced by ________ and using tidal flow to run turbines.", o: ["(A) water basins are dammed", "(B) damming water basins", "(C) to dam water basins", "(D) dams in water basins"] },
-                { q: "11. Abraham Lincoln and Jefferson Davis, ________ of the Union and the Confederacy during the Civil War, were both born in Kentucky.", o: ["(A) they were opposing presidents", "(B) were opposing presidents", "(C) opposing presidents", "(D) presidents opposed"] },
-                { q: "12. A stock ________ at an inflated price is called a watered stock.", o: ["(A) issued", "(B) is issued", "(C) it is issued", "(D) which issued"] },
-                { q: "13. The leaves of the white mulberry provide food for silkworms, ________ silk fabrics are woven.", o: ["(A) whose cocoons", "(B) from cocoons", "(C) whose cocoons are from", "(D) from whose cocoons"] },
-                { q: "14. Not only ________ generate energy, but it also produces fuel for other fission reactors.", o: ["(A) a nuclear breeder reactor", "(B) it is a nuclear breeder reactor", "(C) does a nuclear breeder reactor", "(D) is a nuclear breeder reactor"] },
-                { q: "15. D. W. Griffith pioneered many of the stylistic features and filmmaking techniques ________ as the Hollywood standard.", o: ["(A) that established", "(B) that became established", "(C) what established", "(D) what became established"] },
-                { qHtml: `16. Mosquitoes <span class="underlined-choice">will accepts <span class="choice-label">(A)</span></span> <span class="underlined-choice">the malaria <span class="choice-label">(B)</span></span> parasite at <span class="underlined-choice">only one <span class="choice-label">(C)</span></span> stage of the parasite’s complex <span class="underlined-choice">life cycle <span class="choice-label">(D)</span></span>.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `17. The <span class="underlined-choice">counterpart <span class="choice-label">(A)</span></span> <span class="underlined-choice">of <span class="choice-label">(B)</span></span> a negative <span class="underlined-choice">electrons <span class="choice-label">(C)</span></span> is the <span class="underlined-choice">positive <span class="choice-label">(D)</span></span> proton.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `18. The ankle joint <span class="underlined-choice">occur <span class="choice-label">(A)</span></span> where the <span class="underlined-choice">lower <span class="choice-label">(B)</span></span> ends of the tibia and fibula slot <span class="underlined-choice">neatly <span class="choice-label">(C)</span></span> <span class="underlined-choice">around <span class="choice-label">(D)</span></span> the talus.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `19. In the United States and Canada, motor <span class="underlined-choice">vehicle <span class="choice-label">(A)</span></span> laws <span class="underlined-choice">affect <span class="choice-label">(B)</span></span> the <span class="underlined-choice">operate <span class="choice-label">(C)</span></span> of motorcycles as <span class="underlined-choice">well as <span class="choice-label">(D)</span></span> automobiles.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `20. The neocortex <span class="underlined-choice">is <span class="choice-label">(A)</span></span>, in evolutionary <span class="underlined-choice">terms <span class="choice-label">(B)</span></span>, <span class="underlined-choice">most <span class="choice-label">(C)</span></span> recent <span class="underlined-choice">layer <span class="choice-label">(D)</span></span> of the brain.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `21. <span class="underlined-choice">There are <span class="choice-label">(A)</span></span> more than eighty-four million <span class="underlined-choice">specimens <span class="choice-label">(B)</span></span> in the National Museum of Natural History’s <span class="underlined-choice">collection <span class="choice-label">(C)</span></span> of biological, geological, archaeological, and <span class="underlined-choice">anthropology <span class="choice-label">(D)</span></span> treasures.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `22. <span class="underlined-choice">After <span class="choice-label">(A)</span></span> George Washington married <span class="underlined-choice">widow <span class="choice-label">(B)</span></span> Martha Custis, the couple <span class="underlined-choice">came <span class="choice-label">(C)</span></span> to <span class="underlined-choice">resides <span class="choice-label">(D)</span></span> at Mount Vernon.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `23. <span class="underlined-choice">At this <span class="choice-label">(A)</span></span> stage in their development, <span class="underlined-choice">rubberized <span class="choice-label">(B)</span></span> asphalt can <span class="underlined-choice">hardly <span class="choice-label">(C)</span></span> be classified <span class="underlined-choice">as <span class="choice-label">(D)</span></span> cutting edge.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `24. Rhesus monkeys <span class="underlined-choice">exhibit <span class="choice-label">(A)</span></span> patterns of <span class="underlined-choice">shy <span class="choice-label">(B)</span></span> <span class="underlined-choice">similar to <span class="choice-label">(C)</span></span> <span class="underlined-choice">those <span class="choice-label">(D)</span></span> in humans.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `25. In space, with <span class="underlined-choice">no <span class="choice-label">(A)</span></span> gravity for muscles to <span class="underlined-choice">work against <span class="choice-label">(B)</span></span>, the <span class="underlined-choice">body <span class="choice-label">(C)</span></span> becomes <span class="underlined-choice">weakly <span class="choice-label">(D)</span></span>.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `26. Fort Jefferson, in the Dry Tortugas <span class="underlined-choice">off <span class="choice-label">(A)</span></span> the southern <span class="underlined-choice">tip <span class="choice-label">(B)</span></span> of Florida, can be <span class="underlined-choice">reach <span class="choice-label">(C)</span></span> only <span class="underlined-choice">by <span class="choice-label">(D)</span></span> boat or plane.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `27. <span class="underlined-choice">A <span class="choice-label">(A)</span></span> zoom lens <span class="underlined-choice">produces <span class="choice-label">(B)</span></span> an <span class="underlined-choice">inverted <span class="choice-label">(C)</span></span> real image, either on the film in a camera <span class="underlined-choice">and <span class="choice-label">(D)</span></span> on the light-sensitive tube of a television camera.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `28. <span class="underlined-choice">Supersonic <span class="choice-label">(A)</span></span> flight is flight <span class="underlined-choice">that <span class="choice-label">(B)</span></span> is <span class="underlined-choice">faster <span class="choice-label">(C)</span></span> the speed of <span class="underlined-choice">sound <span class="choice-label">(D)</span></span>.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `29. The Betataken House Ruins at Navajo National Monument <span class="underlined-choice">is <span class="choice-label">(A)</span></span> among the <span class="underlined-choice">largest <span class="choice-label">(B)</span></span> and most <span class="underlined-choice">elaborate <span class="choice-label">(C)</span></span> cliff dwellings in the <span class="underlined-choice">country <span class="choice-label">(D)</span></span>.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `30. It is a <span class="underlined-choice">common <span class="choice-label">(A)</span></span> observation that liquids will <span class="underlined-choice">soak <span class="choice-label">(B)</span></span> through some materials <span class="underlined-choice">but not <span class="choice-label">(C)</span></span> through <span class="underlined-choice">other <span class="choice-label">(D)</span></span>.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `31. The number of wild <span class="underlined-choice">horses <span class="choice-label">(A)</span></span> on Assateague <span class="underlined-choice">are <span class="choice-label">(B)</span></span> increasing lately, <span class="underlined-choice">resulting <span class="choice-label">(C)</span></span> in <span class="underlined-choice">overgrazed <span class="choice-label">(D)</span></span> marsh and dune grasses.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `32. The newsreels of Hearst Metrotone News, which formed part of <span class="underlined-choice">every <span class="choice-label">(A)</span></span> moviegoer’s experience in the era before <span class="underlined-choice">television <span class="choice-label">(B)</span></span>, offer <span class="underlined-choice">an <span class="choice-label">(C)</span></span> unique record of the <span class="underlined-choice">events <span class="choice-label">(D)</span></span> of the 1930s.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `33. <span class="underlined-choice">Unlikely <span class="choice-label">(A)</span></span> gas <span class="underlined-choice">sport <span class="choice-label">(B)</span></span> balloons, hot air balloons <span class="underlined-choice">do not have <span class="choice-label">(C)</span></span> <span class="underlined-choice">nets <span class="choice-label">(D)</span></span>.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `34. <span class="underlined-choice">Born <span class="choice-label">(A)</span></span> in Massachusetts in 1852, Albert Fairbanks <span class="underlined-choice">has begun <span class="choice-label">(B)</span></span> <span class="underlined-choice">making <span class="choice-label">(C)</span></span> banjos in Boston in the <span class="underlined-choice">late <span class="choice-label">(D)</span></span> 1870s.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `35. Dwight David Eisenhower, military <span class="underlined-choice">officer <span class="choice-label">(A)</span></span> and thirty-fourth president of the United States, <span class="underlined-choice">lived <span class="choice-label">(B)</span></span> in the White House and <span class="underlined-choice">of least <span class="choice-label">(C)</span></span> thirty-seven <span class="underlined-choice">other <span class="choice-label">(D)</span></span> residences.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `36. Methane in wetlands <span class="underlined-choice">comes <span class="choice-label">(A)</span></span> <span class="underlined-choice">from <span class="choice-label">(B)</span></span> soil bacteria that <span class="underlined-choice">consumes <span class="choice-label">(C)</span></span> organic plant <span class="underlined-choice">matter <span class="choice-label">(D)</span></span>.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `37. Alois Alzheimer made the first <span class="underlined-choice">observers <span class="choice-label">(A)</span></span> of the telltale <span class="underlined-choice">signs <span class="choice-label">(B)</span></span> of the disease that today <span class="underlined-choice">bears <span class="choice-label">(C)</span></span> his <span class="underlined-choice">name <span class="choice-label">(D)</span></span>.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `38. Edward MacDowell <span class="underlined-choice">remembers <span class="choice-label">(A)</span></span> as the <span class="underlined-choice">composer <span class="choice-label">(B)</span></span> of such <span class="underlined-choice">perennial <span class="choice-label">(C)</span></span> <span class="underlined-choice">favorites <span class="choice-label">(D)</span></span> as “To a Wild Rose” and “To a Water Lily.”`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `39. Animism is the <span class="underlined-choice">belief <span class="choice-label">(A)</span></span> that objects and <span class="underlined-choice">natural phenomena <span class="choice-label">(B)</span></span> such as rivers, rocks, and wind are <span class="underlined-choice">live <span class="choice-label">(C)</span></span> and have <span class="underlined-choice">feelings <span class="choice-label">(D)</span></span>.`, o: ["(A)","(B)","(C)","(D)"] },
-                { qHtml: `40. Newtonian physics <span class="underlined-choice">accounts <span class="choice-label">(A)</span></span> <span class="underlined-choice">for <span class="choice-label">(B)</span></span> the <span class="underlined-choice">observing <span class="choice-label">(C)</span></span> <span class="underlined-choice">orbits <span class="choice-label">(D)</span></span> of the planets and the moons.`, o: ["(A)","(B)","(C)","(D)"] }
-            ]
-        },
-        {
-            title: "SECTION 3 — READING COMPREHENSION",
-            instr: "Read the passages and choose the best answer for each question based on the text provided.",
-            questions: [
-                { passage: `<b>Questions 1–10</b><br><br>The hippopotamus is the third largest land animal, smaller only than the elephant and the rhinoceros. Its name comes from two Greek words which mean “river horse.” The long name of this animal is often shortened to the easier-to-handle term “hippo.”<br><br>The hippo has a natural affinity for the water. It does not float on top of the water; instead, it can easily walk along the bottom of a body of water. The hippo commonly remains underwater for three to five minutes and has been known to stay under for up to half an hour before coming up for air.<br><br>In spite of its name, the hippo has relatively little in common with the horse and instead has a number of interesting similarities in common with the whale. When a hippo comes up after a stay at the bottom of a lake or river, it releases air through a blowhole, just like a whale. In addition, the hippo resembles the whale in that they both have thick layers of blubber for protection and they are almost completely hairless.`, 
-                  q: "1. The topic of this passage is", o: ["(A) the largest land animals", "(B) the derivations of animal names", "(C) the characteristics of the hippo", "(D) the relation between the hippo and the whale"] },
-                { q: "2. It can be inferred from the passage that the rhinoceros is", o: ["(A) smaller than the hippo", "(B) equal in size to the elephant", "(C) a hybrid of the hippo and the elephant", "(D) one of the two largest types of land animals"] },
-                { q: "3. The possessive “Its” in sentence 2 refers to", o: ["(A) hippopotamus", "(B) elephant", "(C) rhinoceros", "(D) horse"] },
-                { q: "4. It can be inferred from the passage that the hippopotamus is commonly called a hippo because the word “hippo” is", o: ["(A) simpler to pronounce", "(B) scientifically more accurate", "(C) the original name", "(D) easier for the animal to recognize"] },
-                { q: "5. The word “float” in paragraph 2 is closest in meaning to", o: ["(A) sink", "(B) drift", "(C) eat", "(D) flap"] },
-                { q: "6. According to the passage, what is the maximum time that hippos have been known to stay underwater?", o: ["(A) Three minutes", "(B) Five minutes", "(C) Thirty minutes", "(D) Ninety minutes"] },
-                { q: "7. The expression “has relatively little in common” in paragraph 3 could best be replaced by", o: ["(A) has few interactions", "(B) is not normally found", "(C) has minimal experience", "(D) shares few similarities"] },
-                { q: "8. The passage states that one way in which a hippo is similar to a whale is that", o: ["(A) they both live on the bottoms of rivers", "(B) they both have blowholes", "(C) they are both named after horses", "(D) they both breathe underwater"] },
-                { q: "9. The word “blubber” in the last paragraph is closest in meaning to", o: ["(A) fat", "(B) metal", "(C) water", "(D) skin"] },
-                { q: "10. The passage states that the hippo does not", o: ["(A) like water", "(B) resemble the whale", "(C) have a protective coating", "(D) have much hair"] },
-                { passage: `<b>Questions 11–19</b><br><br>John James Audubon, nineteenth-century artist and naturalist, is known as one of the foremost authorities on North American birds. Born in Les Cayes, Haiti, in 1785, Audubon was raised in France and studied art under French artist Jacques-Louis David. After settling on his father’s Pennsylvania estate at the age of eighteen, he first began to study and paint birds.<br><br>In his young adulthood, Audubon undertook numerous enterprises, generally without a tremendous amount of success; at various times during his life he was involved in a mercantile business, a lumber and grist mill, a taxidermy business, and a school. His general mode of operating a business was to leave it either unattended or in the hands of a partner and take off on excursions through the wilds to paint the natural life that he saw. His business career came to an end in 1819 when he was jailed for debt and forced to file for bankruptcy.<br><br>It was at that time that Audubon began seriously to pursue the dream of publishing a collection of his paintings of birds. For the next six years he painted birds in their natural habitats while his wife worked as a teacher to support the family. His Birds of America, which included engravings of 435 of his colorful and lifelike watercolors, was published in parts during the period from 1826 to 1838 in England. After the success of the English editions, American editions of his work were published in 1839, and his fame and fortune were ensured.`,
-                  q: "11. This passage is mainly about", o: ["(A) North American birds", "(B) Audubon’s route to success as a painter of birds", "(C) the works that Audubon published", "(D) Audubon’s preference for travel in natural habitats"] },
-                { q: "12. The word “foremost” in paragraph 1 is closest in meaning to", o: ["(A) prior", "(B) leading", "(C) first", "(D) largest"] },
-                { q: "13. In the second paragraph, the author mainly discusses", o: ["(A) how Audubon developed his painting style", "(B) Audubon’s involvement in a mercantile business", "(C) where Audubon went on his excursions", "(D) Audubon’s unsuccessful business practices"] },
-                { q: "14. The word “mode” in paragraph 2 could best be replaced by", o: ["(A) method", "(B) vogue", "(C) average", "(D) trend"] },
-                { q: "15. Audubon decided not to continue to pursue business when", o: ["(A) he was injured in an accident at a grist mill", "(B) he decided to study art in France", "(C) he was put in prison because he owed money", "(D) he made enough money from his paintings"] },
-                { q: "16. The word “pursue” in paragraph 3 is closest in meaning to", o: ["(A) imagine", "(B) share", "(C) follow", "(D) deny"] },
-                { q: "17. According to the passage, Audubon’s paintings", o: ["(A) were realistic portrayals", "(B) used only black, white, and gray", "(C) were done in oils", "(D) depicted birds in cages"] },
-                { q: "18. The word “support” in paragraph 2 could best be replaced by", o: ["(A) tolerate", "(B) provide for", "(C) side with", "(D) fight for"] },
-                { q: "19. It can be inferred from the passage that after 1839 Audubon", o: ["(A) unsuccessfully tried to develop new businesses", "(B) continued to be supported by his wife", "(C) traveled to Europe", "(D) became wealthy"] },
-                { passage: `<b>Questions 20–29</b><br><br>Schizophrenia is often confused with multiple personality disorder, yet is quite distinct from it. Schizophrenia is one of the more common mental disorders, considerably more common than multiple personality disorder. The term “schizophrenia” is composed of roots which mean “a splitting of the mind,” but it does not refer to a division into separate and distinct personalities, as occurs in multiple personality disorder. Instead, schizophrenic behavior is generally characterized by illogical thought patterns and withdrawal from reality. Schizophrenics often live in a fantasy world where they hear voices that others cannot hear, often voices of famous people. Schizophrenics tend to withdraw from families and friends and communicate mainly with the “voices” that they hear in their minds.<br><br>It is common for the symptoms of schizophrenia to develop during the late teen years or early twenties, but the causes of schizophrenia are not well understood. It is believed that heredity may play a part in the onset of schizophrenia. In addition, abnormal brain chemistry also seems to have a role; certain brain chemicals, called neurotransmitters, have been found to be at abnormal levels in some schizophrenics.`,
-                  q: "20. The paragraph preceding the passage most probably discusses", o: ["(A) the causes of schizophrenia", "(B) multiple personality disorder", "(C) the most common mental disorder", "(D) possible cures for schizophrenia"] },
-                { q: "21. Which of the following is true about schizophrenia and multiple personality disorder?", o: ["(A) They are relatively similar.", "(B) One is a psychological disorder, while the other is not.", "(C) Many people mistake one for the other.", "(D) Multiple personality disorder occurs more often than schizophrenia."] },
-                { q: "22. “Disorder” in sentence 2 is closest in meaning to which of the following?", o: ["(A) Disruption", "(B) Untidiness", "(C) Misalignment", "(D) Disease"] },
-                { q: "23. It can be inferred from the passage that a “schism” is", o: ["(A) a division into factions", "(B) a mental disease", "(C) a personality trait", "(D) a part of the brain"] },
-                { q: "24. What is NOT true about schizophrenia, according to the passage?", o: ["(A) It is characterized by separate and distinct personalities.", "(B) It often causes withdrawal from reality.", "(C) Its symptoms include illogical thought patterns.", "(D) Its victims tend to hear voices in their minds."] },
-                { q: "25. According to the passage, how do schizophrenics generally relate to their families?", o: ["(A) They are quite friendly with their families.", "(B) They become remote from their families.", "(C) They have an enhanced ability to understand their families.", "(D) They communicate openly with their families."] },
-                { q: "26. It can be inferred from the passage that it would be least common for schizophrenia to develop at the age of", o: ["(A) fifteen", "(B) twenty", "(C) twenty-five", "(D) thirty"] },
-                { q: "27. The word “onset” in paragraph 2 is closest in meaning to", o: ["(A) start", "(B) medication", "(C) effect", "(D) age"] },
-                { q: "28. The word “abnormal” in the last paragraph is closest in meaning to", o: ["(A) unstable", "(B) unregulated", "(C) uncharted", "(D) unusual"] },
-                { q: "29. Where in the passage does the author explain the derivation of the term “schizophrenia”?", o: ["(A) Sentence 3–4", "(B) Sentence 4–5", "(C) Sentence 6", "(D) Paragraph 2"] },
-                { passage: `<b>Questions 30–39</b><br><br>People are often surprised to learn just how long some varieties of trees can live. If asked to estimate the age of the oldest living trees on Earth, they often come up with guesses in the neighborhood of two or perhaps three hundred years. The real answer is considerably larger than that, more than five thousand years.<br><br>The tree that wins the prize for its considerable maturity is the bristlecone pine of California. This venerable pine predates wonders of the ancient world such as the pyramids of Egypt, the Hanging Gardens of Babylon, and the Colossus of Rhodes. It is not nearly as tall as the giant redwood that is also found in California, and, in fact, it is actually not very tall compared with many other trees, often little more than five meters in height. This relatively short height may be one of the factors that aid the bristlecone pine in living to a ripe old age—high winds and inclement weather cannot easily reach the shorter trees and cause damage. An additional factor that contributes to the long life of the bristlecone pine is that this type of tree has a high percentage of resin, which prevents rot from developing in the tree trunk and branches.`,
-                  q: "30. The best title for this passage would be", o: ["(A) The Size of the Bristlecone Pine", "(B) Three-Hundred-Year-Old Forests", "(C) The Wonders of the Ancient World", "(D) An Amazingly Enduring Tree"] },
-                { q: "31. The word “estimate” in sentence 2 is closest in meaning to", o: ["(A) measure", "(B) approximate", "(C) evaluate", "(D) view"] },
-                { q: "32. The expression “in the neighborhood of” in sentence 2 could best be replaced by", o: ["(A) of approximately", "(B) on the same block as", "(C) with the friendliness of", "(D) located close to"] },
-                { q: "33. It can be inferred from the passage that most people", o: ["(A) are quite accurate in their estimates of the ages of trees", "(B) have two to three hundred trees in their neighborhoods", "(C) do not really have any idea how old the oldest trees on Earth are", "(D) can name some three-hundred-year-old trees"] },
-                { q: "34. According to the passage, approximately how old are the oldest trees on Earth?", o: ["(A) Two hundred years old", "(B) Three hundred years old", "(C) Five hundred years old", "(D) Five thousand years old"] },
-                { q: "35. The word “venerable” in paragraph 2 is closest in meaning to", o: ["(A) ancient", "(B) incredible", "(C) towering", "(D) unrecognizable"] },
-                { q: "36. The author mentions the Egyptian pyramids as an example of something that is", o: ["(A) far away", "(B) believed to be strong", "(C) extremely tall", "(D) known to be old"] },
-                { q: "37. Which of the following is true about the bristlecone pine?", o: ["(A) It is as tall as the great pyramids.", "(B) It is never more than five meters in height.", "(C) It is short in comparison to many other trees.", "(D) It can be two to three hundred feet tall."] },
-                { q: "38. The word “inclement” in the last paragraph could best be replaced by", o: ["(A) sunny", "(B) bad", "(C) unusual", "(D) strong"] },
-                { q: "39. The passage states that resin", o: ["(A) assists the tree trunks to develop", "(B) is found only in the bristlecone pine", "(C) flows from the branches to the trunk", "(D) helps stop rot from starting"] },
-                { passage: `<b>Questions 40–50</b><br><br>The organization that today is known as the Bank of America did start out in America, but under quite a different name. Italian American A. P. Giannini established this bank on October 17, 1904, in a renovated saloon in San Francisco’s Italian community of North Beach under the name Bank of Italy, with immigrants and first-time bank customers comprising the majority of his first customers. During its development, Giannini’s bank survived major crises in the form of a natural disaster and a major economic upheaval that not all other banks were able to overcome.<br><br>One major test for Giannini’s bank occurred on April 18, 1906, when a massive earthquake struck San Francisco, followed by a raging fire that destroyed much of the city. Giannini obtained two wagons and teams of horses, filled the wagons with the bank’s reserves, mostly in the form of gold, covered the reserves with crates of oranges, and escaped from the chaos of the city with his clients’ funds protected. In the aftermath of the disaster, Giannini’s bank was the first to resume operations. Unable to install the bank in a proper office setting, Giannini opened up shop on the Washington Street Wharf on a makeshift desk created from boards and barrels.<br><br>In the period following the 1906 fire, the Bank of Italy continued to prosper and expand. By 1918 there were twenty-four branches of the Bank of Italy, and by 1928 Giannini had acquired numerous other banks, including a Bank of America located in New York City. In 1930 he consolidated all the branches of the Bank of Italy, the Bank of America in New York City, and another Bank of America that he had formed in California into the Bank of America National Trust and Savings Association.<br><br>A second major crisis for the bank occurred during the Great Depression of the 1930s. Although Giannini had already retired prior to the darkest days of the Depression, he became incensed when his successor began selling off banks during the bad economic times. Giannini resumed leadership of the bank at the age of sixty-two. Under Giannini’s leadership, the bank weathered the storm of the Depression and subsequently moved into a phase of overseas development.`,
-                  q: "40. According to the passage, Giannini", o: ["(A) opened the Bank of America in 1904", "(B) worked in a bank in Italy", "(C) set up the Bank of America prior to setting up the Bank of Italy", "(D) later changed the name of the Bank of Italy"] },
-                { q: "41. Where did Giannini open his first bank?", o: ["(A) In New York City", "(B) In what used to be a bar", "(C) On Washington Street Wharf", "(D) On a makeshift desk"] },
-                { q: "42. According to the passage, which of the following is NOT true about the San Francisco earthquake?", o: ["(A) It happened in 1906.", "(B) It occurred in the aftermath of a fire.", "(C) It caused problems for Giannini’s bank.", "(D) It was a tremendous earthquake."] },
-                { q: "43. The word “raging” in paragraph 2 could best be replaced by", o: ["(A) angered", "(B) localized", "(C) intense", "(D) feeble"] },
-                { q: "44. It can be inferred from the passage that Giannini used crates of oranges after the earthquake", o: ["(A) to hide the gold", "(B) to fill up the wagons", "(C) to provide nourishment for his customers", "(D) to protect the gold from the fire"] },
-                { q: "45. The word “chaos” in paragraph 2 is closest in meaning to", o: ["(A) legal system", "(B) extreme heat", "(C) overdevelopment", "(D) total confusion"] },
-                { q: "46. The word “consolidated” in paragraph 3 is closest in meaning to", o: ["(A) hardened", "(B) merged", "(C) moved", "(D) sold"] },
-                { q: "47. The passage states that after his retirement, Giannini", o: ["(A) began selling off banks", "(B) caused economic misfortune to occur", "(C) supported the bank’s new management", "(D) returned to work"] },
-                { q: "48. The expression “weathered the storm of” in paragraph 4 could best be replaced by", o: ["(A) found a cure for", "(B) rained on the parade of", "(C) survived the ordeal of", "(D) blew its stack at"] },
-                { q: "49. Where in the passage does the author describe Giannini’s first banking clients?", o: ["(A) Paragraph 1", "(B) First part of paragraph 2", "(C) Last sentence of paragraph 2", "(D) Paragraph 3"] },
-                { q: "50. The paragraph following the passage most likely discusses", o: ["(A) bank failures during the Great Depression", "(B) a third major crisis of the Bank of America", "(C) the international development of the Bank of America", "(D) how Giannini spent his retirement"] }
-            ]
-        }
+      {
+        title: "SECTION 1 — LISTENING COMPREHENSION",
+        audioUrl: "https://sasingunpakarchive.github.io/learning/audio_listening_415.mp3",
+        instr: `<b>Time — approximately 35 minutes<br>(including the reading of the directions for each part)</b><br><br>In this section of the test, you will have an opportunity to demonstrate your ability to understand conversations and talks in English. Answer all the questions on the basis of what is stated or implied by the speakers you hear.`,
+        questions: [
+          { o: ["(A) Carla does not live very far away.", "(B) What Carla said was unjust.", "(C) He does not fear what anyone says.", "(D) Carla is fairly rude to others."] },
+          { o: ["(A) She thinks it is an improvement.", "(B) The fir trees in it are better.", "(C) It resembles the last one.", "(D) It is the best the man has ever done."] },
+          { o: ["(A) He graduated last in his class.", "(B) He is the last person in his family to graduate.", "(C) He does not believe he can improve gradually.", "(D) He has finally finished his studies."] },
+          { o: ["(A) He is surprised there were five dresses.", "(B) It was an unexpectedly inexpensive dress.", "(C) He would like to know what color dress it was.", "(D) The dress was not cheap."] },
+          { o: ["(A) Leave the car somewhere else.", "(B) Ignore the parking tickets.", "(C) Add more money to the meter.", "(D) Pay the parking attendant."] },
+          { o: ["(A) He does not like to hold too many books at one time.", "(B) There is no bookstore in his neighborhood.", "(C) It is not possible to obtain the book yet.", "(D) He needs to talk to someone at the bookstore."] },
+          { o: ["(A) It was incomplete.", "(B) It finished on time.", "(C) It was about honor.", "(D) It was too long."] },
+          { o: ["(A) She needs to use the man’s notes.", "(B) Yesterday’s physics class was quite boring.", "(C) She took some very good notes in physics class.", "(D) She would like to lend the man her notes."] },
+          { o: ["(A) It is her birthday today.", "(B) She is looking for a birthday gift.", "(C) She wants to go shopping with her dad.", "(D) She wants a new wallet for herself."] },
+          { o: ["(A) He prefers cold water.", "(B) His toes are too big.", "(C) The pool felt quite refreshing.", "(D) He did not go for a swim."] },
+          { o: ["(A) She just left her sister’s house.", "(B) Her sister is not at home.", "(C) She is not exactly sure where her sweater is.", "(D) She does not know where her sister lives."] },
+          { o: ["(A) She does not have time to complete additional reports.", "(B) She cannot finish the reports that she is already working on.", "(C) She is scared of having responsibility for the reports.", "(D) It is not time for the accounting reports to be compiled."] },
+          { o: ["(A) He has had enough exercise.", "(B) He is going to give himself a reward for the hard work.", "(C) He is going to stay on for quite some time.", "(D) He would like to give the woman an exercise machine as a gift."] },
+          { o: ["(A) He cannot see the huge waves.", "(B) The waves are not coming in.", "(C) He would like the woman to repeat what she said.", "(D) He agrees with the woman."] },
+          { o: ["(A) The exam was postponed.", "(B) The man should have studied harder.", "(C) Night is the best time to study for exams.", "(D) She is completely prepared for the exam."] },
+          { o: ["(A) Students who want to change schedules should form a line.", "(B) It is only possible to make four changes in the schedule.", "(C) It is necessary to submit the form quickly.", "(D) Problems occur when people do not wait their turn."] },
+          { o: ["(A) In a mine", "(B) In a jewelry store", "(C) In a clothing store", "(D) In a bank"] },
+          { o: ["(A) A visit to the woman’s family", "(B) The telephone bill", "(C) The cost of a new telephone", "(D) How far away the woman’s family lives"] },
+          { o: ["(A) She has not met her new boss yet.", "(B) She has a good opinion of her boss.", "(C) Her boss has asked her about her impressions of the company.", "(D) Her boss has been putting a lot of pressure on her."] },
+          { o: ["(A) The recital starts in three hours.", "(B) He intends to recite three different poems.", "(C) He received a citation on the third of the month.", "(D) He thinks the performance begins at three."] },
+          { o: ["(A) Choose a new dentist.", "(B) Cure the pain himself.", "(C) Make an appointment with his dentist.", "(D) Ask his dentist about the right way to brush."] },
+          { o: ["(A) It is almost five o’clock.", "(B) The man does not really need the stamps.", "(C) It is a long way to the post office.", "(D) It would be better to go after five o’clock."] },
+          { o: ["(A) The article was placed on reserve.", "(B) The woman must ask the professor for a copy.", "(C) The woman should look through a number of journals in the library.", "(D) He has reservations about the information in the article."] },
+          { o: ["(A) He needs to take a nap.", "(B) He hopes the woman will help him calm down.", "(C) The woman just woke him up.", "(D) He is extremely relaxed."] },
+          { o: ["(A) She does not think the news report is false.", "(B) She has never before reported on the news.", "(C) She never watches the news on television.", "(D) She shares the man’s opinion about the report."] },
+          { o: ["(A) Management will offer pay raises on Friday.", "(B) The policy has not yet been decided.", "(C) The manager is full of hot air.", "(D) The plane has not yet landed."] },
+          { o: ["(A) He does not believe that it is really snowing.", "(B) The snow had been predicted.", "(C) The exact amount of snow is unclear.", "(D) He expected the woman to go out in the snow."] },
+          { o: ["(A) She is going to take the test over again.", "(B) She thinks she did a good job on the exam.", "(C) She has not yet taken the literature exam.", "(D) She is unhappy with how she did."] },
+          { o: ["(A) The door was unlocked.", "(B) It was better to wait outside.", "(C) He could not open the door.", "(D) He needed to take a walk."] },
+          { o: ["(A) He nailed the door shut.", "(B) He is heading home.", "(C) He hit himself in the head.", "(D) He is absolutely correct."] },
+          { o: ["(A) The haircut is unusually short.", "(B) This is Bob’s first haircut.", "(C) Bob does not know who gave him the haircut.", "(D) After the haircut, Bob’s hair still touches the floor."] },
+          { o: ["(A) It is just what he wanted.", "(B) He enjoys having the latest style.", "(C) He dislikes it immensely.", "(D) He thinks it will be cool in the summer."] },
+          { o: ["(A) A broken mirror", "(B) The hairstylist", "(C) The scissors used to cut his hair", "(D) Piles of his hair"] },
+          { o: ["(A) “You should become a hairstylist.”", "(B) “Please put it back on.”", "(C) “It’ll grow back.”", "(D) “It won’t grow fast enough.”"] },
+          { o: ["(A) Every evening", "(B) Every week", "(C) Every Sunday", "(D) Every month"] },
+          { o: ["(A) That she was eighty-five years old", "(B) That a storm was coming", "(C) That she was under a great deal of pressure", "(D) That she wanted to become a weather forecaster"] },
+          { o: ["(A) In her bones", "(B) In her ears", "(C) In her legs", "(D) In her head"] },
+          { o: ["(A) Call his great-grandmother less often.", "(B) Watch the weather forecasts with his great-grandmother.", "(C) Help his great-grandmother relieve some of her pressures.", "(D) Believe his great-grandmother’s predictions about the weather."] },
+          { o: ["(A) In a car", "(B) On a hike", "(C) On a tram", "(D) In a lecture hall"] },
+          { o: ["(A) It means they have big tears.", "(B) It means they like to swim.", "(C) It means they look like crocodiles.", "(D) It means they are pretending to be sad."] },
+          { o: ["(A) They are sad.", "(B) They are warming themselves.", "(C) They are getting rid of salt.", "(D) They regret their actions."] },
+          { o: ["(A) Taking photographs", "(B) Getting closer to the crocodiles", "(C) Exploring the water’s edge", "(D) Getting off the tram"] },
+          { o: ["(A) Water Sports", "(B) Physics", "(C) American History", "(D) Psychology"] },
+          { o: ["(A) To cut", "(B) To move fast", "(C) To steer a boat", "(D) To build a ship"] },
+          { o: ["(A) To bring tea from China", "(B) To transport gold to California", "(C) To trade with the British", "(D) To sail the American river system"] },
+          { o: ["(A) A reading assignment", "(B) A quiz on Friday", "(C) A research paper for the end of the semester", "(D) Some written homework"] },
+          { o: ["(A) Writers", "(B) Actors", "(C) Athletes", "(D) Musicians"] },
+          { o: ["(A) He or she would see butterflies.", "(B) He or she would break a leg.", "(C) He or she would have shaky knees.", "(D) He or she would stop breathing."] },
+          { o: ["(A) By staring at the audience", "(B) By breathing shallowly", "(C) By thinking about possible negative outcomes", "(D) By focusing on what needs to be done"] },
+          { o: ["(A) At two o’clock", "(B) At four o’clock", "(C) At six o’clock", "(D) At eight o’clock"] }
+        ]
+      },
+
+      {
+        title: "SECTION 2 — STRUCTURE AND WRITTEN EXPRESSION",
+        instr: `<b>Time — 30 minutes</b><br>This section is designed to measure your ability to recognize language that is appropriate for standard written English.`,
+        questions: [
+          { q: "1. ________, the outermost layer of skin, is about as thick as a sheet of paper over most of the skin.", o: ["(A) It is the epidermis", "(B) In the epidermis", "(C) The epidermis", "(D) The epidermis is"] },
+          { q: "2. Sam Spade in The Maltese Falcon and Rick Blaine in Casablanca ________ two of Humphrey Bogart’s more famous roles.", o: ["(A) they are two", "(B) two of them are", "(C) two of them", "(D) are two"] },
+          { q: "3. The compound microscope has not one ________ two lenses.", o: ["(A) and also", "(B) but", "(C) and there are", "(D) but there are"] },
+          { q: "4. During the Precambrian period, the Earth’s crust formed, and life ________ in the seas.", o: ["(A) first appeared", "(B) first to appear", "(C) is first appearing", "(D) appearing"] },
+          { q: "5. The hard palate forms a partition ________ and nasal passages.", o: ["(A) the mouth", "(B) between the mouth", "(C) is between the mouth", "(D) it is between the mouth"] },
+          { q: "6. Conditions required for seed germination include abundant water, an adequate supply of oxygen, and ________.", o: ["(A) the temperatures must be appropriate", "(B) having appropriate temperatures", "(C) appropriate temperatures", "(D) appropriately temperate"] },
+          { q: "7. When fluid accumulates against the eardrum, a second more insidious type of ________.", o: ["(A) otitis media may develop", "(B) developing otitis media", "(C) the development of otitis media", "(D) to develop otitis media"] },
+          { q: "8. Some general theories of motivation ________ of central motives, from which other motives develop.", o: ["(A) identify a limited number", "(B) identification of a limited amount", "(C) identify a limited amount", "(D) identifying a limited number"] },
+          { q: "9. Before the Statue of Liberty arrived in the United States, newspapers invited the public to help determine where ________ placed after its arrival.", o: ["(A) should the statue be", "(B) the statue being", "(C) it should be the statue", "(D) the statue should be"] },
+          { q: "10. Hydroelectric power can be produced by ________ and using tidal flow to run turbines.", o: ["(A) water basins are dammed", "(B) damming water basins", "(C) to dam water basins", "(D) dams in water basins"] },
+          { q: "11. Abraham Lincoln and Jefferson Davis, ________ of the Union and the Confederacy during the Civil War, were both born in Kentucky.", o: ["(A) they were opposing presidents", "(B) were opposing presidents", "(C) opposing presidents", "(D) presidents opposed"] },
+          { q: "12. A stock ________ at an inflated price is called a watered stock.", o: ["(A) issued", "(B) is issued", "(C) it is issued", "(D) which issued"] },
+          { q: "13. The leaves of the white mulberry provide food for silkworms, ________ silk fabrics are woven.", o: ["(A) whose cocoons", "(B) from cocoons", "(C) whose cocoons are from", "(D) from whose cocoons"] },
+          { q: "14. Not only ________ generate energy, but it also produces fuel for other fission reactors.", o: ["(A) a nuclear breeder reactor", "(B) it is a nuclear breeder reactor", "(C) does a nuclear breeder reactor", "(D) is a nuclear breeder reactor"] },
+          { q: "15. D. W. Griffith pioneered many of the stylistic features and filmmaking techniques ________ as the Hollywood standard.", o: ["(A) that established", "(B) that became established", "(C) what established", "(D) what became established"] },
+          { qHtml: `16. Mosquitoes <span class="underlined-choice">will accepts <span class="choice-label">(A)</span></span> <span class="underlined-choice">the malaria <span class="choice-label">(B)</span></span> parasite at <span class="underlined-choice">only one <span class="choice-label">(C)</span></span> stage of the parasite’s complex <span class="underlined-choice">life cycle <span class="choice-label">(D)</span></span>.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `17. The <span class="underlined-choice">counterpart <span class="choice-label">(A)</span></span> <span class="underlined-choice">of <span class="choice-label">(B)</span></span> a negative <span class="underlined-choice">electrons <span class="choice-label">(C)</span></span> is the <span class="underlined-choice">positive <span class="choice-label">(D)</span></span> proton.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `18. The ankle joint <span class="underlined-choice">occur <span class="choice-label">(A)</span></span> where the <span class="underlined-choice">lower <span class="choice-label">(B)</span></span> ends of the tibia and fibula slot <span class="underlined-choice">neatly <span class="choice-label">(C)</span></span> <span class="underlined-choice">around <span class="choice-label">(D)</span></span> the talus.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `19. In the United States and Canada, motor <span class="underlined-choice">vehicle <span class="choice-label">(A)</span></span> laws <span class="underlined-choice">affect <span class="choice-label">(B)</span></span> the <span class="underlined-choice">operate <span class="choice-label">(C)</span></span> of motorcycles as <span class="underlined-choice">well as <span class="choice-label">(D)</span></span> automobiles.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `20. The neocortex <span class="underlined-choice">is <span class="choice-label">(A)</span></span>, in evolutionary <span class="underlined-choice">terms <span class="choice-label">(B)</span></span>, <span class="underlined-choice">most <span class="choice-label">(C)</span></span> recent <span class="underlined-choice">layer <span class="choice-label">(D)</span></span> of the brain.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `21. <span class="underlined-choice">There are <span class="choice-label">(A)</span></span> more than eighty-four million <span class="underlined-choice">specimens <span class="choice-label">(B)</span></span> in the National Museum of Natural History’s <span class="underlined-choice">collection <span class="choice-label">(C)</span></span> of biological, geological, archaeological, and <span class="underlined-choice">anthropology <span class="choice-label">(D)</span></span> treasures.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `22. <span class="underlined-choice">After <span class="choice-label">(A)</span></span> George Washington married <span class="underlined-choice">widow <span class="choice-label">(B)</span></span> Martha Custis, the couple <span class="underlined-choice">came <span class="choice-label">(C)</span></span> to <span class="underlined-choice">resides <span class="choice-label">(D)</span></span> at Mount Vernon.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `23. <span class="underlined-choice">At this <span class="choice-label">(A)</span></span> stage in their development, <span class="underlined-choice">rubberized <span class="choice-label">(B)</span></span> asphalt can <span class="underlined-choice">hardly <span class="choice-label">(C)</span></span> be classified <span class="underlined-choice">as <span class="choice-label">(D)</span></span> cutting edge.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `24. Rhesus monkeys <span class="underlined-choice">exhibit <span class="choice-label">(A)</span></span> patterns of <span class="underlined-choice">shy <span class="choice-label">(B)</span></span> <span class="underlined-choice">similar to <span class="choice-label">(C)</span></span> <span class="underlined-choice">those <span class="choice-label">(D)</span></span> in humans.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `25. In space, with <span class="underlined-choice">no <span class="choice-label">(A)</span></span> gravity for muscles to <span class="underlined-choice">work against <span class="choice-label">(B)</span></span>, the <span class="underlined-choice">body <span class="choice-label">(C)</span></span> becomes <span class="underlined-choice">weakly <span class="choice-label">(D)</span></span>.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `26. Fort Jefferson, in the Dry Tortugas <span class="underlined-choice">off <span class="choice-label">(A)</span></span> the southern <span class="underlined-choice">tip <span class="choice-label">(B)</span></span> of Florida, can be <span class="underlined-choice">reach <span class="choice-label">(C)</span></span> only <span class="underlined-choice">by <span class="choice-label">(D)</span></span> boat or plane.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `27. <span class="underlined-choice">A <span class="choice-label">(A)</span></span> zoom lens <span class="underlined-choice">produces <span class="choice-label">(B)</span></span> an <span class="underlined-choice">inverted <span class="choice-label">(C)</span></span> real image, either on the film in a camera <span class="underlined-choice">and <span class="choice-label">(D)</span></span> on the light-sensitive tube of a television camera.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `28. <span class="underlined-choice">Supersonic <span class="choice-label">(A)</span></span> flight is flight <span class="underlined-choice">that <span class="choice-label">(B)</span></span> is <span class="underlined-choice">faster <span class="choice-label">(C)</span></span> the speed of <span class="underlined-choice">sound <span class="choice-label">(D)</span></span>.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `29. The Betataken House Ruins at Navajo National Monument <span class="underlined-choice">is <span class="choice-label">(A)</span></span> among the <span class="underlined-choice">largest <span class="choice-label">(B)</span></span> and most <span class="underlined-choice">elaborate <span class="choice-label">(C)</span></span> cliff dwellings in the <span class="underlined-choice">country <span class="choice-label">(D)</span></span>.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `30. It is a <span class="underlined-choice">common <span class="choice-label">(A)</span></span> observation that liquids will <span class="underlined-choice">soak <span class="choice-label">(B)</span></span> through some materials <span class="underlined-choice">but not <span class="choice-label">(C)</span></span> through <span class="underlined-choice">other <span class="choice-label">(D)</span></span>.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `31. The number of wild <span class="underlined-choice">horses <span class="choice-label">(A)</span></span> on Assateague <span class="underlined-choice">are <span class="choice-label">(B)</span></span> increasing lately, <span class="underlined-choice">resulting <span class="choice-label">(C)</span></span> in <span class="underlined-choice">overgrazed <span class="choice-label">(D)</span></span> marsh and dune grasses.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `32. The newsreels of Hearst Metrotone News, which formed part of <span class="underlined-choice">every <span class="choice-label">(A)</span></span> moviegoer’s experience in the era before <span class="underlined-choice">television <span class="choice-label">(B)</span></span>, offer <span class="underlined-choice">an <span class="choice-label">(C)</span></span> unique record of the <span class="underlined-choice">events <span class="choice-label">(D)</span></span> of the 1930s.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `33. <span class="underlined-choice">Unlikely <span class="choice-label">(A)</span></span> gas <span class="underlined-choice">sport <span class="choice-label">(B)</span></span> balloons, hot air balloons <span class="underlined-choice">do not have <span class="choice-label">(C)</span></span> <span class="underlined-choice">nets <span class="choice-label">(D)</span></span>.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `34. <span class="underlined-choice">Born <span class="choice-label">(A)</span></span> in Massachusetts in 1852, Albert Fairbanks <span class="underlined-choice">has begun <span class="choice-label">(B)</span></span> <span class="underlined-choice">making <span class="choice-label">(C)</span></span> banjos in Boston in the <span class="underlined-choice">late <span class="choice-label">(D)</span></span> 1870s.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `35. Dwight David Eisenhower, military <span class="underlined-choice">officer <span class="choice-label">(A)</span></span> and thirty-fourth president of the United States, <span class="underlined-choice">lived <span class="choice-label">(B)</span></span> in the White House and <span class="underlined-choice">of least <span class="choice-label">(C)</span></span> thirty-seven <span class="underlined-choice">other <span class="choice-label">(D)</span></span> residences.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `36. Methane in wetlands <span class="underlined-choice">comes <span class="choice-label">(A)</span></span> <span class="underlined-choice">from <span class="choice-label">(B)</span></span> soil bacteria that <span class="underlined-choice">consumes <span class="choice-label">(C)</span></span> organic plant <span class="underlined-choice">matter <span class="choice-label">(D)</span></span>.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `37. Alois Alzheimer made the first <span class="underlined-choice">observers <span class="choice-label">(A)</span></span> of the telltale <span class="underlined-choice">signs <span class="choice-label">(B)</span></span> of the disease that today <span class="underlined-choice">bears <span class="choice-label">(C)</span></span> his <span class="underlined-choice">name <span class="choice-label">(D)</span></span>.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `38. Edward MacDowell <span class="underlined-choice">remembers <span class="choice-label">(A)</span></span> as the <span class="underlined-choice">composer <span class="choice-label">(B)</span></span> of such <span class="underlined-choice">perennial <span class="choice-label">(C)</span></span> <span class="underlined-choice">favorites <span class="choice-label">(D)</span></span> as “To a Wild Rose” and “To a Water Lily.”`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `39. Animism is the <span class="underlined-choice">belief <span class="choice-label">(A)</span></span> that objects and <span class="underlined-choice">natural phenomena <span class="choice-label">(B)</span></span> such as rivers, rocks, and wind are <span class="underlined-choice">live <span class="choice-label">(C)</span></span> and have <span class="underlined-choice">feelings <span class="choice-label">(D)</span></span>.`, o: ["(A)", "(B)", "(C)", "(D)"] },
+          { qHtml: `40. Newtonian physics <span class="underlined-choice">accounts <span class="choice-label">(A)</span></span> <span class="underlined-choice">for <span class="choice-label">(B)</span></span> the <span class="underlined-choice">observing <span class="choice-label">(C)</span></span> <span class="underlined-choice">orbits <span class="choice-label">(D)</span></span> of the planets and the moons.`, o: ["(A)", "(B)", "(C)", "(D)"] }
+        ]
+      },
+
+      {
+        title: "SECTION 3 — READING COMPREHENSION",
+        instr: `<b>Time — 55 minutes</b><br>Read the passages and choose the best answer for each question based on the text provided.`,
+        questions: [
+          { passage: `<b>Questions 1–10</b><br><br>The hippopotamus is the third largest land animal, smaller only than the elephant and the rhinoceros. Its name comes from two Greek words which mean “river horse.” The long name of this animal is often shortened to the easier-to-handle term “hippo.”<br><br>The hippo has a natural affinity for the water. It does not float on top of the water; instead, it can easily walk along the bottom of a body of water. The hippo commonly remains underwater for three to five minutes and has been known to stay under for up to half an hour before coming up for air.<br><br>In spite of its name, the hippo has relatively little in common with the horse and instead has a number of interesting similarities in common with the whale. When a hippo comes up after a stay at the bottom of a lake or river, it releases air through a blowhole, just like a whale. In addition, the hippo resembles the whale in that they both have thick layers of blubber for protection and they are almost completely hairless.`,
+            q: "1. The topic of this passage is", o: ["(A) the largest land animals", "(B) the derivations of animal names", "(C) the characteristics of the hippo", "(D) the relation between the hippo and the whale"] },
+          { q: "2. It can be inferred from the passage that the rhinoceros is", o: ["(A) smaller than the hippo", "(B) equal in size to the elephant", "(C) a hybrid of the hippo and the elephant", "(D) one of the two largest types of land animals"] },
+          { q: "3. The possessive “Its” in sentence 2 refers to", o: ["(A) hippopotamus", "(B) elephant", "(C) rhinoceros", "(D) horse"] },
+          { q: "4. It can be inferred from the passage that the hippopotamus is commonly called a hippo because the word “hippo” is", o: ["(A) simpler to pronounce", "(B) scientifically more accurate", "(C) the original name", "(D) easier for the animal to recognize"] },
+          { q: "5. The word “float” in paragraph 2 is closest in meaning to", o: ["(A) sink", "(B) drift", "(C) eat", "(D) flap"] },
+          { q: "6. According to the passage, what is the maximum time that hippos have been known to stay underwater?", o: ["(A) Three minutes", "(B) Five minutes", "(C) Thirty minutes", "(D) Ninety minutes"] },
+          { q: "7. The expression “has relatively little in common” in paragraph 3 could best be replaced by", o: ["(A) has few interactions", "(B) is not normally found", "(C) has minimal experience", "(D) shares few similarities"] },
+          { q: "8. The passage states that one way in which a hippo is similar to a whale is that", o: ["(A) they both live on the bottoms of rivers", "(B) they both have blowholes", "(C) they are both named after horses", "(D) they both breathe underwater"] },
+          { q: "9. The word “blubber” in the last paragraph is closest in meaning to", o: ["(A) fat", "(B) metal", "(C) water", "(D) skin"] },
+          { q: "10. The passage states that the hippo does not", o: ["(A) like water", "(B) resemble the whale", "(C) have a protective coating", "(D) have much hair"] },
+
+          { passage: `<b>Questions 11–19</b><br><br>John James Audubon, nineteenth-century artist and naturalist, is known as one of the foremost authorities on North American birds. Born in Les Cayes, Haiti, in 1785, Audubon was raised in France and studied art under French artist Jacques-Louis David. After settling on his father’s Pennsylvania estate at the age of eighteen, he first began to study and paint birds.<br><br>In his young adulthood, Audubon undertook numerous enterprises, generally without a tremendous amount of success; at various times during his life he was involved in a mercantile business, a lumber and grist mill, a taxidermy business, and a school. His general mode of operating a business was to leave it either unattended or in the hands of a partner and take off on excursions through the wilds to paint the natural life that he saw. His business career came to an end in 1819 when he was jailed for debt and forced to file for bankruptcy.<br><br>It was at that time that Audubon began seriously to pursue the dream of publishing a collection of his paintings of birds. For the next six years he painted birds in their natural habitats while his wife worked as a teacher to support the family. His Birds of America, which included engravings of 435 of his colorful and lifelike watercolors, was published in parts during the period from 1826 to 1838 in England. After the success of the English editions, American editions of his work were published in 1839, and his fame and fortune were ensured.`,
+            q: "11. This passage is mainly about", o: ["(A) North American birds", "(B) Audubon’s route to success as a painter of birds", "(C) the works that Audubon published", "(D) Audubon’s preference for travel in natural habitats"] },
+          { q: "12. The word “foremost” in paragraph 1 is closest in meaning to", o: ["(A) prior", "(B) leading", "(C) first", "(D) largest"] },
+          { q: "13. In the second paragraph, the author mainly discusses", o: ["(A) how Audubon developed his painting style", "(B) Audubon’s involvement in a mercantile business", "(C) where Audubon went on his excursions", "(D) Audubon’s unsuccessful business practices"] },
+          { q: "14. The word “mode” in paragraph 2 could best be replaced by", o: ["(A) method", "(B) vogue", "(C) average", "(D) trend"] },
+          { q: "15. Audubon decided not to continue to pursue business when", o: ["(A) he was injured in an accident at a grist mill", "(B) he decided to study art in France", "(C) he was put in prison because he owed money", "(D) he made enough money from his paintings"] },
+          { q: "16. The word “pursue” in paragraph 3 is closest in meaning to", o: ["(A) imagine", "(B) share", "(C) follow", "(D) deny"] },
+          { q: "17. According to the passage, Audubon’s paintings", o: ["(A) were realistic portrayals", "(B) used only black, white, and gray", "(C) were done in oils", "(D) depicted birds in cages"] },
+          { q: "18. The word “support” in paragraph 2 could best be replaced by", o: ["(A) tolerate", "(B) provide for", "(C) side with", "(D) fight for"] },
+          { q: "19. It can be inferred from the passage that after 1839 Audubon", o: ["(A) unsuccessfully tried to develop new businesses", "(B) continued to be supported by his wife", "(C) traveled to Europe", "(D) became wealthy"] },
+
+          { passage: `<b>Questions 20–29</b><br><br>Schizophrenia is often confused with multiple personality disorder, yet is quite distinct from it. Schizophrenia is one of the more common mental disorders, considerably more common than multiple personality disorder. The term “schizophrenia” is composed of roots which mean “a splitting of the mind,” but it does not refer to a division into separate and distinct personalities, as occurs in multiple personality disorder. Instead, schizophrenic behavior is generally characterized by illogical thought patterns and withdrawal from reality. Schizophrenics often live in a fantasy world where they hear voices that others cannot hear, often voices of famous people. Schizophrenics tend to withdraw from families and friends and communicate mainly with the “voices” that they hear in their minds.<br><br>It is common for the symptoms of schizophrenia to develop during the late teen years or early twenties, but the causes of schizophrenia are not well understood. It is believed that heredity may play a part in the onset of schizophrenia. In addition, abnormal brain chemistry also seems to have a role; certain brain chemicals, called neurotransmitters, have been found to be at abnormal levels in some schizophrenics.`,
+            q: "20. The paragraph preceding the passage most probably discusses", o: ["(A) the causes of schizophrenia", "(B) multiple personality disorder", "(C) the most common mental disorder", "(D) possible cures for schizophrenia"] },
+          { q: "21. Which of the following is true about schizophrenia and multiple personality disorder?", o: ["(A) They are relatively similar.", "(B) One is a psychological disorder, while the other is not.", "(C) Many people mistake one for the other.", "(D) Multiple personality disorder occurs more often than schizophrenia."] },
+          { q: "22. “Disorder” in sentence 2 is closest in meaning to which of the following?", o: ["(A) Disruption", "(B) Untidiness", "(C) Misalignment", "(D) Disease"] },
+          { q: "23. It can be inferred from the passage that a “schism” is", o: ["(A) a division into factions", "(B) a mental disease", "(C) a personality trait", "(D) a part of the brain"] },
+          { q: "24. What is NOT true about schizophrenia, according to the passage?", o: ["(A) It is characterized by separate and distinct personalities.", "(B) It often causes withdrawal from reality.", "(C) Its symptoms include illogical thought patterns.", "(D) Its victims tend to hear voices in their minds."] },
+          { q: "25. According to the passage, how do schizophrenics generally relate to their families?", o: ["(A) They are quite friendly with their families.", "(B) They become remote from their families.", "(C) They have an enhanced ability to understand their families.", "(D) They communicate openly with their families."] },
+          { q: "26. It can be inferred from the passage that it would be least common for schizophrenia to develop at the age of", o: ["(A) fifteen", "(B) twenty", "(C) twenty-five", "(D) thirty"] },
+          { q: "27. The word “onset” in paragraph 2 is closest in meaning to", o: ["(A) start", "(B) medication", "(C) effect", "(D) age"] },
+          { q: "28. The word “abnormal” in the last paragraph is closest in meaning to", o: ["(A) unstable", "(B) unregulated", "(C) uncharted", "(D) unusual"] },
+          { q: "29. Where in the passage does the author explain the derivation of the term “schizophrenia”?", o: ["(A) Sentence 3–4", "(B) Sentence 4–5", "(C) Sentence 6", "(D) Paragraph 2"] },
+
+          { passage: `<b>Questions 30–39</b><br><br>People are often surprised to learn just how long some varieties of trees can live. If asked to estimate the age of the oldest living trees on Earth, they often come up with guesses in the neighborhood of two or perhaps three hundred years. The real answer is considerably larger than that, more than five thousand years.<br><br>The tree that wins the prize for its considerable maturity is the bristlecone pine of California. This venerable pine predates wonders of the ancient world such as the pyramids of Egypt, the Hanging Gardens of Babylon, and the Colossus of Rhodes. It is not nearly as tall as the giant redwood that is also found in California, and, in fact, it is actually not very tall compared with many other trees, often little more than five meters in height. This relatively short height may be one of the factors that aid the bristlecone pine in living to a ripe old age—high winds and inclement weather cannot easily reach the shorter trees and cause damage. An additional factor that contributes to the long life of the bristlecone pine is that this type of tree has a high percentage of resin, which prevents rot from developing in the tree trunk and branches.`,
+            q: "30. The best title for this passage would be", o: ["(A) The Size of the Bristlecone Pine", "(B) Three-Hundred-Year-Old Forests", "(C) The Wonders of the Ancient World", "(D) An Amazingly Enduring Tree"] },
+          { q: "31. The word “estimate” in sentence 2 is closest in meaning to", o: ["(A) measure", "(B) approximate", "(C) evaluate", "(D) view"] },
+          { q: "32. The expression “in the neighborhood of” in sentence 2 could best be replaced by", o: ["(A) of approximately", "(B) on the same block as", "(C) with the friendliness of", "(D) located close to"] },
+          { q: "33. It can be inferred from the passage that most people", o: ["(A) are quite accurate in their estimates of the ages of trees", "(B) have two to three hundred trees in their neighborhoods", "(C) do not really have any idea how old the oldest trees on Earth are", "(D) can name some three-hundred-year-old trees"] },
+          { q: "34. According to the passage, approximately how old are the oldest trees on Earth?", o: ["(A) Two hundred years old", "(B) Three hundred years old", "(C) Five hundred years old", "(D) Five thousand years old"] },
+          { q: "35. The word “venerable” in paragraph 2 is closest in meaning to", o: ["(A) ancient", "(B) incredible", "(C) towering", "(D) unrecognizable"] },
+          { q: "36. The author mentions the Egyptian pyramids as an example of something that is", o: ["(A) far away", "(B) believed to be strong", "(C) extremely tall", "(D) known to be old"] },
+          { q: "37. Which of the following is true about the bristlecone pine?", o: ["(A) It is as tall as the great pyramids.", "(B) It is never more than five meters in height.", "(C) It is short in comparison to many other trees.", "(D) It can be two to three hundred feet tall."] },
+          { q: "38. The word “inclement” in the last paragraph could best be replaced by", o: ["(A) sunny", "(B) bad", "(C) unusual", "(D) strong"] },
+          { q: "39. The passage states that resin", o: ["(A) assists the tree trunks to develop", "(B) is found only in the bristlecone pine", "(C) flows from the branches to the trunk", "(D) helps stop rot from starting"] },
+
+          { passage: `<b>Questions 40–50</b><br><br>The organization that today is known as the Bank of America did start out in America, but under quite a different name. Italian American A. P. Giannini established this bank on October 17, 1904, in a renovated saloon in San Francisco’s Italian community of North Beach under the name Bank of Italy, with immigrants and first-time bank customers comprising the majority of his first customers. During its development, Giannini’s bank survived major crises in the form of a natural disaster and a major economic upheaval that not all other banks were able to overcome.<br><br>One major test for Giannini’s bank occurred on April 18, 1906, when a massive earthquake struck San Francisco, followed by a raging fire that destroyed much of the city. Giannini obtained two wagons and teams of horses, filled the wagons with the bank’s reserves, mostly in the form of gold, covered the reserves with crates of oranges, and escaped from the chaos of the city with his clients’ funds protected. In the aftermath of the disaster, Giannini’s bank was the first to resume operations. Unable to install the bank in a proper office setting, Giannini opened up shop on the Washington Street Wharf on a makeshift desk created from boards and barrels.<br><br>In the period following the 1906 fire, the Bank of Italy continued to prosper and expand. By 1918 there were twenty-four branches of the Bank of Italy, and by 1928 Giannini had acquired numerous other banks, including a Bank of America located in New York City. In 1930 he consolidated all the branches of the Bank of Italy, the Bank of America in New York City, and another Bank of America that he had formed in California into the Bank of America National Trust and Savings Association.<br><br>A second major crisis for the bank occurred during the Great Depression of the 1930s. Although Giannini had already retired prior to the darkest days of the Depression, he became incensed when his successor began selling off banks during the bad economic times. Giannini resumed leadership of the bank at the age of sixty-two. Under Giannini’s leadership, the bank weathered the storm of the Depression and subsequently moved into a phase of overseas development.`,
+            q: "40. According to the passage, Giannini", o: ["(A) opened the Bank of America in 1904", "(B) worked in a bank in Italy", "(C) set up the Bank of America prior to setting up the Bank of Italy", "(D) later changed the name of the Bank of Italy"] },
+          { q: "41. Where did Giannini open his first bank?", o: ["(A) In New York City", "(B) In what used to be a bar", "(C) On Washington Street Wharf", "(D) On a makeshift desk"] },
+          { q: "42. According to the passage, which of the following is NOT true about the San Francisco earthquake?", o: ["(A) It happened in 1906.", "(B) It occurred in the aftermath of a fire.", "(C) It caused problems for Giannini’s bank.", "(D) It was a tremendous earthquake."] },
+          { q: "43. The word “raging” in paragraph 2 could best be replaced by", o: ["(A) angered", "(B) localized", "(C) intense", "(D) feeble"] },
+          { q: "44. It can be inferred from the passage that Giannini used crates of oranges after the earthquake", o: ["(A) to hide the gold", "(B) to fill up the wagons", "(C) to provide nourishment for his customers", "(D) to protect the gold from the fire"] },
+          { q: "45. The word “chaos” in paragraph 2 is closest in meaning to", o: ["(A) legal system", "(B) extreme heat", "(C) overdevelopment", "(D) total confusion"] },
+          { q: "46. The word “consolidated” in paragraph 3 is closest in meaning to", o: ["(A) hardened", "(B) merged", "(C) moved", "(D) sold"] },
+          { q: "47. The passage states that after his retirement, Giannini", o: ["(A) began selling off banks", "(B) caused economic misfortune to occur", "(C) supported the bank’s new management", "(D) returned to work"] },
+          { q: "48. The expression “weathered the storm of” in paragraph 4 could best be replaced by", o: ["(A) found a cure for", "(B) rained on the parade of", "(C) survived the ordeal of", "(D) blew its stack at"] },
+          { q: "49. Where in the passage does the author describe Giannini’s first banking clients?", o: ["(A) Paragraph 1", "(B) First part of paragraph 2", "(C) Last sentence of paragraph 2", "(D) Paragraph 3"] },
+          { q: "50. The paragraph following the passage most likely discusses", o: ["(A) bank failures during the Great Depression", "(B) a third major crisis of the Bank of America", "(C) the international development of the Bank of America", "(D) how Giannini spent his retirement"] }
+        ]
+      }
     ];
+
+    /************************************************************
+     * SECTION HELPERS
+     ************************************************************/
 
     function getSectionKey(index) {
       if (index === 0) return "listening";
@@ -591,11 +685,21 @@
       return "R";
     }
 
-    function startExam() {
+    function getCurrentSectionDuration() {
+      const key = getSectionKey(currentSectionIdx);
+      return SECTION_DURATIONS[key] || 30 * 60;
+    }
+
+    /************************************************************
+     * LOGIN
+     ************************************************************/
+
+    async function startExam() {
       const nama = document.getElementById("nama").value.trim();
       const npm = document.getElementById("npm").value.trim();
       const kelas = document.getElementById("kelas").value;
       const email = document.getElementById("email").value.trim();
+      const startBtn = document.getElementById("start-btn");
 
       if (!nama || !npm || !kelas || !email) {
         showToast("Mohon lengkapi semua data diri terlebih dahulu.");
@@ -607,13 +711,74 @@
         return;
       }
 
+      if (!APPS_SCRIPT_URL || !APPS_SCRIPT_URL.endsWith("/exec")) {
+        showToast("Web App URL Apps Script belum valid. Hubungi admin.");
+        return;
+      }
+
       userData = { nama, npm, kelas, email };
+
+      if (startBtn) {
+        startBtn.disabled = true;
+        startBtn.innerText = "Checking...";
+      }
+
+      showToast("Memeriksa status submit peserta...");
+
+      const duplicateCheck = await checkDuplicateBeforeStart(npm, kelas);
+
+      if (duplicateCheck && duplicateCheck.duplicate === true) {
+        showToast("Data NPM dan kelas ini sudah pernah submit. Hubungi pengawas jika perlu reset.");
+        if (startBtn) {
+          startBtn.disabled = false;
+          startBtn.innerText = "Mulai Ujian";
+        }
+        return;
+      }
+
       document.getElementById("display-info").innerText = `${nama} | ${npm} | ${kelas}`;
       document.getElementById("login-page").classList.add("hidden");
       document.getElementById("exam-page").classList.remove("hidden");
 
       setupSecurity();
+      pauseSecurity(2000);
+
+      currentSectionIdx = 0;
+      startCurrentSection("START_EXAM");
+    }
+
+    /************************************************************
+     * DUPLICATE CHECK BEFORE START VIA JSONP
+     ************************************************************/
+
+    function checkDuplicateBeforeStart(npm, kelas) {
+      return jsonpRequest({
+        action: "CHECK_DUPLICATE",
+        npm: npm,
+        kelas: kelas,
+        testDate: new Date().toISOString()
+      }, 8000).catch(function(error) {
+        console.warn("Duplicate check failed:", error);
+        return { status: "warning", duplicate: false };
+      });
+    }
+
+    /************************************************************
+     * RENDER SECTION
+     ************************************************************/
+
+    function startCurrentSection(reason) {
+      stopSectionTimer();
+      stopListeningAudio();
+
+      timeUpHandled = false;
+      isLocked = false;
+
+      hideLockPanel();
       renderSection();
+      startSectionTimer(reason || "SECTION_STARTED");
+
+      window.scrollTo(0, 0);
     }
 
     function renderSection() {
@@ -622,7 +787,10 @@
       const prefix = getQuestionPrefix(currentSectionIdx);
 
       document.getElementById("section-title").innerText = sec.title;
-      document.getElementById("section-progress").innerText = `Section ${currentSectionIdx + 1} of ${examData.length}`;
+
+      const durationMinutes = Math.round(getCurrentSectionDuration() / 60);
+      document.getElementById("section-progress").innerHTML =
+        `Section ${currentSectionIdx + 1} of ${examData.length}<br><strong>Time: ${durationMinutes} minutes</strong>`;
 
       let html = `<div class="instruction">${sec.instr}</div>`;
 
@@ -636,32 +804,37 @@
               Your browser does not support audio playback.
             </audio>
             <div style="margin-top: 15px;">
-              <button type="button" id="btnPlay" onclick="startSecurePlay()">▶️ Putar Audio</button>
+              <button type="button" id="btnPlay" class="exam-control" onclick="startSecurePlay()">▶️ Putar Audio</button>
             </div>
             <p id="audio-msg" class="audio-msg">*Audio hanya dapat diputar 1x. Jangan merefresh halaman.</p>
           </div>
         `;
       }
 
-      sec.questions.forEach((qObj, i) => {
+      sec.questions.forEach(function(qObj, i) {
         const questionId = prefix + (i + 1);
         const savedAnswer = answers[sectionKey][questionId] || "";
 
-        if (qObj.passage) html += `<div class="passage">${qObj.passage}</div>`;
+        if (qObj.passage) {
+          html += `<div class="passage">${qObj.passage}</div>`;
+        }
 
         const questionText = qObj.qHtml
           ? qObj.qHtml
           : qObj.q
             ? `<strong>${qObj.q}</strong>`
             : `<strong>Question ${i + 1}</strong>`;
+
         html += `<div class="question-block"><p>${questionText}</p>`;
 
-        qObj.o.forEach((opt, oi) => {
+        qObj.o.forEach(function(opt, oi) {
           const val = String.fromCharCode(65 + oi);
           const checked = savedAnswer === val ? "checked" : "";
+
           html += `
             <label class="option-label">
-              <input type="radio" name="${questionId}" value="${val}" ${checked}> ${opt}
+              <input class="exam-control" type="radio" name="${questionId}" value="${val}" ${checked}>
+              ${opt}
             </label>
           `;
         });
@@ -670,8 +843,190 @@
       });
 
       document.getElementById("exam-content").innerHTML = html;
-      document.getElementById("next-btn").innerText = currentSectionIdx === examData.length - 1 ? "Submit Final" : "Submit & Lanjut";
-      window.scrollTo(0, 0);
+
+      const nextBtn = document.getElementById("next-btn");
+      if (nextBtn) {
+        nextBtn.disabled = false;
+        nextBtn.classList.add("exam-control");
+        nextBtn.innerText = currentSectionIdx === examData.length - 1
+          ? "Submit Final"
+          : "Submit & Lanjut";
+      }
+
+      updateViolationDisplay();
+
+      if (sec.audioUrl) {
+        setTimeout(function() {
+          autoStartListeningAudio();
+        }, 800);
+      }
+    }
+
+    /************************************************************
+     * TIMER - ABSOLUTE Date.now()
+     ************************************************************/
+
+    function startSectionTimer(reason) {
+      stopSectionTimer();
+
+      const durationSeconds = getCurrentSectionDuration();
+
+      sectionTimeRemaining = durationSeconds;
+      sectionStartedAt = new Date().toISOString();
+      sectionEndTime = Date.now() + durationSeconds * 1000;
+      timeUpHandled = false;
+
+      updateTimerFromClock();
+
+      sectionTimer = setInterval(function() {
+        updateTimerFromClock();
+      }, 1000);
+    }
+
+    function resumeSectionTimerAfterUnlock() {
+      stopSectionTimer();
+
+      const safeRemaining = Math.max(sectionTimeRemaining, 1);
+      sectionEndTime = Date.now() + safeRemaining * 1000;
+      timeUpHandled = false;
+
+      updateTimerFromClock();
+
+      sectionTimer = setInterval(function() {
+        updateTimerFromClock();
+      }, 1000);
+    }
+
+    function stopSectionTimer() {
+      if (sectionTimer) {
+        clearInterval(sectionTimer);
+        sectionTimer = null;
+      }
+    }
+
+    function updateTimerFromClock() {
+      if (!sectionEndTime || timeUpHandled || isFinished) return;
+
+      const remainingMs = sectionEndTime - Date.now();
+      sectionTimeRemaining = Math.max(0, Math.ceil(remainingMs / 1000));
+
+      updateTimerDisplay();
+
+      if (sectionTimeRemaining <= 0) {
+        handleSectionTimeUp();
+      }
+    }
+
+    function updateTimerDisplay() {
+      const timerDisplay = document.getElementById("timer-display");
+      if (!timerDisplay) return;
+
+      const safeRemaining = Math.max(sectionTimeRemaining, 0);
+      const minutes = Math.floor(safeRemaining / 60);
+      const seconds = safeRemaining % 60;
+
+      timerDisplay.textContent =
+        String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
+
+      timerDisplay.classList.remove("warning", "danger");
+
+      if (safeRemaining <= 60) {
+        timerDisplay.classList.add("danger");
+      } else if (safeRemaining <= 5 * 60) {
+        timerDisplay.classList.add("warning");
+      }
+    }
+
+    function logSectionTime(reason) {
+      const sectionKey = getSectionKey(currentSectionIdx);
+      const sec = examData[currentSectionIdx];
+
+      const alreadyLogged = sectionTimeLogs.some(function(item) {
+        return item.sectionKey === sectionKey && item.startedAt === sectionStartedAt;
+      });
+
+      if (alreadyLogged) return;
+
+      const usedSeconds = getCurrentSectionDuration() - Math.max(sectionTimeRemaining, 0);
+
+      sectionTimeLogs.push({
+        sectionIndex: currentSectionIdx + 1,
+        sectionKey: sectionKey,
+        sectionTitle: sec ? sec.title : "",
+        startedAt: sectionStartedAt,
+        endedAt: new Date().toISOString(),
+        usedSeconds: usedSeconds,
+        remainingSeconds: Math.max(sectionTimeRemaining, 0),
+        reason: reason || "SUBMITTED"
+      });
+    }
+
+    function handleSectionTimeUp() {
+      if (timeUpHandled || isSubmitting || isFinished) return;
+
+      timeUpHandled = true;
+      stopSectionTimer();
+
+      collectCurrentSectionAnswers();
+      logSectionTime("TIME_UP");
+
+      showToast("Waktu section habis. Sistem menyimpan jawaban secara otomatis.");
+
+      if (currentSectionIdx < examData.length - 1) {
+        stopListeningAudio();
+        pauseSecurity(1800);
+
+        setTimeout(function() {
+          currentSectionIdx++;
+          startCurrentSection("TIME_UP_NEXT_SECTION");
+        }, 700);
+
+      } else {
+        stopListeningAudio();
+
+        setTimeout(function() {
+          submitFinalData("TIME_UP");
+        }, 500);
+      }
+    }
+
+    /************************************************************
+     * AUDIO
+     ************************************************************/
+
+    function autoStartListeningAudio() {
+      const audio = document.getElementById("listeningAudio");
+      if (!audio || audioStarted) return;
+
+      setupAudioProtection(audio);
+
+      audio.play().then(function() {
+        audioStarted = true;
+        const btn = document.getElementById("btnPlay");
+        const msg = document.getElementById("audio-msg");
+
+        if (btn) {
+          btn.disabled = true;
+          btn.innerText = "⌛ Audio Sedang Diputar";
+        }
+
+        if (msg) {
+          msg.innerText = "Audio sedang berjalan. Durasi terkunci dan tidak dapat diulang.";
+        }
+
+      }).catch(function() {
+        const btn = document.getElementById("btnPlay");
+        const msg = document.getElementById("audio-msg");
+
+        if (btn) {
+          btn.disabled = false;
+          btn.innerText = "▶️ Putar Audio";
+        }
+
+        if (msg) {
+          msg.innerText = "Autoplay diblokir browser. Klik tombol Putar Audio untuk memulai.";
+        }
+      });
     }
 
     function startSecurePlay() {
@@ -679,40 +1034,87 @@
       const btn = document.getElementById("btnPlay");
       const msg = document.getElementById("audio-msg");
 
-      if (!audio || !btn) return;
+      if (!audio || !btn || audioStarted) return;
 
-      audio.load();
+      setupAudioProtection(audio);
+
+      audio.play().then(function() {
+        audioStarted = true;
+        btn.disabled = true;
+        btn.innerText = "⌛ Audio Sedang Diputar";
+
+        if (msg) {
+          msg.innerText = "Audio sedang berjalan. Durasi terkunci dan tidak dapat diulang.";
+        }
+
+      }).catch(function(error) {
+        showToast("Gagal memutar audio. Periksa koneksi internet atau gunakan browser Chrome/Safari terbaru.");
+        console.error(error);
+      });
+    }
+
+    function setupAudioProtection(audio) {
+      if (!audio) return;
+
+      audioLastPlayedTime = 0;
 
       audio.onseeking = function() {
-        if (audio.currentTime > audioLastPlayedTime + 1) {
-          recordViolation("AUDIO_SEEK_ATTEMPT", "the participant attempted to seek or skip the listening audio");
+        if (Math.abs(audio.currentTime - audioLastPlayedTime) > 1.5) {
           audio.currentTime = audioLastPlayedTime;
+          scheduleViolation(
+            "AUDIO_SEEK_ATTEMPT",
+            "the participant attempted to seek, replay, or skip the listening audio"
+          );
         }
       };
 
       audio.ontimeupdate = function() {
-        if (!audio.seeking) audioLastPlayedTime = audio.currentTime;
+        if (!audio.seeking) {
+          audioLastPlayedTime = audio.currentTime;
+        }
       };
 
-      audio.play().then(function() {
-        btn.disabled = true;
-        btn.innerText = "⌛ Audio Sedang Diputar";
-        if (msg) msg.innerText = "Audio sedang berjalan. Durasi terkunci dan tidak dapat diulang.";
-      }).catch(function(error) {
-        showToast("Gagal memutar audio. Periksa koneksi internet atau coba gunakan browser Chrome/Safari terbaru.");
-        console.error(error);
-      });
-
       audio.onended = function() {
-        btn.innerText = "✅ Selesai";
+        const btn = document.getElementById("btnPlay");
+        const msg = document.getElementById("audio-msg");
+
+        if (btn) {
+          btn.disabled = true;
+          btn.innerText = "✅ Selesai";
+        }
+
         if (msg) {
           msg.style.color = "#15803d";
           msg.innerText = "Audio telah selesai. Silakan lanjut menjawab.";
         }
-        audio.removeAttribute("src");
-        audio.load();
+
+        try {
+          audio.removeAttribute("src");
+          audio.load();
+        } catch (e) {}
       };
     }
+
+    function stopListeningAudio() {
+      const audio = document.getElementById("listeningAudio");
+      if (!audio) return;
+
+      try {
+        audio.pause();
+        audio.currentTime = 0;
+        audio.removeAttribute("src");
+        audio.load();
+      } catch (e) {
+        console.warn("Unable to stop audio safely:", e);
+      }
+
+      audioLastPlayedTime = 0;
+      audioStarted = false;
+    }
+
+    /************************************************************
+     * ANSWERS
+     ************************************************************/
 
     function collectCurrentSectionAnswers() {
       const sectionKey = getSectionKey(currentSectionIdx);
@@ -723,6 +1125,26 @@
         const questionId = prefix + (i + 1);
         const selected = document.querySelector(`input[name="${questionId}"]:checked`);
         answers[sectionKey][questionId] = selected ? selected.value : "";
+      });
+    }
+
+    function collectAllAnswersFromDom() {
+      if (!examData || !Array.isArray(examData)) return;
+
+      examData.forEach(function(section, sectionIndex) {
+        const sectionKey = getSectionKey(sectionIndex);
+        const prefix = getQuestionPrefix(sectionIndex);
+
+        section.questions.forEach(function(_, i) {
+          const questionId = prefix + (i + 1);
+          const selected = document.querySelector(`input[name="${questionId}"]:checked`);
+
+          if (selected) {
+            answers[sectionKey][questionId] = selected.value;
+          } else if (!answers[sectionKey][questionId]) {
+            answers[sectionKey][questionId] = "";
+          }
+        });
       });
     }
 
@@ -739,49 +1161,66 @@
       return blank;
     }
 
+    /************************************************************
+     * SECTION SUBMIT / NEXT
+     ************************************************************/
+
     function submitSection() {
       if (isLocked || isSubmitting) return;
 
       const blank = countBlankCurrentSection();
+
       if (blank > 0) {
         showToast(`Masih ada ${blank} soal yang belum dijawab. Lengkapi jawaban sebelum lanjut.`);
         return;
       }
 
       collectCurrentSectionAnswers();
+      logSectionTime(currentSectionIdx === examData.length - 1 ? "FINAL_MANUAL_SUBMIT" : "MANUAL_SECTION_SUBMIT");
 
       if (currentSectionIdx < examData.length - 1) {
+        stopSectionTimer();
         stopListeningAudio();
-        pauseSecurity(1200);
+        pauseSecurity(1800);
+
         currentSectionIdx++;
-        renderSection();
+        startCurrentSection("MANUAL_NEXT_SECTION");
         showToast("Jawaban section ini telah tersimpan. Silakan lanjut ke bagian berikutnya.");
+
       } else {
+        stopSectionTimer();
         stopListeningAudio();
         submitFinalData("COMPLETED");
       }
     }
 
+    /************************************************************
+     * FINAL SUBMIT
+     ************************************************************/
+
     async function submitFinalData(status) {
       if (isSubmitting) return;
+
       isSubmitting = true;
       isFinished = true;
       completionStatus = status || completionStatus || "COMPLETED";
 
       try {
-        if (!isLocked && currentSectionIdx >= 0 && currentSectionIdx < examData.length) {
-          collectCurrentSectionAnswers();
+        collectCurrentSectionAnswers();
+        collectAllAnswersFromDom();
+
+        const lastLog = sectionTimeLogs[sectionTimeLogs.length - 1];
+
+        if (!lastLog || lastLog.sectionIndex !== currentSectionIdx + 1) {
+          logSectionTime(completionStatus === "TIME_UP" ? "TIME_UP" : "FINAL_SUBMIT");
         }
+
       } catch (e) {
-        console.warn("Unable to collect current section answers:", e);
+        console.warn("Unable to collect final answers:", e);
       }
 
-      if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE") {
-        showToast("Web App URL Apps Script belum dipasang di HTML. Mohon hubungi admin.");
-        isSubmitting = false;
-        isFinished = false;
-        return;
-      }
+      stopSectionTimer();
+      stopListeningAudio();
 
       const payload = {
         nama: userData.nama,
@@ -789,10 +1228,18 @@
         kelas: userData.kelas,
         email: userData.email,
         testDate: new Date().toISOString(),
+        testType: "TOEFL_FULL",
         answers: answers,
         violations: violationLog,
-        completionStatus: completionStatus
+        completionStatus: completionStatus,
+        sectionTimeLogs: sectionTimeLogs
       };
+
+      const nextBtn = document.getElementById("next-btn");
+      if (nextBtn) {
+        nextBtn.disabled = true;
+        nextBtn.innerText = "Submitting...";
+      }
 
       try {
         await fetch(APPS_SCRIPT_URL, {
@@ -805,9 +1252,16 @@
         });
 
         showSubmittedMessage();
+
       } catch (error) {
         isSubmitting = false;
         isFinished = false;
+
+        if (nextBtn) {
+          nextBtn.disabled = false;
+          nextBtn.innerText = currentSectionIdx === examData.length - 1 ? "Submit Final" : "Submit & Lanjut";
+        }
+
         showToast("Submission failed. Please check your internet connection and try again.");
         console.error(error);
       }
@@ -829,49 +1283,93 @@
       `;
     }
 
+    /************************************************************
+     * SECURITY / INTEGRITY DETECTION
+     ************************************************************/
+
     function setupSecurity() {
+      if (securityInitialized) return;
+      securityInitialized = true;
+
       document.addEventListener("visibilitychange", function() {
         if (document.hidden && isExamActive()) {
-          recordViolation("PAGE_HIDDEN_OR_TAB_SWITCH", "the test page was hidden or the participant switched tabs/applications");
+          scheduleViolation(
+            "PAGE_HIDDEN_OR_TAB_SWITCH",
+            "the test page was hidden or the participant switched tabs/applications"
+          );
+        }
+
+        if (!document.hidden) {
+          cancelPendingViolation("PAGE_HIDDEN_OR_TAB_SWITCH");
+
+          if (sectionEndTime && !timeUpHandled && !isFinished) {
+            updateTimerFromClock();
+          }
         }
       });
 
       window.addEventListener("blur", function() {
         if (isExamActive()) {
-          recordViolation("WINDOW_FOCUS_LOST", "the test window lost focus");
+          scheduleViolation(
+            "WINDOW_FOCUS_LOST",
+            "the test window lost focus for more than the allowed tolerance"
+          );
+        }
+      });
+
+      window.addEventListener("focus", function() {
+        cancelPendingViolation("WINDOW_FOCUS_LOST");
+
+        if (sectionEndTime && !timeUpHandled && !isFinished) {
+          updateTimerFromClock();
         }
       });
 
       document.addEventListener("copy", function(e) {
         if (isExamActive()) {
           e.preventDefault();
-          recordViolation("COPY_ATTEMPT", "the participant attempted to copy content from the test page");
+          scheduleViolation(
+            "COPY_ATTEMPT",
+            "the participant attempted to copy content from the test page"
+          );
         }
       });
 
       document.addEventListener("paste", function(e) {
         if (isExamActive()) {
           e.preventDefault();
-          recordViolation("PASTE_ATTEMPT", "the participant attempted to paste content into the test page");
+          scheduleViolation(
+            "PASTE_ATTEMPT",
+            "the participant attempted to paste content into the test page"
+          );
         }
       });
 
       document.addEventListener("contextmenu", function(e) {
         if (isExamActive()) {
           e.preventDefault();
-          recordViolation("RIGHT_CLICK_ATTEMPT", "the participant attempted to open the context menu/right click menu");
+          scheduleViolation(
+            "RIGHT_CLICK_ATTEMPT",
+            "the participant attempted to open the context menu/right click menu"
+          );
         }
       });
 
       document.addEventListener("fullscreenchange", function() {
         if (isExamActive() && document.fullscreenElement === null) {
-          recordViolation("FULLSCREEN_EXIT", "the participant exited fullscreen mode");
+          scheduleViolation(
+            "FULLSCREEN_EXIT",
+            "the participant exited fullscreen mode"
+          );
         }
       });
 
       window.addEventListener("beforeunload", function(e) {
         if (isExamActive() && !isSubmitting) {
-          recordViolation("PAGE_LEAVE_ATTEMPT", "the participant attempted to leave or refresh the test page");
+          scheduleViolation(
+            "PAGE_LEAVE_ATTEMPT",
+            "the participant attempted to leave or refresh the test page"
+          );
           e.preventDefault();
           e.returnValue = "";
         }
@@ -879,7 +1377,14 @@
     }
 
     function isExamActive() {
-      return !isFinished && !isSubmitting && !isLocked && !isSecurityPaused() && !document.getElementById("exam-page").classList.contains("hidden");
+      const examPage = document.getElementById("exam-page");
+
+      return !isFinished &&
+        !isSubmitting &&
+        !isLocked &&
+        !isSecurityPaused() &&
+        examPage &&
+        !examPage.classList.contains("hidden");
     }
 
     function pauseSecurity(ms) {
@@ -890,50 +1395,37 @@
       return Date.now() < securityPausedUntil;
     }
 
-    function showToast(message) {
-      const toast = document.getElementById("toast-message");
-      if (!toast) return;
-      toast.textContent = message;
-      toast.classList.add("show");
-      clearTimeout(showToast._timer);
-      showToast._timer = setTimeout(function() {
-        toast.classList.remove("show");
-      }, 3200);
+    function scheduleViolation(type, detail) {
+      if (!isExamActive()) return;
+      if (pendingViolations[type]) return;
+
+      pendingViolations[type] = setTimeout(function() {
+        pendingViolations[type] = null;
+        registerViolation(type, detail);
+      }, SECURITY_GRACE_MS);
     }
 
-    function showIntegrityNotice(message) {
-      const notice = document.getElementById("integrity-notice");
-      if (!notice) {
-        showToast(message);
+    function cancelPendingViolation(type) {
+      if (pendingViolations[type]) {
+        clearTimeout(pendingViolations[type]);
+        pendingViolations[type] = null;
+      }
+    }
+
+    function registerViolation(type, detail) {
+      if (!isExamActive()) return;
+
+      const now = Date.now();
+
+      if (violationCooldown[type] && now - violationCooldown[type] < VIOLATION_COOLDOWN_MS) {
         return;
       }
-      notice.textContent = message;
-      notice.classList.add("show");
-      clearTimeout(showIntegrityNotice._timer);
-      showIntegrityNotice._timer = setTimeout(function() {
-        notice.classList.remove("show");
-      }, 6500);
-    }
 
-    function stopListeningAudio() {
-      const audio = document.getElementById("listeningAudio");
-      if (!audio) return;
-      try {
-        audio.pause();
-        audio.currentTime = 0;
-        audio.removeAttribute("src");
-        audio.load();
-      } catch (e) {
-        console.warn("Unable to stop audio safely:", e);
-      }
-    }
+      violationCooldown[type] = now;
 
-    function recordViolation(type, detail) {
-      const now = Date.now();
-      if (now - lastViolationAt < 1800) return;
-      lastViolationAt = now;
+      const activeCount = getActiveViolationCount();
 
-      if (violationLog.length >= MAX_VIOLATIONS) return;
+      if (activeCount >= MAX_VIOLATIONS) return;
 
       violationLog.push({
         type: type,
@@ -944,35 +1436,218 @@
 
       updateViolationDisplay();
 
-      const count = violationLog.length;
-      if (count < MAX_VIOLATIONS) {
-        showIntegrityNotice(`⚠️ PERINGATAN ${count}/${MAX_VIOLATIONS}: ${detail}. Aktivitas ini tercatat oleh sistem.`);
+      const newCount = getActiveViolationCount();
+
+      if (newCount < MAX_VIOLATIONS) {
+        showIntegrityNotice(`⚠️ PERINGATAN ${newCount}/${MAX_VIOLATIONS}: ${detail}. Aktivitas ini tercatat oleh sistem.`);
       } else {
-        showIntegrityNotice("❌ Batas maksimal pelanggaran telah tercapai. Ujian dikunci dan jawaban yang sudah tersedia akan dikirim ke sistem.");
+        showIntegrityNotice("❌ Batas maksimal pelanggaran tercapai. Ujian dikunci. Hubungi pengawas untuk membuka kembali akses.");
         handleMaximumViolation();
       }
     }
 
+    function getActiveViolationCount() {
+      return violationLog.filter(function(v) {
+        return v.type !== "MASTER_UNLOCK";
+      }).length;
+    }
+
     function updateViolationDisplay() {
       const el = document.getElementById("violation-display");
-      if (el) el.innerText = `Integrity Warning: ${violationLog.length}/${MAX_VIOLATIONS}`;
+      if (el) {
+        el.innerText = `Integrity Warning: ${getActiveViolationCount()}/${MAX_VIOLATIONS}`;
+      }
     }
+
+    /************************************************************
+     * LOCK / MASTER UNLOCK
+     ************************************************************/
 
     function handleMaximumViolation() {
       isLocked = true;
-      completionStatus = AUTO_SUBMIT_ON_MAX_VIOLATION ? "AUTO_SUBMITTED" : "LOCKED";
+      completionStatus = "LOCKED";
+
+      stopSectionTimer();
+      disableExamControls(true);
 
       const lockMessage = document.getElementById("lock-message");
-      const nextBtn = document.getElementById("next-btn");
 
       if (lockMessage) {
         lockMessage.classList.remove("hidden");
-        lockMessage.innerText = "Ujian dikunci karena batas maksimal pelanggaran telah tercapai. Jawaban yang sudah tersedia akan dikirim ke sistem.";
+        lockMessage.innerHTML = `
+          <div>
+            <strong>Ujian dikunci karena batas maksimal pelanggaran telah tercapai.</strong><br>
+            Jawaban belum dikirim otomatis. Silakan hubungi pengawas untuk membuka kembali akses.
+          </div>
+
+          <div class="master-unlock-panel">
+            <label for="master-code-input"><strong>Masukkan kode master pengawas:</strong></label>
+            <input type="text" id="master-code-input" placeholder="Kode master" autocomplete="off">
+            <button type="button" onclick="verifyMasterCode()">Buka Akses</button>
+            <div id="master-code-message" style="margin-top:8px;font-size:13px;"></div>
+          </div>
+        `;
+      }
+    }
+
+    function disableExamControls(disabled) {
+      document.querySelectorAll(".exam-control").forEach(function(el) {
+        el.disabled = disabled;
+      });
+
+      const radios = document.querySelectorAll('input[type="radio"]');
+      radios.forEach(function(el) {
+        el.disabled = disabled;
+      });
+    }
+
+    function hideLockPanel() {
+      const lockMessage = document.getElementById("lock-message");
+      if (lockMessage) {
+        lockMessage.classList.add("hidden");
+        lockMessage.innerHTML = "";
+      }
+    }
+
+    async function verifyMasterCode() {
+      const input = document.getElementById("master-code-input");
+      const message = document.getElementById("master-code-message");
+
+      const masterCode = input ? input.value.trim() : "";
+
+      if (!masterCode) {
+        if (message) message.textContent = "Masukkan kode master terlebih dahulu.";
+        return;
       }
 
-      if (nextBtn) nextBtn.disabled = true;
+      if (message) message.textContent = "Memverifikasi kode master...";
 
-      submitFinalData(completionStatus);
+      try {
+        const result = await jsonpRequest({
+          action: "VERIFY_MASTER_CODE",
+          masterCode: masterCode,
+          npm: userData.npm || "",
+          kelas: userData.kelas || "",
+          time: new Date().toISOString()
+        }, 8000);
+
+        if (result && result.status === "success" && result.valid === true) {
+          unlockExamWithMasterCode();
+        } else {
+          if (message) message.textContent = "Kode master tidak valid.";
+        }
+
+      } catch (error) {
+        console.error(error);
+        if (message) message.textContent = "Verifikasi gagal. Periksa koneksi atau hubungi admin.";
+      }
+    }
+
+    function unlockExamWithMasterCode() {
+      isLocked = false;
+      completionStatus = "COMPLETED";
+
+      disableExamControls(false);
+      hideLockPanel();
+
+      violationLog.push({
+        type: "MASTER_UNLOCK",
+        detail: "exam unlocked by master code",
+        time: new Date().toISOString(),
+        section: examData[currentSectionIdx] ? examData[currentSectionIdx].title : "Unknown Section"
+      });
+
+      updateViolationDisplay();
+      pauseSecurity(2000);
+      resumeSectionTimerAfterUnlock();
+
+      showToast("Akses ujian telah dibuka kembali oleh pengawas.");
+    }
+
+    /************************************************************
+     * JSONP HELPER FOR READABLE APPS SCRIPT RESPONSE
+     ************************************************************/
+
+    function jsonpRequest(params, timeoutMs) {
+      return new Promise(function(resolve, reject) {
+        const callbackName = "jsonpCallback_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+        const script = document.createElement("script");
+
+        params = params || {};
+        params.callback = callbackName;
+
+        const query = Object.keys(params)
+          .map(function(key) {
+            return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
+          })
+          .join("&");
+
+        const timer = setTimeout(function() {
+          cleanup();
+          reject(new Error("JSONP request timeout"));
+        }, timeoutMs || 8000);
+
+        function cleanup() {
+          clearTimeout(timer);
+
+          try {
+            delete window[callbackName];
+          } catch (e) {
+            window[callbackName] = undefined;
+          }
+
+          if (script && script.parentNode) {
+            script.parentNode.removeChild(script);
+          }
+        }
+
+        window[callbackName] = function(data) {
+          cleanup();
+          resolve(data);
+        };
+
+        script.onerror = function() {
+          cleanup();
+          reject(new Error("JSONP request failed"));
+        };
+
+        script.src = APPS_SCRIPT_URL + "?" + query;
+        document.body.appendChild(script);
+      });
+    }
+
+    /************************************************************
+     * UI HELPERS
+     ************************************************************/
+
+    function showToast(message) {
+      const toast = document.getElementById("toast-message");
+      if (!toast) return;
+
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(function() {
+        toast.classList.remove("show");
+      }, 3200);
+    }
+
+    function showIntegrityNotice(message) {
+      const notice = document.getElementById("integrity-notice");
+
+      if (!notice) {
+        showToast(message);
+        return;
+      }
+
+      notice.textContent = message;
+      notice.classList.add("show");
+
+      clearTimeout(showIntegrityNotice._timer);
+      showIntegrityNotice._timer = setTimeout(function() {
+        notice.classList.remove("show");
+      }, 6500);
     }
 
     function isValidEmail(email) {
